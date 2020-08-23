@@ -48,9 +48,11 @@ importers:
       '@types/node': 12.12.54
       '@types/react': 16.9.46
       '@types/react-dom': 16.9.8
+      '@types/react-vis': 1.11.2
       react: 16.13.1
       react-dom: 16.13.1_react@16.13.1
       react-scripts: 3.4.3_typescript@3.7.5
+      react-vis: 1.11.7_react@16.13.1
       typescript: 3.7.5
     specifiers:
       '@testing-library/jest-dom': ^4.2.4
@@ -60,9 +62,11 @@ importers:
       '@types/node': ^12.0.0
       '@types/react': ^16.9.0
       '@types/react-dom': ^16.9.0
+      '@types/react-vis': ^1.11.2
       react: ^16.13.1
       react-dom: ^16.13.1
       react-scripts: 3.4.3
+      react-vis: ^1.11.7
       typescript: ~3.7.2
 lockfileVersion: 5.1
 packages:
@@ -2229,6 +2233,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-ykkPQ+5nFknnlU6lDd947WbQ6TE3NNzbQAkInC2EKY1qeYdTKp7onFusmYZb+ityzx2YviqT6BXSu+LyWWJwcA==
+  /@types/react-vis/1.11.2:
+    dependencies:
+      '@types/react': 16.9.46
+    dev: false
+    resolution:
+      integrity: sha512-fKM53Xb0nEdq9w0iaOAk6LNWvOzw3PuqM/AiuBRwKkWHNlLqosYJaYm3gw379P6Iq9gu1Po2pbnDWRKmUe2P7g==
   /@types/react/16.9.46:
     dependencies:
       '@types/prop-types': 15.7.3
@@ -4457,6 +4467,92 @@ packages:
     dev: false
     resolution:
       integrity: sha512-m62ShEObQ39CfralilEQRjH6oAMtNCV1xJyEx5LpRYUVN+EviphDgUc/F3hnYbADmkiNs67Y+3ylmlG7Lnu+FA==
+  /d3-array/1.2.4:
+    dev: false
+    resolution:
+      integrity: sha512-KHW6M86R+FUPYGb3R5XiYjXPq7VzwxZ22buHhAEVG5ztoEcZZMLov530mmccaqA1GghZArjQV46fuc8kUqhhHw==
+  /d3-collection/1.0.7:
+    dev: false
+    resolution:
+      integrity: sha512-ii0/r5f4sjKNTfh84Di+DpztYwqKhEyUlKoPrzUFfeSkWxjW49xU2QzO9qrPrNkpdI0XJkfzvmTu8V2Zylln6A==
+  /d3-color/1.4.1:
+    dev: false
+    resolution:
+      integrity: sha512-p2sTHSLCJI2QKunbGb7ocOh7DgTAn8IrLx21QRc/BSnodXM4sv6aLQlnfpvehFMLZEfBc6g9pH9SWQccFYfJ9Q==
+  /d3-contour/1.3.2:
+    dependencies:
+      d3-array: 1.2.4
+    dev: false
+    resolution:
+      integrity: sha512-hoPp4K/rJCu0ladiH6zmJUEz6+u3lgR+GSm/QdM2BBvDraU39Vr7YdDCicJcxP1z8i9B/2dJLgDC1NcvlF8WCg==
+  /d3-format/1.4.5:
+    dev: false
+    resolution:
+      integrity: sha512-J0piedu6Z8iB6TbIGfZgDzfXxUFN3qQRMofy2oPdXzQibYGqPB/9iMcxr/TGalU+2RsyDO+U4f33id8tbnSRMQ==
+  /d3-geo/1.12.1:
+    dependencies:
+      d3-array: 1.2.4
+    dev: false
+    resolution:
+      integrity: sha512-XG4d1c/UJSEX9NfU02KwBL6BYPj8YKHxgBEw5om2ZnTRSbIcego6dhHwcxuSR3clxh0EpE38os1DVPOmnYtTPg==
+  /d3-hexbin/0.2.2:
+    dev: false
+    resolution:
+      integrity: sha1-nFg32s/UcasFM3qeke8Qv8T5iDE=
+  /d3-hierarchy/1.1.9:
+    dev: false
+    resolution:
+      integrity: sha512-j8tPxlqh1srJHAtxfvOUwKNYJkQuBFdM1+JAUfq6xqH5eAqf93L7oG1NVqDa4CpFZNvnNKtCYEUC8KY9yEn9lQ==
+  /d3-interpolate/1.4.0:
+    dependencies:
+      d3-color: 1.4.1
+    dev: false
+    resolution:
+      integrity: sha512-V9znK0zc3jOPV4VD2zZn0sDhZU3WAE2bmlxdIwwQPPzPjvyLkd8B3JUVdS1IDUFDkWZ72c9qnv1GK2ZagTZ8EA==
+  /d3-path/1.0.9:
+    dev: false
+    resolution:
+      integrity: sha512-VLaYcn81dtHVTjEHd8B+pbe9yHWpXKZUC87PzoFmsFrJqgFwDe/qxfp5MlfsfM1V5E/iVt0MmEbWQ7FVIXh/bg==
+  /d3-sankey/0.7.1:
+    dependencies:
+      d3-array: 1.2.4
+      d3-collection: 1.0.7
+      d3-shape: 1.3.7
+    dev: false
+    resolution:
+      integrity: sha1-0imDImj8aaf+yEgD6WwiVqYUxSE=
+  /d3-scale/1.0.7:
+    dependencies:
+      d3-array: 1.2.4
+      d3-collection: 1.0.7
+      d3-color: 1.4.1
+      d3-format: 1.4.5
+      d3-interpolate: 1.4.0
+      d3-time: 1.1.0
+      d3-time-format: 2.3.0
+    dev: false
+    resolution:
+      integrity: sha512-KvU92czp2/qse5tUfGms6Kjig0AhHOwkzXG0+PqIJB3ke0WUv088AHMZI0OssO9NCkXt4RP8yju9rpH8aGB7Lw==
+  /d3-shape/1.3.7:
+    dependencies:
+      d3-path: 1.0.9
+    dev: false
+    resolution:
+      integrity: sha512-EUkvKjqPFUAZyOlhY5gzCxCeI0Aep04LwIRpsZ/mLFelJiUfnK56jo5JMDSE7yyP2kLSb6LtF+S5chMk7uqPqw==
+  /d3-time-format/2.3.0:
+    dependencies:
+      d3-time: 1.1.0
+    dev: false
+    resolution:
+      integrity: sha512-guv6b2H37s2Uq/GefleCDtbe0XZAuy7Wa49VGkPVPMfLL9qObgBST3lEHJBMUp8S7NdLQAGIvr2KXk8Hc98iKQ==
+  /d3-time/1.1.0:
+    dev: false
+    resolution:
+      integrity: sha512-Xh0isrZ5rPYYdqhAVk8VLnMEidhz5aP7htAADH6MfzgmmicPkTo8LhkLxci61/lCB7n7UmE3bN0leRt+qvkLxA==
+  /d3-voronoi/1.1.4:
+    dev: false
+    resolution:
+      integrity: sha512-dArJ32hchFsrQ8uMiTBLq256MpnZjeuBtdHpaDlYuQyjU0CVzCJl/BVW+SkszaAeH95D/8gxqAhgx0ouAWAfRg==
   /damerau-levenshtein/1.0.6:
     dev: false
     resolution:
@@ -4742,6 +4838,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-2/xPb3ORsQ42nHYiSunXkDjPLBaEj/xTwUO4B7XCZQTRk7EBtTOPaygh10YAAh2OI1Qrp6NWfpAhzswj0ydt9g==
+  /dom-walk/0.1.2:
+    dev: false
+    resolution:
+      integrity: sha512-6QvTW9mrGeIegrFXdtQi9pk7O/nSK6lSdXW2eqUspN5LWD7UTji2Fqw5V2YLjBpHEoU9Xl/eUWNpDeZvoyOv2w==
   /domain-browser/1.2.0:
     dev: false
     engines:
@@ -6065,6 +6165,13 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-awConJSVCHVGND6x3tmMaKcQvwXLhjdkmomy2W+Goaui8YPgYgXJZewhg3fWC+DlfqqQuWg8AwqjGTD2nAPVWg==
+  /global/4.4.0:
+    dependencies:
+      min-document: 2.19.0
+      process: 0.11.10
+    dev: false
+    resolution:
+      integrity: sha512-wv/LAoHdRE3BeTGz53FAamhGlPLhlssK45usmGFThIi4XqnBmjKQ16u+RNbP7WvigRZDxUsM0J3gcQ5yicaL0w==
   /globals/11.12.0:
     engines:
       node: '>=4'
@@ -6235,6 +6342,13 @@ packages:
     dev: false
     resolution:
       integrity: sha1-0nRXAQJabHdabFRXk+1QL8DGSaE=
+  /hoek/4.2.1:
+    deprecated: 'This version has been deprecated in accordance with the hapi support policy (hapi.im/support). Please upgrade to the latest version to get the best features, bug fixes, and security patches. If you are unable to upgrade at this time, paid support is available for older versions (hapi.im/commercial).'
+    dev: false
+    engines:
+      node: '>=4.0.0'
+    resolution:
+      integrity: sha512-QLg82fGkfnJ/4iy1xZ81/9SIJiq1NGFUMGs6ParyjBZr6jW2Ufj/snDqTHixNlHdPNwN2RLVD0Pi3igeK9+JfA==
   /hosted-git-info/2.8.8:
     resolution:
       integrity: sha512-f/wzC2QaWBs7t9IYqB4T3sR1xviIViXJRJTWBlx2Gf3g0Xi5vI7Yy4koXQ1c9OYDGHN9sBy1DQ2AB8fqZBWhUg==
@@ -8580,6 +8694,12 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-OqbOk5oEQeAZ8WXWydlu9HJjz9WVdEIvamMCcXmuqUYjTknH/sqsWvhQ3vgwKFRR1HpjvNBKQ37nbJgYzGqGcg==
+  /min-document/2.19.0:
+    dependencies:
+      dom-walk: 0.1.2
+    dev: false
+    resolution:
+      integrity: sha1-e9KC4/WELtKVu3SM3Z8f+iyCRoU=
   /min-indent/1.0.1:
     dev: false
     engines:
@@ -9406,6 +9526,10 @@ packages:
       node: '>=0.12'
     resolution:
       integrity: sha512-4Ejy1OPxi9f2tt1rRV7Go7zmfDQ+ZectEQz3VGUQhgq62HtIRPDyG/JtnwIxs6x3uNMwo2V7q1fMvKjb+Tnpqg==
+  /performance-now/0.2.0:
+    dev: false
+    resolution:
+      integrity: sha1-M+8wxcd9TqIcWlOGnZG1bY8lVeU=
   /performance-now/2.1.0:
     resolution:
       integrity: sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
@@ -10538,6 +10662,17 @@ packages:
   /react-is/16.13.1:
     resolution:
       integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
+  /react-motion/0.5.2_react@16.13.1:
+    dependencies:
+      performance-now: 0.2.0
+      prop-types: 15.7.2
+      raf: 3.4.1
+      react: 16.13.1
+    dev: false
+    peerDependencies:
+      react: ^0.14.9 || ^15.3.0 || ^16.0.0
+    resolution:
+      integrity: sha512-9q3YAvHoUiWlP3cK0v+w1N5Z23HXMj4IF4YuvjvWegWqNPfLXsOBE/V7UvQGpXxHFKRQQcNcVQE31g9SB/6qgQ==
   /react-scripts/3.4.3_typescript@3.7.5:
     dependencies:
       '@babel/core': 7.9.0
@@ -10606,6 +10741,35 @@ packages:
         optional: true
     resolution:
       integrity: sha512-oSnoWmii/iKdeQiwaO6map1lUaZLmG0xIUyb/HwCVFLT7gNbj8JZ9RmpvMCZ4fB98ZUMRfNmp/ft8uy/xD1RLA==
+  /react-vis/1.11.7_react@16.13.1:
+    dependencies:
+      d3-array: 1.2.4
+      d3-collection: 1.0.7
+      d3-color: 1.4.1
+      d3-contour: 1.3.2
+      d3-format: 1.4.5
+      d3-geo: 1.12.1
+      d3-hexbin: 0.2.2
+      d3-hierarchy: 1.1.9
+      d3-interpolate: 1.4.0
+      d3-sankey: 0.7.1
+      d3-scale: 1.0.7
+      d3-shape: 1.3.7
+      d3-voronoi: 1.1.4
+      deep-equal: 1.1.1
+      global: 4.4.0
+      hoek: 4.2.1
+      prop-types: 15.7.2
+      react: 16.13.1
+      react-motion: 0.5.2_react@16.13.1
+    dev: false
+    engines:
+      node: '>=0.10.0'
+      npm: '>=3.0'
+    peerDependencies:
+      react: 15.3.0 - 16.x
+    resolution:
+      integrity: sha512-vJqS12l/6RHeSq8DVl4PzX0j8iPgbT8H8PtgTRsimKsBNcPjPseO4RICw1FUPrwj8MPrrna34LBtzyC4ATd5Ow==
   /react/16.13.1:
     dependencies:
       loose-envify: 1.4.0

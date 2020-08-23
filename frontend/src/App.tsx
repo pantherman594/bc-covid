@@ -1,26 +1,24 @@
 import React from 'react';
-import logo from './logo.svg';
+import { dataToPoints } from './utils/data-conversion';
+import { data } from './utils/dummy-data';
+import { StackedBar } from './components';
+import 'react-vis/dist/style.css'; // react-vis stylesheet
 import './App.css';
+import { PlotDataItem } from './types';
 
-function App() {
+export const App: React.FunctionComponent = () => {
+  const plotDataArr: PlotDataItem[][] = [
+    dataToPoints('totalTested', data),
+    dataToPoints('totalPositive', data),
+    dataToPoints('undergradTested', data),
+    dataToPoints('undergradPositive', data),
+  ].reverse();
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div style={{ height: '500px' }}>
+        <StackedBar data={plotDataArr} />
+      </div>
     </div>
   );
-}
-
-export default App;
+};
