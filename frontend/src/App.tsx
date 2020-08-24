@@ -12,7 +12,9 @@ import { CovidDataItem } from './types';
 import './App.css';
 
 export const App: React.FunctionComponent = () => {
-  const [data, setData] = useState<CovidDataItem[]>(dummyData);
+  const initialData: CovidDataItem[] = process.env.NODE_ENV === 'production' ? [] : dummyData;
+  const [data, setData] = useState<CovidDataItem[]>(initialData);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -26,11 +28,12 @@ export const App: React.FunctionComponent = () => {
       if (process.env.NODE_ENV === 'production') {
         setData(newData);
       }
+      setLoading(false);
     })();
   }, []);
 
   return (
-    <div className="App">
+    <div className="App" style={{ overflowY: loading ? 'hidden' : 'auto' }}>
       <h1>Boston College Covid-19 Live Statistics</h1>
       <h3>
         {'Updated: '}
@@ -42,6 +45,13 @@ export const App: React.FunctionComponent = () => {
       </div>
       <TestedAreaChart data={data} />
       <PercentPositiveChart data={data} />
+      <p style={{ paddingBottom: 0 }}>Made by David Shen and Roger Wang.</p>
+      <a href="https://bccovid.dav.sh/data">collected data</a>{' '}
+      <a href="https://www.bc.edu/content/bc-web/sites/reopening-boston-college.html#testing">data source</a>{' '}
+      <a href="https://github.com/pantherman594/bc-covid/">source code</a>
+      <div className="loading" style={{ opacity: loading ? 1 : 0 }}>
+        Loading...
+      </div>
     </div>
   );
 };
