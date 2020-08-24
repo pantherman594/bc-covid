@@ -10,6 +10,7 @@ body {
 
 .App {
   text-align: center;
+  min-height: 100vh;
   background: rgb(255, 250, 237);
   background: radial-gradient(
     circle,

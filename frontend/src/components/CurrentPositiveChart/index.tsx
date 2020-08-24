@@ -28,6 +28,8 @@ const defaultProps = {
 export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
   const [activePie, setActivePie] = useState(0);
 
+  if (props.data.length === 0) return null;
+
   const latest = props.data[props.data.length - 1];
 
   const lastDate = latest.date;
