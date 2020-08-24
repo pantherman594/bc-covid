@@ -10,6 +10,7 @@ importers:
       express: 4.17.1
       lodash: 4.17.20
       mongoose: 5.10.0_mongoose@5.10.0
+      node-ses: 3.0.2
       superagent: 6.0.0
       typegoose: /@typegoose/typegoose/7.3.2_a6b6491d775376049bb30373d720ca96
     devDependencies:
@@ -49,6 +50,7 @@ importers:
       express: ^4.17.1
       lodash: ^4.17.20
       mongoose: ^5.10.0
+      node-ses: ^3.0.2
       superagent: ^6.0.0
       ts-node-dev: ^1.0.0-pre.60
       typegoose: 'npm:@typegoose/typegoose@^7.3.2'
@@ -2739,10 +2741,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-tG6JCTSpWR8tL2+G1+ap8bP+dqg=
-  /aws4/1.10.1:
+  /aws4/1.9.1:
     dev: false
     resolution:
-      integrity: sha512-zg7Hz2k5lI8kb7U32998pRRFin7zJlkfezGJjUc2heaD4Pw2wObakCDVzkKztTm/Ln7eiVvYsjqak0Ed4LkMDA==
+      integrity: sha512-wMHVg2EOHaMRxbzgFJ9gtjOOCrI80OHLG14rxi28XwOW8ux6IiEbRCGGGqCtdAIg4FQCbW20k9RsT4y3gJlFug==
   /axobject-query/2.2.0:
     dev: false
     resolution:
@@ -8073,6 +8075,17 @@ packages:
     dev: false
     resolution:
       integrity: sha512-gsO4vjEdQaTusZAEebUWp2a5d7dF5DYoIpDG7WySnk7BuZDW+GPpHXoXXuYawRBr/9t5q54tirPz79kFIWg4dA==
+  /node-ses/3.0.2:
+    dependencies:
+      aws4: 1.9.1
+      debug: 2.6.9
+      request: 2.88.2
+      xml2js: 0.4.23
+    dev: false
+    engines:
+      node: '>= 10.x'
+    resolution:
+      integrity: sha512-x2yxL/g7S3mKITJWj53zUfbMJO6u5nZxoptiZPhwEWf0+jjaRW66pdbIMpMq+6FgCOi9nH/0PmdZi/d08AEozA==
   /normalize-package-data/2.5.0:
     dependencies:
       hosted-git-info: 2.8.8
@@ -10138,7 +10151,7 @@ packages:
   /request/2.88.2:
     dependencies:
       aws-sign2: 0.7.0
-      aws4: 1.10.1
+      aws4: 1.9.1
       caseless: 0.12.0
       combined-stream: 1.0.8
       extend: 3.0.2
@@ -12213,6 +12226,21 @@ packages:
     dev: false
     resolution:
       integrity: sha512-A5CUptxDsvxKJEU3yO6DuWBSJz/qizqzJKOMIfUJHETbBw/sFaDxgd6fxm1ewUaM0jZ444Fc5vC5ROYurg/4Pw==
+  /xml2js/0.4.23:
+    dependencies:
+      sax: 1.2.4
+      xmlbuilder: 11.0.1
+    dev: false
+    engines:
+      node: '>=4.0.0'
+    resolution:
+      integrity: sha512-ySPiMjM0+pLDftHgXY4By0uswI3SPKLDw/i3UXbnO8M/p28zqexCUoPmQFrYD+/1BzhGJSs2i1ERWKJAtiLrug==
+  /xmlbuilder/11.0.1:
+    dev: false
+    engines:
+      node: '>=4.0'
+    resolution:
+      integrity: sha512-fDlsI/kFEx7gLvbecc0/ohLG50fugQp8ryHzMTuW9vSa1GJ0XYWKnhsUx7oie3G98+r56aTQIUB4kht42R3JvA==
   /xmlchars/2.2.0:
     dev: false
     resolution:

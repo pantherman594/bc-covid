@@ -2,6 +2,7 @@ import cheerio from 'cheerio';
 import superagent from 'superagent';
 
 import connectDB from './lib/db';
+import error from './lib/error';
 import DataModel from './models/Data';
 
 const DATA_URL = 'https://www.bc.edu/content/bc-web/sites/reopening-boston-college.html';
@@ -25,11 +26,11 @@ const scrape = async () => {
   try {
     res = await superagent.get(DATA_URL);
     if (res.status !== 200) {
-      console.error(`Request failed with error code ${res.status}.`);
+      error(`Request failed with error code ${res.status}.`);
       return;
     }
   } catch (err) {
-    console.error(err);
+    error(err);
     return;
   }
 
@@ -40,7 +41,7 @@ const scrape = async () => {
 
   // Ensure that we found the grid.
   if (dataBoxes.length !== 1) {
-    console.error('Did not find the data boxes');
+    error('Did not find the data boxes');
     return;
   }
 
@@ -49,21 +50,19 @@ const scrape = async () => {
 
   // Ensure we have the expected labels and fields.
   if (fields.length !== EXPECTED_LABELS.length || labels.length !== EXPECTED_LABELS.length) {
-    console.error('Did not find the correct number of data fields.');
+    error('Did not find the correct number of data fields.');
     return;
   }
 
-  let isDataCorrect = true;
+  const failedLabels: string[] = [];
   labels.each(function f(this: Cheerio, i: number, _elem: any) {
     if ($(this).text().trim() !== EXPECTED_LABELS[i]) {
-      isDataCorrect = false;
+      failedLabels.push(EXPECTED_LABELS[i]);
     }
-
-    return isDataCorrect;
   });
 
-  if (!isDataCorrect) {
-    console.error('Labels have changed, please fix scraper.');
+  if (failedLabels.length > 0) {
+    error(`Labels have changed, please fix scraper. Failed labels: ${failedLabels.join(', ')}.`);
     return;
   }
 
@@ -75,7 +74,7 @@ const scrape = async () => {
   });
 
   if (data.length !== EXPECTED_LABELS.length) {
-    console.error('Did not store the correct number of data fields.');
+    error(`Did not store the correct number of data fields. Found: ${data.length}, Expected: ${EXPECTED_LABELS.length}.`);
     return;
   }
 
@@ -84,7 +83,7 @@ const scrape = async () => {
 
   // Ensure that we found the isolation data.
   if (isolationBox.length !== 1) {
-    console.error('Did not find the isolation box.');
+    error('Did not find the isolation box.');
     return;
   }
 
@@ -93,12 +92,12 @@ const scrape = async () => {
 
   // Ensure we have the expected label and field.
   if (field.length !== 1 || label.length !== 1) {
-    console.error('Did not find the correct number of data fields.');
+    error(`Did not find the correct number of data fields. Found: ${field.length}, Expected: 1.`);
     return;
   }
 
   if (label.text().trim() !== EXPECTED_ISOLATION_LABEL) {
-    console.error('Labels have changed, please fix scraper.');
+    error(`Labels have changed, please fix scraper. Failed labels: ${EXPECTED_ISOLATION_LABEL}.`);
     return;
   }
 
