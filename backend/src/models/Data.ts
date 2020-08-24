@@ -6,7 +6,7 @@ import {
 
 @index({ date: 1 })
 export class Data {
-  @prop({ required: true, default: Date.now() })
+  @prop({ required: true, default: Date.now })
   public date!: Date;
 
   @prop({ required: true })
