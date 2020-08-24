@@ -47,7 +47,7 @@ export const data: CovidDataItem[] = [
     totalTested: 8352,
     totalPositive: 8,
     undergradTested: 1512,
-    undergradPositive: 6,
+    undergradPositive: 7,
     isolation: 6,
     flags: [],
   },

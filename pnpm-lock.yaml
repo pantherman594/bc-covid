@@ -1854,6 +1854,16 @@ packages:
     dev: true
     resolution:
       integrity: sha512-AEpNLRcsVSc5AdseJKNHpz0d4e8+ow+abTaC0fKDbAU86rF1evoFF0oC2fV9FdqtfVXkG2LKshpLTJCFOpyvTg==
+  /@types/d3-path/1.0.8:
+    dev: false
+    resolution:
+      integrity: sha512-AZGHWslq/oApTAHu9+yH/Bnk63y9oFOMROtqPAtxl5uB6qm1x2lueWdVEjsjjV3Qc2+QfuzKIwIR5MvVBakfzA==
+  /@types/d3-shape/1.3.2:
+    dependencies:
+      '@types/d3-path': 1.0.8
+    dev: false
+    resolution:
+      integrity: sha512-LtD8EaNYCaBRzHzaAiIPrfcL3DdIysc81dkGlQvv7WQP3+YXV7b0JJTtR1U3bzeRieS603KF4wUo+ZkJVenh8w==
   /@types/eslint-visitor-keys/1.0.0:
     resolution:
       integrity: sha512-OCutwjDZ4aFS6PB1UZ988C4YgwlBHJd6wCeQqaLdmadZ/7e+w79+hbMUFC1QXDNCmdyoRfAFdm0RypzwR+Qpag==
@@ -4273,6 +4283,10 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-9lNNFRSCabIDUue+4m9QH5oZEpA=
+  /decimal.js-light/2.5.0:
+    dev: false
+    resolution:
+      integrity: sha512-b3VJCbd2hwUpeRGG3Toob+CRo8W22xplipNhP3tN7TSVB/cyMX71P1vM2Xjc9H74uV6dS2hDDmo/rHq8L87Upg==
   /decode-uri-component/0.2.0:
     dev: false
     engines:
@@ -4476,6 +4490,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-gd3ypIPfOMr9h5jIKq8E3sHOTCjeirnl0WK5ZdS1AW0Odt0b1PaWaHdJ4Qk4klv+YB9aJBS7mESXjFoDQPu6DA==
+  /dom-helpers/3.4.0:
+    dependencies:
+      '@babel/runtime': 7.11.2
+    dev: false
+    resolution:
+      integrity: sha512-LnuPJ+dwqKDIyotW1VzmOZ5TONUN7CwkCR5hrgawTUbkBGYdeoNLZo6nNfGkCrjtE1nXXaj7iMMpDa8/d9WoIA==
   /dom-serializer/0.1.1:
     dependencies:
       domelementtype: 1.3.1
@@ -10136,6 +10156,20 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-6tDA8g98We0zd0GvVeMT9arEOnTw9qM03L9cJXaCjrip1OO764RDBLBfrB4cwzNGDj5OA5ioymC9GkizgWJDUg==
+  /reduce-css-calc/1.3.0:
+    dependencies:
+      balanced-match: 0.4.2
+      math-expression-evaluator: 1.2.22
+      reduce-function-call: 1.0.3
+    dev: false
+    resolution:
+      integrity: sha1-dHyRTgSWFKTJz7umKYca0dKSdxY=
+  /reduce-function-call/1.0.3:
+    dependencies:
+      balanced-match: 1.0.0
+    dev: false
+    resolution:
+      integrity: sha512-Hl/tuV2VDgWgCSEeWMLwxLZqX7OK59eU1guxXsRKTAyeYimivsKdtcV4fu3r710tpG5GmDKDhQ0HSZLExnNmyQ==
   /reflect-metadata/0.1.13:
     dev: false
     resolution:
