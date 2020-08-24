@@ -1,1 +1,2 @@
-export * from './StackedBar';
+export * from './ChartContainer';
+export * from './TestedAreaChart';
