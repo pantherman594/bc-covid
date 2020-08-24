@@ -27,6 +27,10 @@ export const App: React.FunctionComponent = () => {
   return (
     <div className="App">
       <h1>Boston College Covid-19 Live Statistics</h1>
+      <h3>
+        {'Updated: '}
+        {data[data.length - 1].date.toLocaleDateString(undefined, { day: 'numeric', month: 'numeric' })}
+      </h3>
       <TestedAreaChart data={data} />
       <CurrentPositiveChart data={data} recoveryDays={10} />
     </div>
