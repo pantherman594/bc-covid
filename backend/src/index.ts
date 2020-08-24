@@ -6,6 +6,7 @@ import { DocumentType } from 'typegoose';
 
 import DataModel, { Data } from './models/Data';
 import connectDB from './lib/db';
+import { setup } from './lib/error';
 import scrape from './scraper';
 
 const PORT = process.env.PORT || 5000;
@@ -72,6 +73,9 @@ if (process.env.NODE_ENV === 'production') {
 
 app.listen(PORT, async () => {
   console.log(`Listening on port ${PORT}.`);
+
+  // Set up email error notifications.
+  setup();
 
   // Run the scraper once now.
   await scrape();

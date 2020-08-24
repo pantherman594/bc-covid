@@ -17,6 +17,7 @@
     "express": "^4.17.1",
     "lodash": "^4.17.20",
     "mongoose": "^5.10.0",
+    "node-ses": "^3.0.2",
     "superagent": "^6.0.0",
     "typegoose": "npm:@typegoose/typegoose@^7.3.2"
   },
