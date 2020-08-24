@@ -83,9 +83,61 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
   return (
     <div className='chart-container'>
       <PieChart
-        width={400}
-        height={400}
+        width={500}
+        height={500}
       >
+        {/* This pie fills in the space between the next pies. */}
+        <Pie
+          {...defaultProps}
+          data={[{ name: 'Total', value: 1, fill: BG_COLOR }]}
+          innerRadius={'60%'}
+          outerRadius={'100%'}
+        />
+
+        {/* This pie renders the number of positive cases. */}
+        <Pie
+          {...defaultProps}
+          data={[
+            { name: 'Tested', value: curNumTested, fill: '#3dbd00' },
+            { name: 'Padding After', value: PADDING, fill: BG_COLOR },
+            { name: 'Remaining', value: NUM_UNDERGRADS - curNumTested - PADDING * 2, fill: BG_COLOR },
+            { name: 'Padding After', value: PADDING, fill: BG_COLOR },
+          ]}
+          innerRadius={'60%'}
+          outerRadius={'65%'}
+          stroke="none"
+          onMouseEnter={onPieEnter(1)}
+        />
+
+        {/* This pie renders the number of positive cases. */}
+        <Pie
+          {...defaultProps}
+          data={[
+            { name: 'Positive', value: curNumPositive, fill: '#bc0e02' },
+            { name: 'Padding After', value: PADDING, fill: BG_COLOR },
+            { name: 'Remaining', value: NUM_UNDERGRADS - curNumPositive - PADDING * 2, fill: BG_COLOR },
+            { name: 'Padding After', value: PADDING, fill: BG_COLOR },
+          ]}
+          innerRadius={'67%'}
+          outerRadius={'93%'}
+          stroke="none"
+          onMouseEnter={onPieEnter(2)}
+        />
+
+        {/* This pie renders the number of isolated students. */}
+        <Pie
+          {...defaultProps}
+          data={[
+            { name: 'Isolated', value: latest.isolation, fill: '#d95c00' },
+            { name: 'Padding After', value: PADDING, fill: BG_COLOR },
+            { name: 'Remaining', value: NUM_UNDERGRADS - latest.isolation - PADDING * 2, fill: BG_COLOR },
+            { name: 'Padding Before', value: PADDING, fill: BG_COLOR },
+          ]}
+          innerRadius={'95%'}
+          outerRadius={'100%'}
+          stroke="none"
+          onMouseEnter={onPieEnter(3)}
+        />
         {/* This pie renders the text in the center. */}
         <Pie
           {...defaultProps}
@@ -93,7 +145,7 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
           activeShape={renderLabel}
           data={[
             {
-              name: `Estimated total undergraduates: ${NUM_UNDERGRADS.toLocaleString()}`,
+              name: `Estimated total undergrads: ${NUM_UNDERGRADS.toLocaleString()}`,
               value: NUM_UNDERGRADS,
               percentage: false,
             },
@@ -115,61 +167,9 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
           ]}
           fill="#0000"
           innerRadius={'0%'}
-          outerRadius={'75%'}
+          outerRadius={'60%'}
         />
 
-        {/* This pie fills in the space between the next pies. */}
-        <Pie
-          {...defaultProps}
-          data={[{ name: 'Total', value: 1, fill: BG_COLOR }]}
-          innerRadius={'75%'}
-          outerRadius={'100%'}
-        />
-
-        {/* This pie renders the number of positive cases. */}
-        <Pie
-          {...defaultProps}
-          data={[
-            { name: 'Tested', value: curNumTested, fill: '#3dbd00' },
-            { name: 'Padding After', value: PADDING, fill: BG_COLOR },
-            { name: 'Remaining', value: NUM_UNDERGRADS - curNumTested - PADDING * 2, fill: BG_COLOR },
-            { name: 'Padding After', value: PADDING, fill: BG_COLOR },
-          ]}
-          innerRadius={'75%'}
-          outerRadius={'76%'}
-          stroke="none"
-          onMouseEnter={onPieEnter(1)}
-        />
-
-        {/* This pie renders the number of positive cases. */}
-        <Pie
-          {...defaultProps}
-          data={[
-            { name: 'Positive', value: curNumPositive, fill: '#bc0e02' },
-            { name: 'Padding After', value: PADDING, fill: BG_COLOR },
-            { name: 'Remaining', value: NUM_UNDERGRADS - curNumPositive - PADDING * 2, fill: BG_COLOR },
-            { name: 'Padding After', value: PADDING, fill: BG_COLOR },
-          ]}
-          innerRadius={'78%'}
-          outerRadius={'93%'}
-          stroke="none"
-          onMouseEnter={onPieEnter(2)}
-        />
-
-        {/* This pie renders the number of isolated students. */}
-        <Pie
-          {...defaultProps}
-          data={[
-            { name: 'Isolated', value: latest.isolation, fill: '#d95c00' },
-            { name: 'Padding After', value: PADDING, fill: BG_COLOR },
-            { name: 'Remaining', value: NUM_UNDERGRADS - latest.isolation - PADDING * 2, fill: BG_COLOR },
-            { name: 'Padding Before', value: PADDING, fill: BG_COLOR },
-          ]}
-          innerRadius={'95%'}
-          outerRadius={'100%'}
-          stroke="none"
-          onMouseEnter={onPieEnter(3)}
-        />
       </PieChart>
     </div>
   );

@@ -2,7 +2,12 @@ import React, { useEffect, useState }from 'react';
 import superagent from 'superagent';
 
 import { data as dummyData } from './utils/dummy-data';
-import { CurrentPositiveChart, NumberStats, TestedAreaChart } from './components';
+import {
+  CurrentPositiveChart,
+  NumberStats,
+  PercentPositiveChart,
+  TestedAreaChart,
+} from './components';
 import { CovidDataItem } from './types';
 import './App.css';
 
@@ -36,6 +41,7 @@ export const App: React.FunctionComponent = () => {
         <CurrentPositiveChart data={data} recoveryDays={10} />
       </div>
       <TestedAreaChart data={data} />
+      <PercentPositiveChart data={data} />
     </div>
   );
 };

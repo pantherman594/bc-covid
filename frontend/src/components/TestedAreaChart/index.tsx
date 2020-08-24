@@ -1,6 +1,8 @@
 import React from 'react';
 import moment from 'moment';
-import { AreaChart, XAxis, YAxis, Area, Label } from 'recharts';
+import { AreaChart, XAxis, YAxis, Area, Tooltip } from 'recharts';
+
+import style from './style.module.css';
 import { ChartContainer } from '../index';
 import { CovidDataItem } from '../../types';
 
@@ -16,7 +18,24 @@ export const TestedAreaChart = (props: TestedAreaChartProps) => {
     });
   };
 
-  const tickFormatter = (tick: number) => moment(tick).format('MM-DD-YYYY');
+  const dateTickFormatter = (tick: number) => moment(tick).format('M/D');
+
+  const renderTooltipContent = (o: any) => {
+    const { payload, label } = o;
+
+    return (
+      <div className={style.customTooltip}>
+        <p>{dateTickFormatter(label)}</p>
+        {
+          payload.map((entry: any, index: number) => (
+            <p key={`item-${index}`} style={{ color: entry.color }}>
+              {`${entry.name.replace(/([A-Z])/g, " $1")}: ${entry.value}`}
+            </p>
+          ))
+        }
+      </div>
+    );
+  };
 
   return (
     <ChartContainer
@@ -28,8 +47,8 @@ export const TestedAreaChart = (props: TestedAreaChartProps) => {
     >
       <defs>
         <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-          <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+          <stop offset="5%" stopColor="#ff0000" stopOpacity={0.8} />
+          <stop offset="95%" stopColor="#ff0000" stopOpacity={0} />
         </linearGradient>
         <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
           <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
@@ -39,16 +58,12 @@ export const TestedAreaChart = (props: TestedAreaChartProps) => {
 
       <XAxis
         dataKey="date"
-        tickFormatter={tickFormatter}
+        tickFormatter={dateTickFormatter}
         type="number"
         scale="time"
         domain={['dataMin', 'dataMax']}
-      >
-        <Label value="Time" position="outside" offset={-50} />
-      </XAxis>
-      <YAxis>
-        <Label value="# Students" position="outside" offset={10} />
-      </YAxis>
+      />
+      <YAxis />
       <Area
         type="monotone"
         dataKey="undergradTested"
@@ -59,10 +74,11 @@ export const TestedAreaChart = (props: TestedAreaChartProps) => {
       <Area
         type="monotone"
         dataKey="undergradPositive"
-        stroke="#8884d8"
+        stroke="#ff0000"
         fillOpacity={1}
         fill="url(#colorUv)"
       />
+      <Tooltip content={renderTooltipContent} />
     </ChartContainer>
   );
 };

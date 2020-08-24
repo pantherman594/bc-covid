@@ -1,0 +1,10 @@
+.customTooltip {
+  padding: 10px;
+  background: white;
+  border: 1px solid #cecece;
+}
+
+.customTooltip p {
+  margin: 5px;
+  text-transform: capitalize;
+}

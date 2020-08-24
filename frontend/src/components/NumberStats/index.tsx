@@ -36,11 +36,17 @@ export const NumberStats = (props: NumberStatsProps) => {
   const NumberStat = (statProps: NumberStatProps) => {
     const { dataKey, description, ...rest } = statProps;
     const change = latest[dataKey] - previous[dataKey];
+
+    let incr = change > 0;
+    if ((dataKey as string).indexOf('Positive') !== -1) {
+      incr = !incr;
+    }
+
     return (
       <div className={styles.stat} {...rest}>
         <div className={styles.row}>
           {latest[dataKey].toLocaleString()}
-          <div className={[styles.change, styles[change > 0 ? "incr" : "decr"]].join(" ")}>
+          <div className={[styles.change, styles[incr ? "incr" : "decr"]].join(" ")}>
             { change > 0 ? "\u25b2 +" : "\u25bc " }{change.toLocaleString()}
           </div>
         </div>
@@ -52,33 +58,31 @@ export const NumberStats = (props: NumberStatsProps) => {
   };
 
   return (
-    <div className={styles.row}>
-      <div className={styles.column}>
-        <div className={styles.container}>
-          <NumberStat
-            dataKey="undergradTested"
-            description="Undergrads Tested"
-          />
-          <NumberStat
-            dataKey="undergradPositive"
-            description="Undergrads Positive"
-          />
-        </div>
-        <div className={styles.container}>
-          <NumberStat
-            dataKey="totalTested"
-            description="Total Tested"
-          />
-          <NumberStat
-            dataKey="totalPositive"
-            description="Total Positive"
-          />
-        </div>
+    <div className={styles.column}>
+      <div className={styles.container}>
+        <NumberStat
+          dataKey="totalTested"
+          description="Total Tested"
+        />
+        <NumberStat
+          dataKey="totalPositive"
+          description="Total Positive"
+        />
+      </div>
+      <div className={styles.container}>
+        <NumberStat
+          dataKey="undergradTested"
+          description="Undergrads Tested"
+        />
+        <NumberStat
+          dataKey="undergradPositive"
+          description="Undergrads Positive"
+        />
       </div>
       <NumberStat
         dataKey="isolation"
         description="Undergrads Isolated"
-        style={{ flex: 0 }}
+        style={{ flex: 0, paddingTop: 10 }}
       />
     </div>
   );
