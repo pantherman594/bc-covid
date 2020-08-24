@@ -8,7 +8,7 @@ import DataModel from './models/Data';
 const DATA_URL = 'https://www.bc.edu/content/bc-web/sites/reopening-boston-college.html';
 
 const EXPECTED_LABELS = [
-  'BC Community Members Tested',
+  'BC Community tests performed',
   'Total Positives',
   'Undergrads Tested',
   'Undergrads Testing Positive',
