@@ -2,7 +2,7 @@ import React, { useEffect, useState }from 'react';
 import superagent from 'superagent';
 
 import { data as dummyData } from './utils/dummy-data';
-import { CurrentPositiveChart, TestedAreaChart } from './components';
+import { CurrentPositiveChart, NumberStats, TestedAreaChart } from './components';
 import { CovidDataItem } from './types';
 import './App.css';
 
@@ -31,8 +31,11 @@ export const App: React.FunctionComponent = () => {
         {'Updated: '}
         {data[data.length - 1].date.toLocaleDateString(undefined, { day: 'numeric', month: 'numeric' })}
       </h3>
+      <div className="row" style={{ maxWidth: '80%', margin: '0 auto' }}>
+        <NumberStats data={data} />
+        <CurrentPositiveChart data={data} recoveryDays={10} />
+      </div>
       <TestedAreaChart data={data} />
-      <CurrentPositiveChart data={data} recoveryDays={10} />
     </div>
   );
 };

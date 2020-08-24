@@ -12,6 +12,7 @@ interface CurrentPositiveChartProps {
 const NUM_UNDERGRADS = 8500;
 // Pad the pie with 1.5 degree on both sides, in case the value is too small to hover.
 const PADDING = 1.5 * NUM_UNDERGRADS / 360;
+const BG_COLOR = "#b6c6d6";
 
 const defaultProps = {
   dataKey: 'value',
@@ -82,8 +83,8 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
   return (
     <div className='chart-container'>
       <PieChart
-        width={500}
-        height={500}
+        width={400}
+        height={400}
       >
         {/* This pie renders the text in the center. */}
         <Pie
@@ -120,7 +121,7 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
         {/* This pie fills in the space between the next pies. */}
         <Pie
           {...defaultProps}
-          data={[{ name: 'Total', value: 1, fill: '#ccc' }]}
+          data={[{ name: 'Total', value: 1, fill: BG_COLOR }]}
           innerRadius={'75%'}
           outerRadius={'100%'}
         />
@@ -130,9 +131,9 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
           {...defaultProps}
           data={[
             { name: 'Tested', value: curNumTested, fill: '#3dbd00' },
-            { name: 'Padding After', value: PADDING, fill: '#ccc' },
-            { name: 'Remaining', value: NUM_UNDERGRADS - curNumTested - PADDING * 2, fill: '#ccc' },
-            { name: 'Padding After', value: PADDING, fill: '#ccc' },
+            { name: 'Padding After', value: PADDING, fill: BG_COLOR },
+            { name: 'Remaining', value: NUM_UNDERGRADS - curNumTested - PADDING * 2, fill: BG_COLOR },
+            { name: 'Padding After', value: PADDING, fill: BG_COLOR },
           ]}
           innerRadius={'75%'}
           outerRadius={'76%'}
@@ -145,9 +146,9 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
           {...defaultProps}
           data={[
             { name: 'Positive', value: curNumPositive, fill: '#bc0e02' },
-            { name: 'Padding After', value: PADDING, fill: '#ccc' },
-            { name: 'Remaining', value: NUM_UNDERGRADS - curNumPositive - PADDING * 2, fill: '#ccc' },
-            { name: 'Padding After', value: PADDING, fill: '#ccc' },
+            { name: 'Padding After', value: PADDING, fill: BG_COLOR },
+            { name: 'Remaining', value: NUM_UNDERGRADS - curNumPositive - PADDING * 2, fill: BG_COLOR },
+            { name: 'Padding After', value: PADDING, fill: BG_COLOR },
           ]}
           innerRadius={'78%'}
           outerRadius={'93%'}
@@ -160,9 +161,9 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
           {...defaultProps}
           data={[
             { name: 'Isolated', value: latest.isolation, fill: '#d95c00' },
-            { name: 'Padding After', value: PADDING, fill: '#ccc' },
-            { name: 'Remaining', value: NUM_UNDERGRADS - latest.isolation - PADDING * 2, fill: '#ccc' },
-            { name: 'Padding Before', value: PADDING, fill: '#ccc' },
+            { name: 'Padding After', value: PADDING, fill: BG_COLOR },
+            { name: 'Remaining', value: NUM_UNDERGRADS - latest.isolation - PADDING * 2, fill: BG_COLOR },
+            { name: 'Padding Before', value: PADDING, fill: BG_COLOR },
           ]}
           innerRadius={'95%'}
           outerRadius={'100%'}

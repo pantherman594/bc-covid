@@ -20,6 +20,18 @@ body {
   );
 }
 
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.row > * {
+  padding: 10px;
+}
+
 h1,
 h2,
 h3,

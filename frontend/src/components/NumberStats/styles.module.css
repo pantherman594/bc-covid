@@ -1,0 +1,54 @@
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 400px;
+  max-width: 80%;
+  padding: 10px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  font-weight: bold;
+  flex: 1;
+}
+
+.change {
+  font-size: 14px;
+  align-self: flex-end;
+  padding-left: 10px;
+  padding-bottom: 5px;
+}
+
+.incr {
+  color: green;
+}
+
+.decr {
+  color: red;
+}
+
+.description {
+  font-size: 16px;
+  font-weight: initial;
+}
