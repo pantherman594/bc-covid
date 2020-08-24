@@ -68,6 +68,7 @@ importers:
       react-dom: 16.13.1_react@16.13.1
       react-scripts: 3.4.3_typescript@3.7.5
       recharts: 1.8.5_react-dom@16.13.1+react@16.13.1
+      superagent: 6.0.0
       typescript: 3.7.5
     specifiers:
       '@testing-library/jest-dom': ^4.2.4
@@ -83,6 +84,7 @@ importers:
       react-dom: ^16.13.1
       react-scripts: 3.4.3
       recharts: ^1.8.5
+      superagent: ^6.0.0
       typescript: ~3.7.2
 lockfileVersion: 5.1
 packages:
