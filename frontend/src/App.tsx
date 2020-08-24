@@ -8,7 +8,7 @@ export const App: React.FunctionComponent = () => {
     <div className="App">
       <h1>Boston College Covid-19 Live Statistics</h1>
       <TestedAreaChart data={data} />
-      <CurrentPositiveChart data={data} />
+      <CurrentPositiveChart data={data} recoveryDays={10} />
     </div>
   );
 };

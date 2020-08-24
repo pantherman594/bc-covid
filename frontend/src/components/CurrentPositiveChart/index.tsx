@@ -6,9 +6,10 @@ import { CovidDataItem } from '../../types';
 
 interface CurrentPositiveChartProps {
   data: CovidDataItem[];
+  recoveryDays: number;
 }
 
-const NUM_UNDERGRADS = 9000;
+const NUM_UNDERGRADS = 8500;
 // Pad the pie with 1.5 degree on both sides, in case the value is too small to hover.
 const PADDING = 1.5 * NUM_UNDERGRADS / 360;
 
@@ -29,21 +30,25 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
   const latest = props.data[props.data.length - 1];
 
   const lastDate = latest.date;
-  const twoWeeksPrior = moment(lastDate).subtract(2, 'weeks').endOf('day');
+  const recoveryDate = moment(lastDate).subtract(props.recoveryDays, 'days').endOf('day');
 
-  // Find the most recent data entry that is at least two weeks prior.
-  const estNumRecovered = props.data.reduceRight((result: number, cur: CovidDataItem) => {
-    if (result < 0 && twoWeeksPrior.isAfter(cur.date)) {
-      return cur.undergradPositive;
+  // Find the most recent data entry that is at least recoveryDays days prior.
+  const recoveryData = props.data.reduceRight((result: CovidDataItem | undefined, cur: CovidDataItem) => {
+    if (result === undefined && recoveryDate.isAfter(cur.date)) {
+      return cur;
     }
 
     return result;
-  }, -1);
+  }, undefined);
 
   // Estimate the current number of infected students as the number of total positive tests
-  // minus the number of positive tests from two weeks ago. This assumes COVID-19 has a
-  // two week recovery time.
-  const curNumPositive = latest.undergradPositive - Math.max(0, estNumRecovered);
+  // minus the number of positive tests from recoveryDays days ago. This assumes someone with
+  // COVID-19 will recover in recoveryDays days.
+  const recoveryPositive = recoveryData ? recoveryData.undergradPositive : 0;
+  const curNumPositive = latest.undergradPositive - recoveryPositive;
+
+  const recoveryTested = recoveryData ? recoveryData.undergradTested : 0;
+  const curNumTested = latest.undergradTested - recoveryTested;
 
   const renderLabel = (props: any) => {
     const { cx, cy, payload } = props;
@@ -69,6 +74,11 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
     }
   };
 
+  let recoveryDuration = `${props.recoveryDays} days`;
+  if (props.recoveryDays === 1) {
+    recoveryDuration = 'day';
+  }
+
   return (
     <div className='chart-container'>
       <PieChart
@@ -82,17 +92,22 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
           activeShape={renderLabel}
           data={[
             {
-              name: `Estimated Total Undergraduates: ${NUM_UNDERGRADS.toLocaleString()}`,
+              name: `Estimated total undergraduates: ${NUM_UNDERGRADS.toLocaleString()}`,
               value: NUM_UNDERGRADS,
               percentage: false,
             },
             {
-              name: `Estimated Current Positive Cases: ${curNumPositive.toLocaleString()}`,
+              name: `Tests in the last ${recoveryDuration}: ${curNumTested.toLocaleString()}`,
+              value: curNumTested,
+              percentage: true,
+            },
+            {
+              name: `Estimated current positive cases: ${curNumPositive.toLocaleString()}`,
               value: curNumPositive,
               percentage: true,
             },
             {
-              name: `Isolated Students: ${latest.isolation.toLocaleString()}`,
+              name: `Isolated students: ${latest.isolation.toLocaleString()}`,
               value: latest.isolation,
               percentage: true,
             },
@@ -102,15 +117,30 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
           outerRadius={'75%'}
         />
 
-        {/* This pie fills in the space between the next two pies. */}
+        {/* This pie fills in the space between the next pies. */}
         <Pie
           {...defaultProps}
           data={[{ name: 'Total', value: 1, fill: '#ccc' }]}
-          innerRadius={'79%'}
-          outerRadius={'83%'}
+          innerRadius={'75%'}
+          outerRadius={'100%'}
         />
 
-        {/* This pie Renders the number of positive cases. */}
+        {/* This pie renders the number of positive cases. */}
+        <Pie
+          {...defaultProps}
+          data={[
+            { name: 'Tested', value: curNumTested, fill: '#3dbd00' },
+            { name: 'Padding After', value: PADDING, fill: '#ccc' },
+            { name: 'Remaining', value: NUM_UNDERGRADS - curNumTested - PADDING * 2, fill: '#ccc' },
+            { name: 'Padding After', value: PADDING, fill: '#ccc' },
+          ]}
+          innerRadius={'75%'}
+          outerRadius={'76%'}
+          stroke="none"
+          onMouseEnter={onPieEnter(1)}
+        />
+
+        {/* This pie renders the number of positive cases. */}
         <Pie
           {...defaultProps}
           data={[
@@ -119,13 +149,13 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
             { name: 'Remaining', value: NUM_UNDERGRADS - curNumPositive - PADDING * 2, fill: '#ccc' },
             { name: 'Padding After', value: PADDING, fill: '#ccc' },
           ]}
-          innerRadius={'82%'}
-          outerRadius={'100%'}
+          innerRadius={'78%'}
+          outerRadius={'93%'}
           stroke="none"
-          onMouseEnter={onPieEnter(1)}
+          onMouseEnter={onPieEnter(2)}
         />
 
-        {/* This pie Renders the number of isolated students. */}
+        {/* This pie renders the number of isolated students. */}
         <Pie
           {...defaultProps}
           data={[
@@ -134,10 +164,10 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
             { name: 'Remaining', value: NUM_UNDERGRADS - latest.isolation - PADDING * 2, fill: '#ccc' },
             { name: 'Padding Before', value: PADDING, fill: '#ccc' },
           ]}
-          innerRadius={'75%'}
-          outerRadius={'80%'}
+          innerRadius={'95%'}
+          outerRadius={'100%'}
           stroke="none"
-          onMouseEnter={onPieEnter(2)}
+          onMouseEnter={onPieEnter(3)}
         />
       </PieChart>
     </div>
