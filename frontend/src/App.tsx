@@ -1,4 +1,5 @@
 import React, { useEffect, useState }from 'react';
+import moment from 'moment';
 import superagent from 'superagent';
 
 import { data as dummyData } from './utils/dummy-data';
@@ -6,11 +7,32 @@ import {
   CurrentPositiveChart,
   NumberStats,
   PercentPositiveChart,
+  PopulationPercentChart,
   TestedAreaChart,
   TestedBarChart,
 } from './components';
 import { CovidDataItem } from './types';
 import './App.css';
+
+const processData = (data: any) => {
+  const newData: CovidDataItem[] = [];
+
+  data.map((entry: any) => ({
+    ...entry,
+    date: new Date(entry.date),
+  })).reduceRight((deleteTo: moment.Moment, entry: any) => {
+    if (entry.date > deleteTo) {
+      return deleteTo;
+    }
+
+    newData.push(entry);
+    return moment(entry.date).subtract(1, 'day').endOf('day');
+  }, moment());
+
+  newData.reverse();
+  console.log(newData);
+  return newData;
+};
 
 export const App: React.FunctionComponent = () => {
   const initialData: CovidDataItem[] = [];
@@ -22,10 +44,7 @@ export const App: React.FunctionComponent = () => {
     const loadData = async () => {
       const res = await superagent.get('https://bccovid.dav.sh/data');
 
-      const newData = res.body.map((entry: any) => ({
-        ...entry,
-        date: new Date(entry.date),
-      }));
+      const newData = processData(res.body);
 
       if (process.env.NODE_ENV === 'production') {
         setData(newData);
@@ -38,10 +57,7 @@ export const App: React.FunctionComponent = () => {
     };
 
     if (window.localStorage.getItem('data') !== null) {
-      setData(JSON.parse(window.localStorage.getItem('data') as string).map((entry: any) => {
-        const { date, ...item } = entry;
-        return { ...item, date: new Date(date) };
-      }));
+      setData(processData(JSON.parse(window.localStorage.getItem('data') as string)));
       setLoading(false);
 
       setTimeout(loadData, 1000);
@@ -60,19 +76,41 @@ export const App: React.FunctionComponent = () => {
             {'Updated: '}
             {data.length === 0 ? null : data[data.length - 1].date.toLocaleDateString(undefined, { day: 'numeric', month: 'numeric' })}
           </h3>
+
           <div className="row" style={{ maxWidth: '80%', margin: '0 auto' }}>
             <NumberStats data={data} />
             <CurrentPositiveChart data={data} recoveryDays={10} />
           </div>
           <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff. Current positive cases are estimated with a 10 day recovery period from testing positive.</div>
+
           <TestedAreaChart data={data} />
+
           <PercentPositiveChart data={data} />
           <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff.</div>
+
           <TestedBarChart data={data} />
           <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff. "Remaining" refers to that total minus the undergraduate stats.</div>
+
+          <PopulationPercentChart data={data} recoveryDays={10} />
+          <div className="hint">Take these values with a huge grain of salt. Many assumptions were made about population sizes and recovery times.</div>
+
           <p style={{ paddingBottom: 0 }}>Made by David Shen and Roger Wang.</p>
+
           <a href="https://bccovid.dav.sh/data">collected data</a>{' '}
-          <a href="https://www.bc.edu/content/bc-web/sites/reopening-boston-college.html#testing">data source</a>{' '}
+
+          <br />
+
+          <a href="https://www.bc.edu/content/bc-web/sites/reopening-boston-college.html#testing">bc data</a>
+          <br />
+
+          <a href="https://www.bu.edu/healthway/community-dashboard/">bu data</a>{' '}
+          <a href="https://news.northeastern.edu/coronavirus/reopening/testing-dashboard/">neu data</a>{' '}
+          <a href="https://docs.google.com/spreadsheets/u/0/d/1C8PDCqHB9DbUYbvrEMN2ZKyeDGAMAxdcNkmO2QSZJsE/pubhtml">neu direct</a>{' '}
+          <a href="https://usafacts.org/visualizations/coronavirus-covid-19-spread-map/">county data</a>{' '}
+          <a href="https://usafactsstatic.blob.core.windows.net/public/data/covid-19/covid_confirmed_usafacts.csv">county direct</a>
+
+          <br />
+
           <a href="https://github.com/pantherman594/bc-covid/">source code</a>
         </React.Fragment>
       }

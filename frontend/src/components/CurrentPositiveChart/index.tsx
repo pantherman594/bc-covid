@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import moment from 'moment';
 import './styles.css';
 import { Pie, PieChart } from 'recharts';
-import { CovidDataItem } from '../../types';
+import { create, CovidDataItem } from '../../types';
 
 interface CurrentPositiveChartProps {
   data: CovidDataItem[];
@@ -32,26 +32,13 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
 
   const latest = props.data[props.data.length - 1];
 
-  const lastDate = latest.date;
-  const recoveryDate = moment(lastDate).subtract(props.recoveryDays, 'days').endOf('day');
-
-  // Find the most recent data entry that is at least recoveryDays days prior.
-  const recoveryData = props.data.reduceRight((result: CovidDataItem | undefined, cur: CovidDataItem) => {
-    if (result === undefined && recoveryDate.isAfter(cur.date)) {
-      return cur;
-    }
-
-    return result;
-  }, undefined);
-
   // Estimate the current number of infected students as the number of total positive tests
   // minus the number of positive tests from recoveryDays days ago. This assumes someone with
   // COVID-19 will recover in recoveryDays days.
-  const recoveryPositive = recoveryData ? recoveryData.undergradPositive : 0;
-  const curNumPositive = latest.undergradPositive - recoveryPositive;
+  const recoveryData = props.data[props.data.length - 1 - props.recoveryDays] || create();
 
-  const recoveryTested = recoveryData ? recoveryData.undergradTested : 0;
-  const curNumTested = latest.undergradTested - recoveryTested;
+  const curNumPositive = latest.undergradPositive - recoveryData.undergradPositive;
+  const curNumTested = latest.undergradTested - recoveryData.undergradTested;
 
   const renderLabel = (props: any) => {
     const { cx, cy, payload } = props;

@@ -4,7 +4,7 @@ import { LineChart, XAxis, YAxis, Legend, Line, Tooltip } from 'recharts';
 
 import style from './style.module.css';
 import { ChartContainer } from '../index';
-import { CovidDataItem } from '../../types';
+import { create, CovidDataItem } from '../../types';
 
 interface PercentPositiveChartProps {
   data: CovidDataItem[];
@@ -14,16 +14,7 @@ export const PercentPositiveChart = (props: PercentPositiveChartProps) => {
   // format date property from Date obj to milliseconds
   const toPlotData = (data: CovidDataItem[]): any[] => {
     return data.map((item: CovidDataItem, index: number, array: CovidDataItem[]) => {
-      const prev = array[index - 1] || {
-        id: '',
-        date: new Date(),
-        totalTested: 0,
-        totalPositive: 0,
-        undergradTested: 0,
-        undergradPositive: 0,
-        isolation: 0,
-        flags: [],
-      };
+      const prev = array[index - 1] || create();
 
       const totalPositive = item.totalPositive - prev.totalPositive;
       const totalTested = item.totalTested - prev.totalTested;
@@ -59,7 +50,7 @@ export const PercentPositiveChart = (props: PercentPositiveChartProps) => {
 
   return (
     <ChartContainer
-      title="Percent Positive per Day"
+      title="Test Percent Positive per Day"
       width={'80%'}
       height={500}
       chartComp={LineChart}

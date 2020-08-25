@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './styles.module.css';
-import { CovidDataItem } from '../../types';
+import { create, CovidDataItem } from '../../types';
 
 interface NumberStatProps extends React.ComponentProps<"div"> {
   dataKey: keyof CovidDataItem;
@@ -18,16 +18,7 @@ export const NumberStats = (props: NumberStatsProps) => {
 
   const latest = props.data[props.data.length - 1];
 
-  let previous: CovidDataItem = {
-    id: '',
-    date: new Date(),
-    totalTested: 0,
-    totalPositive: 0,
-    undergradTested: 0,
-    undergradPositive: 0,
-    isolation: 0,
-    flags: [],
-  };
+  let previous = create();
 
   if (props.data.length > 1) {
     previous = props.data[props.data.length - 2];
