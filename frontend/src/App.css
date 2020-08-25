@@ -21,8 +21,8 @@ body {
   padding: 50px 0;
 }
 
-.App > *:not(:first-child) {
-  padding: 20px 0;
+.App > div:not(:first-child) {
+  margin: 20px 0;
 }
 
 .loading {
