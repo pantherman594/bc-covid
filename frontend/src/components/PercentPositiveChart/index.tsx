@@ -18,11 +18,13 @@ export const PercentPositiveChart = (props: PercentPositiveChartProps) => {
 
       const totalPositive = item.totalPositive - prev.totalPositive;
       const totalTested = item.totalTested - prev.totalTested;
-      const percentTotal = (100 * totalPositive / totalTested).toFixed(2);
+      const percentTotal = totalTested === 0 ? '0'
+        : (100 * totalPositive / totalTested).toFixed(2);
 
       const undergradPositive = item.undergradPositive - prev.undergradPositive;
       const undergradTested = item.undergradTested - prev.undergradTested;
-      const percentUndergrad = (100 * undergradPositive / undergradTested).toFixed(2);
+      const percentUndergrad = undergradTested === 0 ? '0'
+        : (100 * undergradPositive / undergradTested).toFixed(2);
 
       return { total: percentTotal, undergrads: percentUndergrad, date: item.date.getTime() };
     });
