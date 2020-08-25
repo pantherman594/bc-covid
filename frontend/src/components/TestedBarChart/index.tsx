@@ -18,7 +18,7 @@ export const TestedBarChart = (props: TestedBarChartProps) => {
         ...item,
         remainingTested: -1 * (item.totalTested - item.undergradTested),
         remainingPositive: -1 * (item.totalPositive - item.undergradPositive),
-        date: item.date.toLocaleDateString(undefined, { month: 'numeric', year: '2-digit' }),
+        date: item.date.toLocaleDateString(undefined, { month: 'numeric', day: '2-digit' }),
       };
     });
   };
