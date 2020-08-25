@@ -24,6 +24,18 @@ export class Data {
   @prop({ required: true })
   public isolation!: number;
 
+  @prop({ required: true })
+  public buPositive!: number;
+
+  @prop({ required: true })
+  public neuPositive!: number;
+
+  @prop({ required: true })
+  public suffolkPositive!: number;
+
+  @prop({ required: true })
+  public massPositive!: number;
+
   @prop({ required: true, type: String, default: [] })
   public flags!: string[];
 }

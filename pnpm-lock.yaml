@@ -8,6 +8,7 @@ importers:
       cors: 2.8.5
       cron: 1.8.2
       express: 4.17.1
+      fast-csv: 4.3.1
       lodash: 4.17.20
       mongoose: 5.10.0_mongoose@5.10.0
       node-ses: 3.0.2
@@ -48,6 +49,7 @@ importers:
       eslint-config-airbnb-typescript: ^9.0.0
       eslint-plugin-import: ^2.22.0
       express: ^4.17.1
+      fast-csv: ^4.3.1
       lodash: ^4.17.20
       mongoose: ^5.10.0
       node-ses: ^3.0.2
@@ -1374,6 +1376,27 @@ packages:
     dev: false
     resolution:
       integrity: sha512-ij4wRiunFfaJxjB0BdrYHIH8FxBJpOwNPhhAcunlmPdXudL1WQV1qoP9un6JsEBAgQH+7UXyyjh0g7jTxXK6tg==
+  /@fast-csv/format/4.3.1:
+    dependencies:
+      lodash.escaperegexp: 4.1.2
+      lodash.isboolean: 3.0.3
+      lodash.isequal: 4.5.0
+      lodash.isfunction: 3.0.9
+      lodash.isnil: 4.0.0
+    dev: false
+    resolution:
+      integrity: sha512-Ap6KSt0iJlzrivZU4grQzDGGOQ+vN5kvUeOHLF1BE7nWri1auiodgS3SCffvLe1Zvu79tACe1tw3dyBADk1NsA==
+  /@fast-csv/parse/4.3.1:
+    dependencies:
+      lodash.escaperegexp: 4.1.2
+      lodash.groupby: 4.6.0
+      lodash.isfunction: 3.0.9
+      lodash.isnil: 4.0.0
+      lodash.isundefined: 3.0.1
+      lodash.uniq: 4.5.0
+    dev: false
+    resolution:
+      integrity: sha512-C73N77St4IHfVmT8Z2mWvLfvLyHWHyvGZVSG5mbhGefkmg9JztoaYpelf8ciqv99JzZ1ModpfuMWLwKEDTRL9A==
   /@hapi/address/2.1.4:
     deprecated: This version has been deprecated and is no longer supported or maintained
     dev: false
@@ -5244,6 +5267,16 @@ packages:
       '0': node >=0.6.0
     resolution:
       integrity: sha1-lpGEQOMEGnpBT4xS48V06zw+HgU=
+  /fast-csv/4.3.1:
+    dependencies:
+      '@fast-csv/format': 4.3.1
+      '@fast-csv/parse': 4.3.1
+      '@types/node': 14.6.0
+    dev: false
+    engines:
+      node: '>=10.0.0'
+    resolution:
+      integrity: sha512-hCvT77K9fEVvR9iKt8OsOwbci/r1BHn8qcVOghjnllkHaKkpzjrc96IcLHC/2jpuPcPrzXpshk/TOqaRQZK8bA==
   /fast-deep-equal/3.1.3:
     resolution:
       integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==
@@ -7473,6 +7506,34 @@ packages:
     dev: false
     resolution:
       integrity: sha1-gteb/zCmfEAF/9XiUVMArZyk168=
+  /lodash.escaperegexp/4.1.2:
+    dev: false
+    resolution:
+      integrity: sha1-ZHYsSGGAglGKw99Mz11YhtriA0c=
+  /lodash.groupby/4.6.0:
+    dev: false
+    resolution:
+      integrity: sha1-Cwih3PaDl8OXhVwyOXg4Mt90A9E=
+  /lodash.isboolean/3.0.3:
+    dev: false
+    resolution:
+      integrity: sha1-bC4XHbKiV82WgC/UOwGyDV9YcPY=
+  /lodash.isequal/4.5.0:
+    dev: false
+    resolution:
+      integrity: sha1-QVxEePK8wwEgwizhDtMib30+GOA=
+  /lodash.isfunction/3.0.9:
+    dev: false
+    resolution:
+      integrity: sha512-AirXNj15uRIMMPihnkInB4i3NHeb4iBtNg9WRWuK2o31S+ePwwNmDPaTL3o7dTJ+VXNZim7rFs4rxN4YU1oUJw==
+  /lodash.isnil/4.0.0:
+    dev: false
+    resolution:
+      integrity: sha1-SeKM1VkBNFjIFMVHnTxmOiG/qmw=
+  /lodash.isundefined/3.0.1:
+    dev: false
+    resolution:
+      integrity: sha1-I+89lTVWUgOmbO/VuDD4SJEa+0g=
   /lodash.memoize/4.1.2:
     dev: false
     resolution:
