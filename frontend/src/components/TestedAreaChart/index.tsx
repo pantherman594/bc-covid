@@ -48,11 +48,11 @@ export const TestedAreaChart = (props: TestedAreaChartProps) => {
       <defs>
         <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
           <stop offset="5%" stopColor="#ff0000" stopOpacity={0.8} />
-          <stop offset="95%" stopColor="#ff0000" stopOpacity={0} />
+          <stop offset="95%" stopColor="#ff0000" stopOpacity={0.2} />
         </linearGradient>
         <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
-          <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+          <stop offset="5%" stopColor="#5f6d7d" stopOpacity={0.8} />
+          <stop offset="95%" stopColor="#5f6d7d" stopOpacity={0.2} />
         </linearGradient>
       </defs>
 
@@ -64,10 +64,11 @@ export const TestedAreaChart = (props: TestedAreaChartProps) => {
         domain={['dataMin', 'dataMax']}
       />
       <YAxis />
+      <Tooltip content={renderTooltipContent} />
       <Area
         type="monotone"
         dataKey="undergradTested"
-        stroke="#82ca9d"
+        stroke="#5f6d7d"
         fillOpacity={1}
         fill="url(#colorPv)"
       />
@@ -78,7 +79,6 @@ export const TestedAreaChart = (props: TestedAreaChartProps) => {
         fillOpacity={1}
         fill="url(#colorUv)"
       />
-      <Tooltip content={renderTooltipContent} />
     </ChartContainer>
   );
 };

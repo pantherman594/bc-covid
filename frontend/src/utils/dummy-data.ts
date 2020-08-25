@@ -55,7 +55,7 @@ export const data: CovidDataItem[] = [
     id: '6',
     date: new Date(2020, 7, 28),
     totalTested: 8861,
-    totalPositive: 145,
+    totalPositive: 345,
     undergradTested: 1989,
     undergradPositive: 131,
     isolation: 119,

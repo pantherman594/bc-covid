@@ -12,7 +12,7 @@ interface CurrentPositiveChartProps {
 const NUM_UNDERGRADS = 8500;
 // Pad the pie with 1.5 degree on both sides, in case the value is too small to hover.
 const PADDING = 1.5 * NUM_UNDERGRADS / 360;
-const BG_COLOR = "#b6c6d6";
+const BG_COLOR = "#0000";
 
 const defaultProps = {
   dataKey: 'value',
@@ -91,7 +91,8 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
         {/* This pie fills in the space between the next pies. */}
         <Pie
           {...defaultProps}
-          data={[{ name: 'Total', value: 1, fill: BG_COLOR }]}
+          data={[{ name: 'Total', value: 1 }]}
+          fill="#5f6d7daa"
           innerRadius={'60%'}
           outerRadius={'100%'}
         />

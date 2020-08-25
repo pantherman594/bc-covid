@@ -68,11 +68,11 @@ export const PercentPositiveChart = (props: PercentPositiveChartProps) => {
       <defs>
         <linearGradient id="colorPTotal" x1="0" y1="0" x2="0" y2="1">
           <stop offset="5%" stopColor="#009dff" stopOpacity={0.8} />
-          <stop offset="95%" stopColor="#009dff" stopOpacity={0} />
+          <stop offset="95%" stopColor="#009dff" stopOpacity={0.2} />
         </linearGradient>
         <linearGradient id="colorPUnder" x1="0" y1="0" x2="0" y2="1">
           <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-          <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+          <stop offset="95%" stopColor="#8884d8" stopOpacity={0.2} />
         </linearGradient>
       </defs>
 
@@ -84,13 +84,7 @@ export const PercentPositiveChart = (props: PercentPositiveChartProps) => {
         domain={['dataMin', 'dataMax']}
       />
       <YAxis tickFormatter={percentTickFormatter} />
-      <Area
-        type="monotone"
-        dataKey="percentUndergrad"
-        stroke="#8884d8"
-        fillOpacity={1}
-        fill="url(#colorPUnder)"
-      />
+      <Tooltip content={renderTooltipContent} />
       <Area
         type="monotone"
         dataKey="percentTotal"
@@ -98,7 +92,13 @@ export const PercentPositiveChart = (props: PercentPositiveChartProps) => {
         fillOpacity={1}
         fill="url(#colorPTotal)"
       />
-      <Tooltip content={renderTooltipContent} />
+      <Area
+        type="monotone"
+        dataKey="percentUndergrad"
+        stroke="#8884d8"
+        fillOpacity={1}
+        fill="url(#colorPUnder)"
+      />
     </ChartContainer>
   );
 };

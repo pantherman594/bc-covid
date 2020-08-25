@@ -1,5 +1,5 @@
 import React from 'react';
-import { ResponsiveContainer, CartesianGrid, Tooltip } from 'recharts';
+import { ResponsiveContainer, CartesianGrid } from 'recharts';
 import './styles.css';
 interface ChartContainerProps {
   title: string;
@@ -18,9 +18,8 @@ export const ChartContainer = (props: ChartContainerProps) => {
       <h1>{props.title}</h1>
       <ResponsiveContainer width={props.width} height={props.height}>
         <ChartComp {...props.chartProps}>
-          {props.children}
           <CartesianGrid strokeDasharray="3 3" />
-          <Tooltip />
+          {props.children}
         </ChartComp>
       </ResponsiveContainer>
     </div>
