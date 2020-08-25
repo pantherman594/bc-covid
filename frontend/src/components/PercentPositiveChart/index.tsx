@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import { AreaChart, XAxis, YAxis, Area, Tooltip } from 'recharts';
+import { LineChart, XAxis, YAxis, Legend, Line, Tooltip } from 'recharts';
 
 import style from './style.module.css';
 import { ChartContainer } from '../index';
@@ -33,7 +33,7 @@ export const PercentPositiveChart = (props: PercentPositiveChartProps) => {
       const undergradTested = item.undergradTested - prev.undergradTested;
       const percentUndergrad = (100 * undergradPositive / undergradTested).toFixed(2);
 
-      return { percentTotal, percentUndergrad, date: item.date.getTime() };
+      return { total: percentTotal, undergrads: percentUndergrad, date: item.date.getTime() };
     });
   };
 
@@ -49,7 +49,7 @@ export const PercentPositiveChart = (props: PercentPositiveChartProps) => {
         {
           payload.map((entry: any, index: number) => (
             <p key={`item-${index}`} style={{ color: entry.color }}>
-              {`${entry.name.replace(/([A-Z])/g, " $1")}: ${percentTickFormatter(entry.value)}`}
+              {`${entry.name}: ${percentTickFormatter(entry.value)}`}
             </p>
           ))
         }
@@ -59,11 +59,11 @@ export const PercentPositiveChart = (props: PercentPositiveChartProps) => {
 
   return (
     <ChartContainer
-      title="Percentage of Positive Cases"
+      title="Percent Positive per Day"
       width={'80%'}
       height={500}
-      chartComp={AreaChart}
-      chartProps={{ data: toPlotData(props.data) }}
+      chartComp={LineChart}
+      chartProps={{ data: toPlotData(props.data), syncId: "syncTestPercent" }}
     >
       <defs>
         <linearGradient id="colorPTotal" x1="0" y1="0" x2="0" y2="1">
@@ -85,19 +85,16 @@ export const PercentPositiveChart = (props: PercentPositiveChartProps) => {
       />
       <YAxis tickFormatter={percentTickFormatter} />
       <Tooltip content={renderTooltipContent} />
-      <Area
+      <Legend />
+      <Line
         type="monotone"
-        dataKey="percentTotal"
+        dataKey="total"
         stroke="#009dff"
-        fillOpacity={1}
-        fill="url(#colorPTotal)"
       />
-      <Area
+      <Line
         type="monotone"
-        dataKey="percentUndergrad"
+        dataKey="undergrads"
         stroke="#8884d8"
-        fillOpacity={1}
-        fill="url(#colorPUnder)"
       />
     </ChartContainer>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import { AreaChart, XAxis, YAxis, Area, Tooltip } from 'recharts';
+import { AreaChart, XAxis, YAxis, Legend, Area, Tooltip } from 'recharts';
 
 import style from './style.module.css';
 import { ChartContainer } from '../index';
@@ -14,7 +14,11 @@ export const TestedAreaChart = (props: TestedAreaChartProps) => {
   // format date property from Date obj to milliseconds
   const toPlotData = (data: CovidDataItem[]): any[] => {
     return data.map((item: CovidDataItem) => {
-      return { ...item, date: item.date.getTime() };
+      return {
+        tested: item.undergradTested,
+        positive: item.undergradPositive,
+        date: item.date.getTime(),
+      };
     });
   };
 
@@ -29,7 +33,7 @@ export const TestedAreaChart = (props: TestedAreaChartProps) => {
         {
           payload.map((entry: any, index: number) => (
             <p key={`item-${index}`} style={{ color: entry.color }}>
-              {`${entry.name.replace(/([A-Z])/g, " $1")}: ${entry.value}`}
+              {`${entry.name}: ${entry.value}`}
             </p>
           ))
         }
@@ -39,11 +43,11 @@ export const TestedAreaChart = (props: TestedAreaChartProps) => {
 
   return (
     <ChartContainer
-      title="Undergraduates Tested and Positive Cases"
+      title="Cumulative Undergraduate Tests and Results"
       width={'80%'}
       height={500}
       chartComp={AreaChart}
-      chartProps={{ data: toPlotData(props.data) }}
+      chartProps={{ data: toPlotData(props.data), syncId: "syncTestPercent" }}
     >
       <defs>
         <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
@@ -65,16 +69,17 @@ export const TestedAreaChart = (props: TestedAreaChartProps) => {
       />
       <YAxis />
       <Tooltip content={renderTooltipContent} />
+      <Legend />
       <Area
         type="monotone"
-        dataKey="undergradTested"
+        dataKey="tested"
         stroke="#5f6d7d"
         fillOpacity={1}
         fill="url(#colorPv)"
       />
       <Area
         type="monotone"
-        dataKey="undergradPositive"
+        dataKey="positive"
         stroke="#ff0000"
         fillOpacity={1}
         fill="url(#colorUv)"

@@ -1,5 +1,4 @@
 import React from 'react';
-import moment from 'moment';
 import { BarChart, Bar, XAxis, YAxis, ReferenceLine, Tooltip } from 'recharts';
 
 import style from './style.module.css';
@@ -22,6 +21,15 @@ export const TestedBarChart = (props: TestedBarChartProps) => {
       };
     });
   };
+
+  let maxUndergrad = 0;
+  let maxRemaining = 0;
+
+  for (const item of props.data) {
+    if (item.undergradTested > maxUndergrad) maxUndergrad = item.undergradTested;
+    if (item.totalTested - item.undergradTested > maxRemaining)
+      maxRemaining = item.totalTested - item.undergradTested;
+  }
 
   const valueTickFormatter = (tick: number) => Math.abs(tick);
 
@@ -54,19 +62,17 @@ export const TestedBarChart = (props: TestedBarChartProps) => {
 
   return (
     <ChartContainer
-      title="BC Tested and Positive Cases"
+      title="Tests and Results per Day"
       width={'80%'}
       height={500}
       chartComp={BarChart}
       chartProps={{ data: toPlotData(props.data), stackOffset: 'sign' }}
     >
-      <XAxis
-        dataKey="date"
-      />
-      <YAxis
-        tickFormatter={valueTickFormatter}
-      />
       <Tooltip content={renderTooltipContent} />
+      <ReferenceLine y={maxUndergrad} stroke="#0000" label="Undergraduates" />
+      <ReferenceLine y={-1 * maxRemaining} stroke="#0000" label="Remaining BC Community" />
+      <XAxis dataKey="date"/>
+      <YAxis tickFormatter={valueTickFormatter} />
       <ReferenceLine y={0} stroke="#000" />
       <Bar
         dataKey="undergradPositive"

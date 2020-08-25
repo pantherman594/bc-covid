@@ -64,9 +64,12 @@ export const App: React.FunctionComponent = () => {
             <NumberStats data={data} />
             <CurrentPositiveChart data={data} recoveryDays={10} />
           </div>
+          <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff. Current positive cases are estimated with a 10 day recovery period from testing positive.</div>
           <TestedAreaChart data={data} />
           <PercentPositiveChart data={data} />
+          <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff.</div>
           <TestedBarChart data={data} />
+          <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff. "Remaining" refers to that total minus the undergraduate stats.</div>
           <p style={{ paddingBottom: 0 }}>Made by David Shen and Roger Wang.</p>
           <a href="https://bccovid.dav.sh/data">collected data</a>{' '}
           <a href="https://www.bc.edu/content/bc-web/sites/reopening-boston-college.html#testing">data source</a>{' '}
