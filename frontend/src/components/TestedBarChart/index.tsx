@@ -69,8 +69,8 @@ export const TestedBarChart = (props: TestedBarChartProps) => {
       chartProps={{ data: toPlotData(props.data), stackOffset: 'sign' }}
     >
       <Tooltip content={renderTooltipContent} />
-      <ReferenceLine y={maxUndergrad + 500} stroke="#0000" label="Undergraduates" />
-      <ReferenceLine y={-1 * maxRemaining - 500} stroke="#0000" label="Remaining BC Community" />
+      <ReferenceLine y={maxUndergrad} stroke="#0000" label="Undergraduates" />
+      <ReferenceLine y={-1 * maxRemaining} stroke="#0000" label="Remaining BC Community" />
       <XAxis dataKey="date"/>
       <YAxis tickFormatter={valueTickFormatter} />
       <ReferenceLine y={0} stroke="#000" />

@@ -37,9 +37,11 @@ export const NumberStats = (props: NumberStatsProps) => {
       <div className={styles.stat} {...rest}>
         <div className={styles.row}>
           {latest[dataKey].toLocaleString()}
-          <div className={[styles.change, styles[incr ? "incr" : "decr"]].join(" ")}>
-            { change > 0 ? "\u25b2 +" : "\u25bc " }{change.toLocaleString()}
-          </div>
+          { change === 0 ? null :
+            <div className={[styles.change, styles[incr ? "incr" : "decr"]].join(" ")}>
+              { change > 0 ? "\u25b2 +" : "\u25bc " }{change.toLocaleString()}
+            </div>
+          }
         </div>
         <div className={styles.description}>
           {description}

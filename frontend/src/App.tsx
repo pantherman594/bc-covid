@@ -30,7 +30,6 @@ const processData = (data: any) => {
   }, moment());
 
   newData.reverse();
-  console.log(newData);
   return newData;
 };
 
