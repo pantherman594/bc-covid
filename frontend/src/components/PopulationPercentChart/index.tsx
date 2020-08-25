@@ -10,16 +10,16 @@ import { create, CovidDataItem } from '../../types';
 // couldn't find exact numbers so we'll use this just to compare the campuses.
 
 // From https://www.bc.edu/bc-web/about/bc-facts.html.
-//            students faculty
-const BC_POP = (14600 + 860) * 0.8;
+//                       students faculty
+const BC_POP = Math.round((14600 + 860) * 0.8);
 
 // From https://facts.northeastern.edu/.
-//              undergrad grad     faculty staff  research pros
-const NEU_POP = ((20400 + 17379) + (3092 + 2859 + 210)) * 0.8;
+//                         undergrad grad     faculty staff  research pros
+const NEU_POP = Math.round(((20400 + 17379) + (3092 + 2859 + 210)) * 0.8);
 
 // From https://www.bu.edu/asir/files/2020/05/G3b-Fact-Sheet-FY2020.pdf.
-//            students faculty
-const BU_POP = (34589 + 10517) * 0.8;
+//                       students faculty
+const BU_POP = Math.round((34589 + 10517) * 0.8);
 
 // From https://usafacts.org/visualizations/coronavirus-covid-19-spread-map/.
 const MASS_POP = 6892503; // From https://usafactsstatic.blob.core.windows.net/public/data/covid-19/covid_county_population_usafacts.csv.
@@ -35,11 +35,11 @@ export const PopulationPercentChart = (props: PopulationPercentChartProps) => {
     return data.map((item: CovidDataItem, index: number, array: CovidDataItem[]) => {
       const prev = array[index - props.recoveryDays] || create();
 
-      const bcPercent = (100 * (item.totalPositive - prev.totalPositive) / BC_POP).toFixed(2);
-      const buPercent = (100 * (item.buPositive - prev.buPositive) / BU_POP).toFixed(2);
-      const neuPercent = (100 * (item.neuPositive - prev.neuPositive) / NEU_POP).toFixed(2);
-      const suffolkPercent = (100 * (item.suffolkPositive - prev.suffolkPositive) / SUFFOLK_POP).toFixed(2);
-      const massPercent = (100 * (item.massPositive - prev.massPositive) / MASS_POP).toFixed(2);
+      const bcPercent = (item.totalPositive - prev.totalPositive) / BC_POP;
+      const buPercent = (item.buPositive - prev.buPositive) / BU_POP;
+      const neuPercent = (item.neuPositive - prev.neuPositive) / NEU_POP;
+      const suffolkPercent = (item.suffolkPositive - prev.suffolkPositive) / SUFFOLK_POP;
+      const massPercent = (item.massPositive - prev.massPositive) / MASS_POP;
 
       return {
         BC: bcPercent,
@@ -53,10 +53,18 @@ export const PopulationPercentChart = (props: PopulationPercentChartProps) => {
   };
 
   const dateTickFormatter = (tick: number) => moment(tick).format('M/D');
-  const percentTickFormatter = (tick: number) => `${tick}%`;
+  const percentTickFormatter = (tick: number) => `${(100 * tick).toFixed(2)}%`;
 
   const renderTooltipContent = (o: any) => {
     const { payload, label } = o;
+
+    const pops = {
+      BC: BC_POP,
+      BU: BU_POP,
+      NEU: NEU_POP,
+      'Suffolk County': SUFFOLK_POP,
+      Massachusetts: MASS_POP,
+    } as any;
 
     return (
       <div className={style.customTooltip}>
@@ -64,7 +72,7 @@ export const PopulationPercentChart = (props: PopulationPercentChartProps) => {
         {
           payload.map((entry: any, index: number) => (
             <p key={`item-${index}`} style={{ color: entry.color }}>
-              {`${entry.name}: ${percentTickFormatter(entry.value)}`}
+              {`${entry.name}: ${percentTickFormatter(entry.value)} (${Math.round(pops[entry.name] * entry.value).toLocaleString()}/${pops[entry.name].toLocaleString()})`}
             </p>
           ))
         }
