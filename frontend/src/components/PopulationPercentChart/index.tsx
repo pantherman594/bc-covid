@@ -9,9 +9,9 @@ import { create, CovidDataItem } from '../../types';
 // Assume 80% of all students and faculty return to campus. While this is not accurate, I
 // couldn't find exact numbers so we'll use this just to compare the campuses.
 
-// From https://www.bc.edu/bc-web/about/bc-facts.html.
-//                       students faculty
-const BC_POP = Math.round((14600 + 860) * 0.8);
+// From https://www.bc.edu/content/dam/files/publications/factbook/pdf/19-20_factbook.pdf. Pages 25, 26, 28, 36.
+//                      undergrad grad  staffFTE  profs facultyFTE
+const BC_POP = Math.round((9370 + 4801 + 2621.45 + 878 + 1201.33) * 0.8);
 
 // From https://facts.northeastern.edu/.
 //                         undergrad grad     faculty staff  research pros
@@ -83,7 +83,7 @@ export const PopulationPercentChart = (props: PopulationPercentChartProps) => {
   return (
     <ChartContainer
       title="Population Percent Infected per Day"
-      width={'80%'}
+      width={'100%'}
       height={500}
       chartComp={LineChart}
       chartProps={{ data: toPlotData(props.data), syncId: "syncTestPercent" }}

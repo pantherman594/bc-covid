@@ -8,9 +8,11 @@ interface CurrentPositiveChartProps {
   recoveryDays: number;
 }
 
-const NUM_UNDERGRADS = 8500;
+const NUM_UNDERGRADS = 7500;
+const NUM_COMMUNITY = 7600;
 // Pad the pie with 1.5 degree on both sides, in case the value is too small to hover.
-const PADDING = 1.5 * NUM_UNDERGRADS / 360;
+const PADDING_UNDERGRADS = 1.5 * NUM_UNDERGRADS / 360;
+const PADDING_COMMUNITY = 1.5 * NUM_COMMUNITY / 360;
 const BG_COLOR = "#0000";
 
 const defaultProps = {
@@ -39,17 +41,23 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
   const curNumPositive = latest.undergradPositive - recoveryData.undergradPositive;
   const curNumTested = latest.undergradTested - recoveryData.undergradTested;
 
+  const curNumCommunityPositive = (latest.totalPositive - latest.undergradPositive)
+    - (recoveryData.totalPositive - recoveryData.undergradPositive);
+  const curNumCommunityTested = (latest.totalTested - latest.undergradTested)
+    - (recoveryData.totalTested - recoveryData.undergradTested);
+
   const renderLabel = (props: any) => {
     const { cx, cy, payload } = props;
 
-    const percent = (payload.value / NUM_UNDERGRADS) * 100;
+    const percent = (payload.percentage || 0) * 100;
     const percentStr = percent.toFixed(percent < 10 ? 2 : 1);
 
     return (
       <g>
-        <text x={cx} y={cy} dy={8} textAnchor="middle" fill={'#000'}>{payload.name}</text>
+        <rect x={cx - 180} y={cy - 12} width={360} height={payload.percentage ? 50 : 30} fill={'#0005'} />
+        <text x={cx} y={cy} dy={8} textAnchor="middle" fill={'#fff'}>{payload.name}</text>
         { payload.percentage ? (
-          <text x={cx} y={cy + 20} dy={8} textAnchor="middle" fill={'#333'}>({percentStr}%)</text>
+          <text x={cx} y={cy + 20} dy={8} textAnchor="middle" fill={'#ccc'}>({percentStr}%)</text>
         ) : null }
       </g>
     );
@@ -57,7 +65,7 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
 
   const onPieEnter = (pie: number) => (_data: any, index: number) => {
     if (index === 2) {
-      setActivePie(0);
+      setActivePie(pie < 4 ? 0 : 1);
     } else {
       setActivePie(pie);
     }
@@ -76,12 +84,12 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
       >
         <PieChart
         >
-          {/* This pie fills in the space between the next pies. */}
+          {/* This pie fills in the space between the outer pies. */}
           <Pie
             {...defaultProps}
             data={[{ name: 'Total', value: 1 }]}
             fill="#5f6d7daa"
-            innerRadius={'60%'}
+            innerRadius={'75%'}
             outerRadius={'100%'}
           />
 
@@ -89,15 +97,54 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
           <Pie
             {...defaultProps}
             data={[
+              { name: 'Positive', value: curNumCommunityPositive, fill: '#bc0e02' },
+              { name: 'Padding After', value: PADDING_COMMUNITY, fill: BG_COLOR },
+              { name: 'Remaining', value: NUM_COMMUNITY - curNumCommunityPositive - PADDING_COMMUNITY * 2, fill: BG_COLOR },
+              { name: 'Padding After', value: PADDING_COMMUNITY, fill: BG_COLOR },
+            ]}
+            innerRadius={'82%'}
+            outerRadius={'100%'}
+            stroke="none"
+            onMouseEnter={onPieEnter(2)}
+          />
+
+          {/* This pie renders the number of tested community. */}
+          <Pie
+            {...defaultProps}
+            data={[
+              { name: 'Tested', value: curNumCommunityTested, fill: '#3dbd00' },
+              { name: 'Padding After', value: PADDING_COMMUNITY, fill: BG_COLOR },
+              { name: 'Remaining', value: NUM_COMMUNITY - curNumCommunityTested - PADDING_COMMUNITY * 2, fill: BG_COLOR },
+              { name: 'Padding After', value: PADDING_COMMUNITY, fill: BG_COLOR },
+            ]}
+            innerRadius={'75%'}
+            outerRadius={'80%'}
+            stroke="none"
+            onMouseEnter={onPieEnter(3)}
+          />
+
+          {/* This pie fills in the space between the inner pies. */}
+          <Pie
+            {...defaultProps}
+            data={[{ name: 'Total', value: 1 }]}
+            fill="#5f6d7daa"
+            innerRadius={'10%'}
+            outerRadius={'65%'}
+          />
+
+          {/* This pie renders the number of tested students. */}
+          <Pie
+            {...defaultProps}
+            data={[
               { name: 'Tested', value: curNumTested, fill: '#3dbd00' },
-              { name: 'Padding After', value: PADDING, fill: BG_COLOR },
-              { name: 'Remaining', value: NUM_UNDERGRADS - curNumTested - PADDING * 2, fill: BG_COLOR },
-              { name: 'Padding After', value: PADDING, fill: BG_COLOR },
+              { name: 'Padding After', value: PADDING_UNDERGRADS, fill: BG_COLOR },
+              { name: 'Remaining', value: NUM_UNDERGRADS - curNumTested - PADDING_UNDERGRADS * 2, fill: BG_COLOR },
+              { name: 'Padding After', value: PADDING_UNDERGRADS, fill: BG_COLOR },
             ]}
             innerRadius={'60%'}
             outerRadius={'65%'}
             stroke="none"
-            onMouseEnter={onPieEnter(1)}
+            onMouseEnter={onPieEnter(4)}
           />
 
           {/* This pie renders the number of positive cases. */}
@@ -105,14 +152,14 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
             {...defaultProps}
             data={[
               { name: 'Positive', value: curNumPositive, fill: '#bc0e02' },
-              { name: 'Padding After', value: PADDING, fill: BG_COLOR },
-              { name: 'Remaining', value: NUM_UNDERGRADS - curNumPositive - PADDING * 2, fill: BG_COLOR },
-              { name: 'Padding After', value: PADDING, fill: BG_COLOR },
+              { name: 'Padding After', value: PADDING_UNDERGRADS, fill: BG_COLOR },
+              { name: 'Remaining', value: NUM_UNDERGRADS - curNumPositive - PADDING_UNDERGRADS * 2, fill: BG_COLOR },
+              { name: 'Padding After', value: PADDING_UNDERGRADS, fill: BG_COLOR },
             ]}
-            innerRadius={'67%'}
-            outerRadius={'93%'}
+            innerRadius={'20%'}
+            outerRadius={'58%'}
             stroke="none"
-            onMouseEnter={onPieEnter(2)}
+            onMouseEnter={onPieEnter(5)}
           />
 
           {/* This pie renders the number of isolated students. */}
@@ -120,15 +167,16 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
             {...defaultProps}
             data={[
               { name: 'Isolated', value: latest.isolation, fill: '#d95c00' },
-              { name: 'Padding After', value: PADDING, fill: BG_COLOR },
-              { name: 'Remaining', value: NUM_UNDERGRADS - latest.isolation - PADDING * 2, fill: BG_COLOR },
-              { name: 'Padding Before', value: PADDING, fill: BG_COLOR },
+              { name: 'Padding After', value: PADDING_UNDERGRADS, fill: BG_COLOR },
+              { name: 'Remaining', value: NUM_UNDERGRADS - latest.isolation - PADDING_UNDERGRADS * 2, fill: BG_COLOR },
+              { name: 'Padding Before', value: PADDING_UNDERGRADS, fill: BG_COLOR },
             ]}
-            innerRadius={'95%'}
-            outerRadius={'100%'}
+            innerRadius={'10%'}
+            outerRadius={'18%'}
             stroke="none"
-            onMouseEnter={onPieEnter(3)}
+            onMouseEnter={onPieEnter(6)}
           />
+
           {/* This pie renders the text in the center. */}
           <Pie
             {...defaultProps}
@@ -136,29 +184,42 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
             activeShape={renderLabel}
             data={[
               {
+                name: `Estimated total community: ${NUM_COMMUNITY.toLocaleString()}`,
+                value: NUM_UNDERGRADS,
+              },
+              {
                 name: `Estimated total undergrads: ${NUM_UNDERGRADS.toLocaleString()}`,
                 value: NUM_UNDERGRADS,
-                percentage: false,
               },
               {
-                name: `Tests in the last ${recoveryDuration}: ${curNumTested.toLocaleString()}`,
-                value: curNumTested,
-                percentage: true,
-              },
-              {
-                name: `Estimated current positive cases: ${curNumPositive.toLocaleString()}`,
+                name: `Estimated current positive community cases: ${curNumCommunityPositive.toLocaleString()}`,
                 value: curNumPositive,
-                percentage: true,
+                percentage: curNumCommunityPositive / NUM_COMMUNITY,
+              },
+              {
+                name: `Community tests in the last ${recoveryDuration}: ${curNumCommunityTested.toLocaleString()}`,
+                value: curNumTested,
+                percentage: curNumCommunityTested / NUM_COMMUNITY,
+              },
+              {
+                name: `Undergrad tests in the last ${recoveryDuration}: ${curNumTested.toLocaleString()}`,
+                value: curNumTested,
+                percentage: curNumTested / NUM_UNDERGRADS,
+              },
+              {
+                name: `Estimated current positive undergrad cases: ${curNumPositive.toLocaleString()}`,
+                value: curNumPositive,
+                percentage: curNumPositive / NUM_UNDERGRADS,
               },
               {
                 name: `Isolated students: ${latest.isolation.toLocaleString()}`,
                 value: latest.isolation,
-                percentage: true,
+                percentage: latest.isolation / NUM_UNDERGRADS,
               },
             ]}
             fill="#0000"
             innerRadius={'0%'}
-            outerRadius={'60%'}
+            outerRadius={'1%'}
           />
 
         </PieChart>

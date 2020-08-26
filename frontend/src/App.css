@@ -22,7 +22,7 @@ body {
 }
 
 .App > div:not(:first-child) {
-  margin: 20px 0;
+  margin: 20px 10%;
 }
 
 .loading {

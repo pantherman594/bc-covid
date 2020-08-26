@@ -63,7 +63,7 @@ export const TestedBarChart = (props: TestedBarChartProps) => {
   return (
     <ChartContainer
       title="Tests and Results per Day"
-      width={'80%'}
+      width={'100%'}
       height={500}
       chartComp={BarChart}
       chartProps={{ data: toPlotData(props.data), stackOffset: 'sign' }}

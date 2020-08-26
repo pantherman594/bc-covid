@@ -10,6 +10,7 @@ import {
   PopulationPercentChart,
   TestedAreaChart,
   TestedBarChart,
+  UndergradTestedAreaChart,
 } from './components';
 import { CovidDataItem } from './types';
 import './App.css';
@@ -80,9 +81,17 @@ export const App: React.FunctionComponent = () => {
             <NumberStats data={data} />
             <CurrentPositiveChart data={data} recoveryDays={10} />
           </div>
-          <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff. Current positive cases are estimated with a 10 day recovery period from testing positive.</div>
+          <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff. "Community" excludes undergrad students. Current positive cases are estimated with a 10 day recovery period from testing positive.</div>
 
-          <TestedAreaChart data={data} />
+          <div className="row">
+            <div style={{ flex: 1, minWidth: 500 }}>
+              <UndergradTestedAreaChart data={data} />
+            </div>
+            <div style={{ flex: 1, minWidth: 500 }}>
+              <TestedAreaChart data={data} />
+            </div>
+          </div>
+          <div className="hint">"Community" refers to the BC community excluding undergrad students: including grad students, faculty, and staff.</div>
 
           <PercentPositiveChart data={data} />
           <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff.</div>

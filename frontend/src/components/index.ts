@@ -5,3 +5,4 @@ export * from './PercentPositiveChart';
 export * from './PopulationPercentChart';
 export * from './TestedAreaChart';
 export * from './TestedBarChart';
+export * from './UndergradTestedAreaChart';

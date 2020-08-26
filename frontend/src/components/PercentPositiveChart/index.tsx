@@ -53,7 +53,7 @@ export const PercentPositiveChart = (props: PercentPositiveChartProps) => {
   return (
     <ChartContainer
       title="Test Percent Positive per Day"
-      width={'80%'}
+      width={'100%'}
       height={500}
       chartComp={LineChart}
       chartProps={{ data: toPlotData(props.data), syncId: "syncTestPercent" }}

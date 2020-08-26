@@ -6,17 +6,17 @@ import style from './style.module.css';
 import { ChartContainer } from '../index';
 import { CovidDataItem } from '../../types';
 
-interface TestedAreaChartProps {
+interface UndergradTestedAreaChartProps {
   data: CovidDataItem[];
 }
 
-export const TestedAreaChart = (props: TestedAreaChartProps) => {
+export const UndergradTestedAreaChart = (props: UndergradTestedAreaChartProps) => {
   // format date property from Date obj to milliseconds
   const toPlotData = (data: CovidDataItem[]): any[] => {
     return data.map((item: CovidDataItem) => {
       return {
-        tested: item.totalTested - item.undergradTested,
-        positive: item.totalPositive - item.undergradPositive,
+        tested: item.undergradTested,
+        positive: item.undergradPositive,
         date: item.date.getTime(),
       };
     });
@@ -43,7 +43,7 @@ export const TestedAreaChart = (props: TestedAreaChartProps) => {
 
   return (
     <ChartContainer
-      title="Cumulative Community Tests"
+      title="Cumulative Undergrad Tests"
       width={'100%'}
       height={500}
       chartComp={AreaChart}
