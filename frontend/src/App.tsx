@@ -84,10 +84,10 @@ export const App: React.FunctionComponent = () => {
           <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff. "Community" excludes undergrad students. Current positive cases are estimated with a 10 day recovery period from testing positive.</div>
 
           <div className="row">
-            <div style={{ flex: 1, minWidth: 500 }}>
+            <div style={{ flex: 1, minWidth: 350 }}>
               <UndergradTestedAreaChart data={data} />
             </div>
-            <div style={{ flex: 1, minWidth: 500 }}>
+            <div style={{ flex: 1, minWidth: 350 }}>
               <TestedAreaChart data={data} />
             </div>
           </div>
