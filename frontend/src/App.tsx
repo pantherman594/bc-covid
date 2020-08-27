@@ -71,7 +71,7 @@ export const App: React.FunctionComponent = () => {
     <div className="App" style={{ overflowY: loading ? 'hidden' : 'auto' }}>
       { loading ? null :
         <React.Fragment>
-          <h1>Boston College Covid-19 Live Statistics</h1>
+          <h1>Boston College Covid-19 Statistics</h1>
           <h3>
             {'Updated: '}
             {data.length === 0 ? null : data[data.length - 1].date.toLocaleDateString(undefined, { day: 'numeric', month: 'numeric' })}
