@@ -8,11 +8,10 @@ import DataModel from './models/Data';
 
 const DATA_URL = 'https://www.bc.edu/content/bc-web/sites/reopening-boston-college.html';
 
-// Don't ask... this just works. Got to it by looking through the requests sent by
+// From
 // https://app.powerbi.com/view?r=eyJrIjoiMzI4OTBlMzgtODg5MC00OGEwLThlMDItNGJiNDdjMDU5ODhkIiwidCI6ImQ1N2QzMmNjLWMxMjEtNDg4Zi1iMDdiLWRmZTcwNTY4MGM3MSIsImMiOjN9,
 // and https://www.bu.edu/healthway/community-dashboard/.
 const BU_URL = 'https://wabi-us-north-central-api.analysis.windows.net/public/reports/querydata?synchronous=true';
-const BU_REQ = JSON.parse('{"version":"1.0.0","queries":[{"Query":{"Commands":[{"SemanticQueryDataShapeCommand":{"Query":{"Version":2,"From":[{"Name":"s","Entity":"Testing","Type":0}],"Select":[{"Measure":{"Expression":{"SourceRef":{"Source":"s"}},"Property":"Test Results"},"Name":"SHS Lab/Testing - Result Through Yesterday.Test Results"},{"Measure":{"Expression":{"SourceRef":{"Source":"s"}},"Property":"Positive Results"},"Name":"SHS Lab/Testing - Result Through Yesterday.Positive Results"},{"Measure":{"Expression":{"SourceRef":{"Source":"s"}},"Property":"Negative Results"},"Name":"SHS Lab/Testing - Result Through Yesterday.Negative Results"},{"Measure":{"Expression":{"SourceRef":{"Source":"s"}},"Property":"Invalid Results"},"Name":"SHS Lab/Testing - Result Through Yesterday.Inconclusive Results"}],"OrderBy":[{"Direction":2,"Expression":{"Measure":{"Expression":{"SourceRef":{"Source":"s"}},"Property":"Test Results"}}}]},"Binding":{"Primary":{"Groupings":[{"Projections":[0,1,2,3]}]},"DataReduction":{"DataVolume":3,"Primary":{"Window":{}}},"Version":1}}}]},"CacheKey":"{\\"Commands\\":[{\\"SemanticQueryDataShapeCommand\\":{\\"Query\\":{\\"Version\\":2,\\"From\\":[{\\"Name\\":\\"s\\",\\"Entity\\":\\"Testing\\",\\"Type\\":0}],\\"Select\\":[{\\"Measure\\":{\\"Expression\\":{\\"SourceRef\\":{\\"Source\\":\\"s\\"}},\\"Property\\":\\"Test Results\\"},\\"Name\\":\\"SHS Lab/Testing - Result Through Yesterday.Test Results\\"},{\\"Measure\\":{\\"Expression\\":{\\"SourceRef\\":{\\"Source\\":\\"s\\"}},\\"Property\\":\\"Positive Results\\"},\\"Name\\":\\"SHS Lab/Testing - Result Through Yesterday.Positive Results\\"},{\\"Measure\\":{\\"Expression\\":{\\"SourceRef\\":{\\"Source\\":\\"s\\"}},\\"Property\\":\\"Negative Results\\"},\\"Name\\":\\"SHS Lab/Testing - Result Through Yesterday.Negative Results\\"},{\\"Measure\\":{\\"Expression\\":{\\"SourceRef\\":{\\"Source\\":\\"s\\"}},\\"Property\\":\\"Invalid Results\\"},\\"Name\\":\\"SHS Lab/Testing - Result Through Yesterday.Inconclusive Results\\"}],\\"OrderBy\\":[{\\"Direction\\":2,\\"Expression\\":{\\"Measure\\":{\\"Expression\\":{\\"SourceRef\\":{\\"Source\\":\\"s\\"}},\\"Property\\":\\"Test Results\\"}}}]},\\"Binding\\":{\\"Primary\\":{\\"Groupings\\":[{\\"Projections\\":[0,1,2,3]}]},\\"DataReduction\\":{\\"DataVolume\\":3,\\"Primary\\":{\\"Window\\":{}}},\\"Version\\":1}}}]}","QueryId":"","ApplicationContext":{"DatasetId":"05640cb4-075c-4bec-87d1-2b0b7df65918","Sources":[{"ReportId":"0f711970-f662-4b15-9c08-1d4090b80ec9"}]}}],"cancelQueries":[],"modelId":11982553}');
 
 // From https://news.northeastern.edu/coronavirus/reopening/testing-dashboard/.
 const NEU_URL = 'https://spreadsheets.google.com/feeds/cells/1C8PDCqHB9DbUYbvrEMN2ZKyeDGAMAxdcNkmO2QSZJsE/1/public/full?alt=json';
@@ -154,6 +153,35 @@ const scrapeBC = async (): Promise<IBCData> => {
   return bcData;
 };
 
+const generateRequest = (command: any) => {
+  const query = {
+    Commands: [
+      {
+        SemanticQueryDataShapeCommand: command,
+      },
+    ],
+  };
+
+  const request = {
+    version: '1.0.0',
+    queries: [{
+      Query: query,
+      CacheKey: JSON.stringify(query),
+      QueryId: '',
+      ApplicationContext: {
+        DatasetId: '05640cb4-075c-4bec-87d1-2b0b7df65918',
+        Sources: [{
+          ReportId: '0f711970-f662-4b15-9c08-1d4090b80ec9',
+        }],
+      },
+    }],
+    cancelQueries: [],
+    modelId: 11982553,
+  };
+
+  return request;
+};
+
 const tryTraverse = (obj: any, path: (string | number)[]): any => {
   if (path.length === 0) return obj;
 
@@ -168,8 +196,63 @@ const tryTraverse = (obj: any, path: (string | number)[]): any => {
 const scrapeBU = async (): Promise<IBUData> => {
   console.log('Scraping BU...');
 
+  const dataCommand = {
+    Query: {
+      Version: 2,
+      From: [{ Name: 'c', Entity: 'Cumulative Testing Combined', Type: 0 }],
+      Select: [
+        {
+          Measure: {
+            Expression: { SourceRef: { Source: 'c' } },
+            Property: 'Cumulative Results',
+          },
+          Name: 'Cumulative Testing Combined.Cumulative Results',
+        },
+        {
+          Measure: {
+            Expression: { SourceRef: { Source: 'c' } },
+            Property: 'Cumulative Positives',
+          },
+          Name: 'Cumulative Testing Combined.Cumulative Positives',
+        },
+        {
+          Measure: {
+            Expression: { SourceRef: { Source: 'c' } },
+            Property: 'Cumulative Negatives',
+          },
+          Name: 'Cumulative Testing Combined.Cumulative Negatives',
+        },
+        {
+          Measure: {
+            Expression: { SourceRef: { Source: 'c' } },
+            Property: 'Cumulative Invalid',
+          },
+          Name: 'Cumulative Testing Combined.Cumulative Invalid',
+        },
+      ],
+      OrderBy: [{
+        Direction: 2,
+        Expression: {
+          Measure: {
+            Expression: {
+              SourceRef: {
+                Source: 'c',
+              },
+            },
+            Property: 'Cumulative Results',
+          },
+        },
+      }],
+    },
+    Binding: {
+      Primary: { Groupings: [{ Projections: [0, 1, 2, 3] }] },
+      DataReduction: { DataVolume: 3, Primary: { Window: {} } },
+      Version: 1,
+    },
+  };
+
   // Attempt to load the webpage.
-  const res = await superagent.post(BU_URL).send(BU_REQ).set('Accept', 'application/json');
+  const res = await superagent.post(BU_URL).send(generateRequest(dataCommand)).set('Accept', 'application/json');
   if (res.status !== 200) {
     throw new Error(`Request failed with error code ${res.status}.`);
   }
