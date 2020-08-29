@@ -9,7 +9,7 @@ interface CurrentPositiveChartProps {
 }
 
 const NUM_UNDERGRADS = 7500;
-const NUM_COMMUNITY = 7600;
+const NUM_COMMUNITY = 8500;
 // Pad the pie with 1.5 degree on both sides, in case the value is too small to hover.
 const PADDING_UNDERGRADS = 1.5 * NUM_UNDERGRADS / 360;
 const PADDING_COMMUNITY = 1.5 * NUM_COMMUNITY / 360;
