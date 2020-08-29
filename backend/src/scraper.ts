@@ -281,7 +281,7 @@ const scrapeNeu = async (): Promise<INEUData> => {
   const data = res.body;
 
   const entries = data.feed.entry;
-  const neuPositive = parseInt(entries[entries.length - 2].content.$t, 10);
+  const neuPositive = parseInt(entries[entries.length - 5].content.$t, 10);
   if (Number.isNaN(neuPositive)) {
     throw new Error('Parse int failed.');
   }
