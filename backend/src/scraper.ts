@@ -166,7 +166,6 @@ const generateRequest = (command: any) => {
     version: '1.0.0',
     queries: [{
       Query: query,
-      CacheKey: JSON.stringify(query),
       QueryId: '',
       ApplicationContext: {
         DatasetId: '05640cb4-075c-4bec-87d1-2b0b7df65918',
@@ -204,27 +203,6 @@ const scrapeBU = async (): Promise<IBUData> => {
         {
           Measure: {
             Expression: { SourceRef: { Source: 'c' } },
-            Property: 'Cumulative Results',
-          },
-          Name: 'Cumulative Testing Combined.Cumulative Results',
-        },
-        {
-          Measure: {
-            Expression: { SourceRef: { Source: 'c' } },
-            Property: 'Cumulative Negatives',
-          },
-          Name: 'Cumulative Testing Combined.Cumulative Negatives',
-        },
-        {
-          Measure: {
-            Expression: { SourceRef: { Source: 'c' } },
-            Property: 'Cumulative Invalid',
-          },
-          Name: 'Cumulative Testing Combined.Cumulative Invalid',
-        },
-        {
-          Measure: {
-            Expression: { SourceRef: { Source: 'c' } },
             Property: 'Cumulative Positives',
           },
           Name: 'Cumulative Testing Combined.Cumulative Positives',
@@ -245,14 +223,18 @@ const scrapeBU = async (): Promise<IBUData> => {
       }],
     },
     Binding: {
-      Primary: { Groupings: [{ Projections: [0, 1, 2, 3] }] },
+      Primary: { Groupings: [{ Projections: [0] }] },
       DataReduction: { DataVolume: 3, Primary: { Window: {} } },
       Version: 1,
     },
   };
 
   // Attempt to load the webpage.
-  const res = await superagent.post(BU_URL).send(generateRequest(dataCommand)).set('Accept', 'application/json');
+  const res = await superagent.post(BU_URL)
+    .send(generateRequest(dataCommand))
+    .set('X-PowerBI-ResourceKey', '32890e38-8890-48a0-8e02-4bb47c05988d')
+    .set('Accept', 'application/json');
+
   if (res.status !== 200) {
     throw new Error(`Request failed with error code ${res.status}.`);
   }
@@ -260,7 +242,7 @@ const scrapeBU = async (): Promise<IBUData> => {
   const data = JSON.parse(res.text);
 
   const buPositive = tryTraverse(data, ['results', 0, 'result', 'data', 'dsr', 'DS', 0,
-    'PH', 0, 'DM0', 0, 'C', 3]);
+    'PH', 0, 'DM0', 0, 'M0']);
 
   const buData = { buPositive };
 
