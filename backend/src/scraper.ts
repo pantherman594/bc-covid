@@ -211,13 +211,6 @@ const scrapeBU = async (): Promise<IBUData> => {
         {
           Measure: {
             Expression: { SourceRef: { Source: 'c' } },
-            Property: 'Cumulative Positives',
-          },
-          Name: 'Cumulative Testing Combined.Cumulative Positives',
-        },
-        {
-          Measure: {
-            Expression: { SourceRef: { Source: 'c' } },
             Property: 'Cumulative Negatives',
           },
           Name: 'Cumulative Testing Combined.Cumulative Negatives',
@@ -228,6 +221,13 @@ const scrapeBU = async (): Promise<IBUData> => {
             Property: 'Cumulative Invalid',
           },
           Name: 'Cumulative Testing Combined.Cumulative Invalid',
+        },
+        {
+          Measure: {
+            Expression: { SourceRef: { Source: 'c' } },
+            Property: 'Cumulative Positives',
+          },
+          Name: 'Cumulative Testing Combined.Cumulative Positives',
         },
       ],
       OrderBy: [{
@@ -260,7 +260,7 @@ const scrapeBU = async (): Promise<IBUData> => {
   const data = JSON.parse(res.text);
 
   const buPositive = tryTraverse(data, ['results', 0, 'result', 'data', 'dsr', 'DS', 0,
-    'PH', 0, 'DM0', 0, 'C', 1]);
+    'PH', 0, 'DM0', 0, 'C', 3]);
 
   const buData = { buPositive };
 
