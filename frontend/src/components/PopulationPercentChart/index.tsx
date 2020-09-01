@@ -4,7 +4,7 @@ import { LineChart, XAxis, YAxis, Legend, Line, Tooltip } from 'recharts';
 
 import style from './style.module.css';
 import { ChartContainer } from '../index';
-import { create, CovidDataItem } from '../../types';
+import { CovidDataItem } from '../../types';
 
 // Assume 80% of all students and faculty return to campus. While this is not accurate, I
 // couldn't find exact numbers so we'll use this just to compare the campuses.
