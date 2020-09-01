@@ -9,7 +9,7 @@ interface CurrentPositiveChartProps {
 }
 
 const NUM_UNDERGRADS = 7500;
-const NUM_COMMUNITY = 8500;
+const NUM_COMMUNITY = 7600;
 // Pad the pie with 1.5 degree on both sides, in case the value is too small to hover.
 const PADDING_UNDERGRADS = 1.5 * NUM_UNDERGRADS / 360;
 const PADDING_COMMUNITY = 1.5 * NUM_COMMUNITY / 360;
@@ -24,6 +24,11 @@ const defaultProps = {
   endAngle: 90,
   blendStroke: true,
   paddingAngle: 0,
+};
+
+const noStroke = {
+  blendStroke: false,
+  stroke: 'none',
 };
 
 export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
@@ -87,6 +92,7 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
           {/* This pie fills in the space between the outer pies. */}
           <Pie
             {...defaultProps}
+            {...noStroke}
             data={[{ name: 'Total', value: 1 }]}
             fill="#5f6d7daa"
             innerRadius={'75%'}
@@ -104,7 +110,6 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
             ]}
             innerRadius={'82%'}
             outerRadius={'100%'}
-            stroke="none"
             onMouseEnter={onPieEnter(2)}
           />
 
@@ -119,13 +124,13 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
             ]}
             innerRadius={'75%'}
             outerRadius={'80%'}
-            stroke="none"
             onMouseEnter={onPieEnter(3)}
           />
 
           {/* This pie fills in the space between the inner pies. */}
           <Pie
             {...defaultProps}
+            {...noStroke}
             data={[{ name: 'Total', value: 1 }]}
             fill="#5f6d7daa"
             innerRadius={'10%'}
@@ -143,7 +148,6 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
             ]}
             innerRadius={'60%'}
             outerRadius={'65%'}
-            stroke="none"
             onMouseEnter={onPieEnter(4)}
           />
 
@@ -158,7 +162,6 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
             ]}
             innerRadius={'20%'}
             outerRadius={'58%'}
-            stroke="none"
             onMouseEnter={onPieEnter(5)}
           />
 
@@ -173,7 +176,6 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
             ]}
             innerRadius={'10%'}
             outerRadius={'18%'}
-            stroke="none"
             onMouseEnter={onPieEnter(6)}
           />
 
@@ -192,7 +194,7 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
                 value: NUM_UNDERGRADS,
               },
               {
-                name: `Estimated current positive community cases: ${curNumCommunityPositive.toLocaleString()}`,
+                name: `Positive community tests in the last ${recoveryDuration}: ${curNumCommunityPositive.toLocaleString()}`,
                 value: curNumPositive,
                 percentage: curNumCommunityPositive / NUM_COMMUNITY,
               },
@@ -207,7 +209,7 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
                 percentage: curNumTested / NUM_UNDERGRADS,
               },
               {
-                name: `Estimated current positive undergrad cases: ${curNumPositive.toLocaleString()}`,
+                name: `Positive undergrad tests in the last ${recoveryDuration}: ${curNumPositive.toLocaleString()}`,
                 value: curNumPositive,
                 percentage: curNumPositive / NUM_UNDERGRADS,
               },

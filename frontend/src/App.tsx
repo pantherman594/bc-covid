@@ -46,7 +46,7 @@ export const App: React.FunctionComponent = () => {
 
       const newData = processData(res.body);
 
-      if (process.env.NODE_ENV === 'production') {
+      if (true || process.env.NODE_ENV === 'production') {
         setData(newData);
         window.localStorage.setItem('data', JSON.stringify(newData));
       } else {
@@ -79,9 +79,9 @@ export const App: React.FunctionComponent = () => {
 
           <div className="row" style={{ maxWidth: '80%', margin: '0 auto' }}>
             <NumberStats data={data} />
-            <CurrentPositiveChart data={data} recoveryDays={10} />
+            <CurrentPositiveChart data={data} recoveryDays={7} />
           </div>
-          <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff. "Community" excludes undergrad students. Current positive cases are estimated with a 10 day recovery period from testing positive.</div>
+          <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff. "Community" excludes undergrad students.</div>
 
           <div className="row">
             <div style={{ flex: 1, minWidth: 350 }}>
@@ -99,8 +99,8 @@ export const App: React.FunctionComponent = () => {
           <TestedBarChart data={data} />
           <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff. "Remaining" refers to that total minus the undergraduate stats.</div>
 
-          <PopulationPercentChart data={data} recoveryDays={10} />
-          <div className="hint">Take these values with a huge grain of salt. Many assumptions were made about population sizes and recovery times.</div>
+          <PopulationPercentChart data={data} recoveryDays={7} />
+          <div className="hint">This graph shows the number of positive tests in the past 7 days, as a percentage of the total population of the respective community. Take these values with a huge grain of salt. Many assumptions were made about population sizes.</div>
 
           <p style={{ paddingBottom: 0 }}>Made by David Shen and Roger Wang.</p>
 

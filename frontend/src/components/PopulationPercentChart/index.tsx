@@ -33,7 +33,8 @@ interface PopulationPercentChartProps {
 export const PopulationPercentChart = (props: PopulationPercentChartProps) => {
   const toPlotData = (data: CovidDataItem[]): any[] => {
     return data.map((item: CovidDataItem, index: number, array: CovidDataItem[]) => {
-      const prev = array[index - props.recoveryDays] || create();
+      const prev = array[index - props.recoveryDays];
+      if (!prev) return {};
 
       const bcPercent = (item.totalPositive - prev.totalPositive) / BC_POP;
       const buPercent = (item.buPositive - prev.buPositive) / BU_POP;
@@ -82,7 +83,7 @@ export const PopulationPercentChart = (props: PopulationPercentChartProps) => {
 
   return (
     <ChartContainer
-      title="Population Percent Infected per Day"
+      title="7-Day Population Percent Newly Infected"
       width={'100%'}
       height={500}
       chartComp={LineChart}
