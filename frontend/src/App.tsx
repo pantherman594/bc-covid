@@ -81,7 +81,7 @@ export const App: React.FunctionComponent = () => {
             <NumberStats data={data} />
             <CurrentPositiveChart data={data} recoveryDays={7} />
           </div>
-          <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff. "Community" excludes undergrad students.</div>
+            <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff. "Community" excludes undergrad students. Estimated populations are 80% of 2019-20 populations, as drawn from the <a href="https://www.bc.edu/content/dam/files/publications/factbook/pdf/19-20_factbook.pdf">BC factbook</a>. This is by no means accurate, but I have not been able to find any official numbers.</div>
 
           <div className="row">
             <div style={{ flex: 1, minWidth: 350 }}>
