@@ -121,14 +121,15 @@ const scrapeBC = async (): Promise<IBCData> => {
   }
 
   const field = isolationBox.find('.figure');
-  const label = isolationBox.find('.fact');
+  const label = isolationBox.find('.fact > p:nth-child(1)');
 
   // Ensure we have the expected label and field.
   if (field.length !== 1 || label.length !== 1) {
     throw new Error(`Did not find the correct number of data fields. Found: ${field.length}, Expected: 1.`);
   }
 
-  if (label.text().trim() !== EXPECTED_ISOLATION_LABEL) {
+  if (label.text().trim().replace(/[^a-zA-Z ]/g, '') !== EXPECTED_ISOLATION_LABEL) {
+    console.log(label.text().trim().replace(/[^a-zA-Z ]/g, ''));
     throw new Error(`Labels have changed, please fix scraper. Failed labels: ${EXPECTED_ISOLATION_LABEL}.`);
   }
 
