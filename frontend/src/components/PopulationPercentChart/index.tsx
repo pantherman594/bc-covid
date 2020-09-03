@@ -83,7 +83,7 @@ export const PopulationPercentChart = (props: PopulationPercentChartProps) => {
 
   return (
     <ChartContainer
-      title="7-Day Population Percent Newly Infected"
+      title="7-Day Population Percent Newly Testing Positive"
       width={'100%'}
       height={500}
       chartComp={LineChart}

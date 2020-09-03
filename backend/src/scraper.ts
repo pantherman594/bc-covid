@@ -30,7 +30,7 @@ const IGNORE_KEYS = [
 const EXPECTED_LABELS = [
   'BC Community tests performed',
   'Total Positives',
-  'Undergrads Tested',
+  'Total Undergraduate Tests',
   'Undergrads Testing Positive',
 ];
 

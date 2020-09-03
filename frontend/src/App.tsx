@@ -26,13 +26,15 @@ const processData = (data: any) => {
       return deleteTo;
     }
 
+    const newDate = moment(entry.date).endOf('day');
+
     const newEntry = {
       ...entry,
-      date: moment(entry.date).endOf('day').toDate(),
+      date: newDate.toDate(),
     };
 
     newData.push(newEntry);
-    return moment(entry.date).subtract(1, 'day').endOf('day');
+    return newDate.subtract(1, 'day');
   }, moment());
 
   newData.reverse();
