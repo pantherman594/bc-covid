@@ -22,7 +22,13 @@ export const TestedAreaChart = (props: TestedAreaChartProps) => {
     });
   };
 
-  const dateTickFormatter = (tick: number) => moment(tick).format('M/D');
+  const dateTickFormatter = (tick: number) => {
+    let str = moment(tick).format('M/D');
+
+    if (str === '9/3') str += '*';
+
+    return str;
+  };
 
   const renderTooltipContent = (o: any) => {
     const { payload, label } = o;

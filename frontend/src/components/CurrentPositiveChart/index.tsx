@@ -43,13 +43,13 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
   // COVID-19 will recover in recoveryDays days.
   const recoveryData = props.data[props.data.length - 1 - props.recoveryDays] || create();
 
-  const curNumPositive = latest.undergradPositive - recoveryData.undergradPositive;
-  const curNumTested = latest.undergradTested - recoveryData.undergradTested;
+  const curNumPositive = Math.max(-1, latest.undergradPositive - recoveryData.undergradPositive);
+  const curNumTested = Math.max(-1, latest.undergradTested - recoveryData.undergradTested);
 
-  const curNumCommunityPositive = (latest.totalPositive - latest.undergradPositive)
-    - (recoveryData.totalPositive - recoveryData.undergradPositive);
-  const curNumCommunityTested = (latest.totalTested - latest.undergradTested)
-    - (recoveryData.totalTested - recoveryData.undergradTested);
+  const curNumCommunityPositive = Math.max(-1, (latest.totalPositive - latest.undergradPositive)
+    - (recoveryData.totalPositive - recoveryData.undergradPositive));
+  const curNumCommunityTested = Math.max(-1, (latest.totalTested - latest.undergradTested)
+    - (recoveryData.totalTested - recoveryData.undergradTested));
 
   const renderLabel = (props: any) => {
     const { cx, cy, payload } = props;
@@ -80,6 +80,14 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
   if (props.recoveryDays === 1) {
     recoveryDuration = 'day';
   }
+
+  const numberFormat = (n: number): string => {
+    if (n === -1) {
+      return '< 0 *';
+    }
+
+    return n.toLocaleString();
+  };
 
   return (
     <div className={style['chart-container']}>
@@ -186,35 +194,35 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
             activeShape={renderLabel}
             data={[
               {
-                name: `Estimated total community: ${NUM_COMMUNITY.toLocaleString()}`,
+                name: `Estimated total community: ${numberFormat(NUM_COMMUNITY)}`,
                 value: NUM_UNDERGRADS,
               },
               {
-                name: `Estimated total undergrads: ${NUM_UNDERGRADS.toLocaleString()}`,
+                name: `Estimated total undergrads: ${numberFormat(NUM_UNDERGRADS)}`,
                 value: NUM_UNDERGRADS,
               },
               {
-                name: `Positive community tests in the last ${recoveryDuration}: ${curNumCommunityPositive.toLocaleString()}`,
+                name: `Positive community tests in the last ${recoveryDuration}: ${numberFormat(curNumCommunityPositive)}`,
                 value: curNumPositive,
                 percentage: curNumCommunityPositive / NUM_COMMUNITY,
               },
               {
-                name: `Community tests in the last ${recoveryDuration}: ${curNumCommunityTested.toLocaleString()}`,
+                name: `Community tests in the last ${recoveryDuration}: ${numberFormat(curNumCommunityTested)}`,
                 value: curNumTested,
                 percentage: curNumCommunityTested / NUM_COMMUNITY,
               },
               {
-                name: `Undergrad tests in the last ${recoveryDuration}: ${curNumTested.toLocaleString()}`,
+                name: `Undergrad tests in the last ${recoveryDuration}: ${numberFormat(curNumTested)}`,
                 value: curNumTested,
                 percentage: curNumTested / NUM_UNDERGRADS,
               },
               {
-                name: `Positive undergrad tests in the last ${recoveryDuration}: ${curNumPositive.toLocaleString()}`,
+                name: `Positive undergrad tests in the last ${recoveryDuration}: ${numberFormat(curNumPositive)}`,
                 value: curNumPositive,
                 percentage: curNumPositive / NUM_UNDERGRADS,
               },
               {
-                name: `Isolated students: ${latest.isolation.toLocaleString()}`,
+                name: `Isolated students: ${numberFormat(latest.isolation)}`,
                 value: latest.isolation,
                 percentage: latest.isolation / NUM_UNDERGRADS,
               },

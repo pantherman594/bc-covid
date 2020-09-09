@@ -46,6 +46,7 @@ export const App: React.FunctionComponent = () => {
   const [data, setData] = useState<CovidDataItem[]>(initialData);
   const [loading, setLoading] = useState(true);
   const [showLoading, setShowLoading] = useState(false);
+  const [adjustSep3, setAdjustSep3] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -108,6 +109,38 @@ export const App: React.FunctionComponent = () => {
 
           <PopulationPercentChart data={data} recoveryDays={7} />
           <div className="hint">This graph shows the number of positive tests in the past 7 days, as a percentage of the total population of the respective community. Take these values with a huge grain of salt. Many assumptions were made about population sizes.</div>
+
+          <hr />
+
+          <div className="note">
+            * On 9/3, BC shifted their reporting from the number of undergrads who tested positive to the number of undergrad tests that came back positive, counting tests instead of people. I did not adjust the data prior to 9/3 because that could only be a guess, but I suspect a good number of undergraduate tests were counted as community tests. Picture shifting the "Tests and Results per Day" graph below up a bit to better fit the data after 9/3.
+            <br /><br />
+            The button below adjusts the data prior to 9/3 by moving 30% of the community tests to the undergraduates. There is no reasoning to this 30% other than the fact that it makes the cumulative graphs non-decreasing, as one would expect them to be.
+          </div>
+          { adjustSep3 ? (
+            <div className="note">Refresh the page to reset the data.</div>
+          ) : (
+            <React.Fragment>
+              <button onClick={() => {
+                setAdjustSep3(true);
+                setData((data: CovidDataItem[]) => data.map((entry: CovidDataItem) => {
+                  if (entry.date < new Date('2020-09-04')) {
+                    const { undergradTested, totalTested, ...rest } = entry;
+                    return {
+                      ...rest,
+                      totalTested,
+                      undergradTested: Math.round(undergradTested + (totalTested - undergradTested) * 0.3),
+                    };
+                  }
+                  return entry;
+                }));
+              }}>
+                Simulate
+              </button>
+            </React.Fragment>
+          )}
+
+          <hr />
 
           <p style={{ paddingBottom: 0 }}>Made by David Shen and Roger Wang.</p>
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import { BarChart, Bar, XAxis, YAxis, ReferenceLine, Tooltip } from 'recharts';
 
 import style from './style.module.css';
@@ -17,7 +18,7 @@ export const TestedBarChart = (props: TestedBarChartProps) => {
         ...item,
         remainingTested: -1 * (item.totalTested - item.undergradTested),
         remainingPositive: -1 * (item.totalPositive - item.undergradPositive),
-        date: item.date.toLocaleDateString(undefined, { month: 'numeric', day: '2-digit' }),
+        date: item.date.getTime(),
       };
     });
   };
@@ -31,6 +32,14 @@ export const TestedBarChart = (props: TestedBarChartProps) => {
       maxRemaining = item.totalTested - item.undergradTested;
   }
 
+  const dateTickFormatter = (tick: number) => {
+    let str = moment(tick).format('M/D');
+
+    if (str === '9/3') str += '*';
+
+    return str;
+  };
+
   const valueTickFormatter = (tick: number) => Math.abs(tick);
 
   const renderTooltipContent = (o: any) => {
@@ -42,7 +51,7 @@ export const TestedBarChart = (props: TestedBarChartProps) => {
 
     return (
       <div className={style.customTooltip}>
-        <p>{label}</p>
+        <p>{dateTickFormatter(label)}</p>
         <p>
           {`Total Positive: ${totalPositive}`}
         </p>
@@ -71,7 +80,10 @@ export const TestedBarChart = (props: TestedBarChartProps) => {
       <Tooltip content={renderTooltipContent} />
       <ReferenceLine y={maxUndergrad} stroke="#0000" label="Undergraduates" />
       <ReferenceLine y={-1 * maxRemaining} stroke="#0000" label="Remaining BC Community" />
-      <XAxis dataKey="date"/>
+      <XAxis
+        dataKey="date"
+        tickFormatter={dateTickFormatter}
+      />
       <YAxis tickFormatter={valueTickFormatter} />
       <ReferenceLine y={0} stroke="#000" />
       <Bar
