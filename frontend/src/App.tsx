@@ -159,7 +159,8 @@ export const App: React.FunctionComponent = () => {
 
           <br />
 
-          <a href="https://github.com/pantherman594/bc-covid/">source code</a>
+          <a href="https://github.com/pantherman594/bc-covid/">source code</a>{' '}
+          <a href="https://bccovid.dav.sh/changelog">changelog</a>
         </React.Fragment>
       }
       <div className="loading" style={{ opacity: loading && showLoading ? 1 : 0 }}>

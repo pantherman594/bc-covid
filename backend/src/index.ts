@@ -1,3 +1,4 @@
+import { exec } from 'child_process';
 import cors from 'cors';
 import { CronJob } from 'cron';
 import express from 'express';
@@ -11,6 +12,14 @@ import scrape from './scraper';
 
 const PORT = process.env.PORT || 5000;
 const app = express();
+
+let changelog = 'Error loading changelog.';
+
+exec('git log --pretty="format:- %h %as  %s"', (err, stdout, stderr) => {
+  if (err || stderr) return;
+
+  changelog = stdout;
+});
 
 const corsOptionsDelegate = (req: any, callback: any) => {
   const corsOptions = {
@@ -59,6 +68,11 @@ app.use('/data', async (req, res) => {
   });
 
   res.json(cleanedData);
+});
+
+app.use('/changelog', async (_req, res) => {
+  res.type('txt');
+  res.send(changelog);
 });
 
 app.use('/api/*', (req, res) => { // Handle 404
