@@ -41,7 +41,7 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
   // Estimate the current number of infected students as the number of total positive tests
   // minus the number of positive tests from recoveryDays days ago. This assumes someone with
   // COVID-19 will recover in recoveryDays days.
-  const recoveryData = props.data[props.data.length - 1 - props.recoveryDays] || create();
+  const recoveryData = props.data[props.data.length - 1 - Math.floor(props.recoveryDays / 2)] || create();
 
   const curNumPositive = Math.max(-1, latest.undergradPositive - recoveryData.undergradPositive);
   const curNumTested = Math.max(-1, latest.undergradTested - recoveryData.undergradTested);

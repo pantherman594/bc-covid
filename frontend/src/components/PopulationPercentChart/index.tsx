@@ -33,7 +33,19 @@ interface PopulationPercentChartProps {
 export const PopulationPercentChart = (props: PopulationPercentChartProps) => {
   const toPlotData = (data: CovidDataItem[]): any[] => {
     return data.map((item: CovidDataItem, index: number, array: CovidDataItem[]) => {
-      const prev = array[index - props.recoveryDays];
+      let { recoveryDays } = props;
+
+      // Starting 9/10, BC is only reporting data Tues, Thurs, Sat.
+      // These adjustments are needed to keep the 7-day change accurate.
+      if (item.date > new Date(2020, 8, 17)) {
+        recoveryDays = Math.floor(recoveryDays / 2);
+      } else if (item.date > new Date(2020, 8, 15)) {
+        recoveryDays = 4;
+      } else if (item.date > new Date(2020, 8, 12)) {
+        recoveryDays = 6;
+      }
+
+      const prev = array[index - recoveryDays];
       if (!prev) return {};
 
       const bcPercent = (item.totalPositive - prev.totalPositive) / BC_POP;

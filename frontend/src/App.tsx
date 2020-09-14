@@ -140,6 +140,10 @@ export const App: React.FunctionComponent = () => {
             </React.Fragment>
           )}
 
+          <div className="note">
+            Starting 9/10, BC is only updating their dashboard on Tuesdays, Thursdays, and Saturdays.
+          </div>
+
           <hr />
 
           <p style={{ paddingBottom: 0 }}>Made by David Shen and Roger Wang.</p>
