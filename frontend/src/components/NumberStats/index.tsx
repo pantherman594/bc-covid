@@ -33,13 +33,16 @@ export const NumberStats = (props: NumberStatsProps) => {
       incr = !incr;
     }
 
+    let style = incr ? styles.incr : styles.decr;
+    if (dataKey === 'isolation') style = '';
+
     return (
       <div className={styles.stat} {...rest}>
         <div className={styles.row}>
           {latest[dataKey].toLocaleString()}
           { change === 0 ? <div className={styles.change}>{"\u2013 +0"}</div> :
-            <div className={[styles.change, styles[incr ? "incr" : "decr"]].join(" ")}>
-              { change > 0 ? "\u25b2 +" : "\u25bc -" }{change.toLocaleString()}
+            <div className={[styles.change, style].join(" ")}>
+              { change > 0 ? "\u25b2 +" : "\u25bc " }{change.toLocaleString()}
             </div>
           }
         </div>
