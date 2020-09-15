@@ -95,6 +95,6 @@ app.listen(PORT, async () => {
   await scrape();
 
   // Run the scraper at the start of every hour on Tuesday, Thursday, Saturday.
-  const job = new CronJob('0 0 * * * 2,4,6', scrape);
+  const job = new CronJob('0 0 * * * 2,4,6', scrape, null, true, 'America/New_York');
   job.start();
 });
