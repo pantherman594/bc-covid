@@ -25,6 +25,9 @@ export class Data {
   public isolation!: number;
 
   @prop({ required: true })
+  public recovered!: number;
+
+  @prop({ required: true })
   public buPositive!: number;
 
   @prop({ required: true })

@@ -42,6 +42,7 @@ interface IBCData {
   undergradTested: number;
   undergradPositive: number;
   isolation: number;
+  recovered: number;
 }
 
 interface IBUData {
@@ -121,10 +122,11 @@ const scrapeBC = async (): Promise<IBCData> => {
   }
 
   const field = isolationBox.find('.figure');
+  const recoveredData = isolationBox.find('.fact > p:nth-child(3)');
   const label = isolationBox.find('.fact > p:nth-child(1)');
 
   // Ensure we have the expected label and field.
-  if (field.length !== 1 || label.length !== 1) {
+  if (field.length !== 1 || recoveredData.length !== 1 || label.length !== 1) {
     throw new Error(`Did not find the correct number of data fields. Found: ${field.length}, Expected: 1.`);
   }
 
@@ -133,10 +135,22 @@ const scrapeBC = async (): Promise<IBCData> => {
     throw new Error(`Labels have changed, please fix scraper. Failed labels: ${EXPECTED_ISOLATION_LABEL}.`);
   }
 
-  // Convert the field into a number, stripping commas, and add to the data array.
+  // Convert the value into a number, stripping commas.
   const isolation = parseInt($(field).text().replace(/,/g, ''), 10);
 
   if (Number.isNaN(isolation)) {
+    throw new Error('Parse int failed.');
+  }
+
+  const recoveredMatch = recoveredData.text().match(/^([0-9]+) Students Recovered$/);
+  if (!recoveredMatch) {
+    throw new Error('Labels have changed, please fix scraper. Failed label: Students Recovered.');
+  }
+
+  // Convert the value into a number, stripping commas.
+  const recovered = parseInt(recoveredMatch[1].replace(/,/g, ''), 10);
+
+  if (Number.isNaN(recovered)) {
     throw new Error('Parse int failed.');
   }
 
@@ -147,6 +161,7 @@ const scrapeBC = async (): Promise<IBCData> => {
     undergradTested: data[2],
     undergradPositive: data[3],
     isolation,
+    recovered,
   };
 
   console.log('BC Complete.');
