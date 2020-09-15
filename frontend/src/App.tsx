@@ -47,6 +47,7 @@ export const App: React.FunctionComponent = () => {
   const [loading, setLoading] = useState(true);
   const [showLoading, setShowLoading] = useState(false);
   const [adjustSep3, setAdjustSep3] = useState(false);
+  const [logScale, setLogScale] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -75,6 +76,8 @@ export const App: React.FunctionComponent = () => {
     }
   }, []);
 
+  const scale = logScale ? 'log' : 'linear';
+
   return (
     <div className="App" style={{ overflowY: loading ? 'hidden' : 'auto' }}>
       { loading ? null :
@@ -84,6 +87,11 @@ export const App: React.FunctionComponent = () => {
             {'Updated: '}
             {data.length === 0 ? null : data[data.length - 1].date.toLocaleDateString(undefined, { day: 'numeric', month: 'numeric' })}
           </h3>
+          <button onClick={() => {
+            setLogScale(!logScale);
+          }}>
+            {logScale ? 'Use linear scale' : 'Use log scale'}
+          </button>
 
           <div className="row" style={{ maxWidth: '80%', margin: '0 auto' }}>
             <NumberStats data={data} />
@@ -93,10 +101,10 @@ export const App: React.FunctionComponent = () => {
 
           <div className="row">
             <div style={{ flex: 1, minWidth: 350 }}>
-              <UndergradTestedAreaChart data={data} />
+              <UndergradTestedAreaChart data={data} scale={scale} />
             </div>
             <div style={{ flex: 1, minWidth: 350 }}>
-              <TestedAreaChart data={data} />
+              <TestedAreaChart data={data} scale={scale} />
             </div>
           </div>
           <div className="hint">"Community" refers to the BC community excluding undergrad students: including grad students, faculty, and staff.</div>
@@ -104,7 +112,7 @@ export const App: React.FunctionComponent = () => {
           <PercentPositiveChart data={data} />
           <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff.</div>
 
-          <TestedBarChart data={data} />
+          <TestedBarChart data={data} scale={scale} />
           <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff. "Remaining" refers to that total minus the undergraduate stats.</div>
 
           <PopulationPercentChart data={data} recoveryDays={7} />

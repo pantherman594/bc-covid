@@ -8,6 +8,7 @@ import { CovidDataItem } from '../../types';
 
 interface TestedAreaChartProps {
   data: CovidDataItem[];
+  scale: 'log' | 'linear';
 }
 
 export const TestedAreaChart = (props: TestedAreaChartProps) => {
@@ -21,6 +22,10 @@ export const TestedAreaChart = (props: TestedAreaChartProps) => {
       };
     });
   };
+
+  const max = props.data.reduce((runningMax: number, entry: CovidDataItem) => {
+    return Math.max(runningMax, entry.undergradTested, entry.totalTested - entry.undergradTested);
+  }, 0);
 
   const dateTickFormatter = (tick: number) => {
     let str = moment(tick).format('M/D');
@@ -73,7 +78,11 @@ export const TestedAreaChart = (props: TestedAreaChartProps) => {
         scale="time"
         domain={['dataMin', 'dataMax']}
       />
-      <YAxis />
+      <YAxis
+        scale={props.scale}
+        domain={[0.01, max]}
+        allowDataOverflow
+      />
       <Tooltip content={renderTooltipContent} />
       <Legend />
       <Area
