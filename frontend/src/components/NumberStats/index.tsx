@@ -55,21 +55,21 @@ export const NumberStats = (props: NumberStatsProps) => {
       <div className={styles.container}>
         <NumberStat
           dataKey="totalTested"
-          description="Total Tested"
+          description="Total Tests"
         />
         <NumberStat
           dataKey="totalPositive"
-          description="Total Positive"
+          description="Total Positive Tests"
         />
       </div>
       <div className={styles.container}>
         <NumberStat
           dataKey="undergradTested"
-          description="Undergrads Tested"
+          description="Undergrad Tests"
         />
         <NumberStat
           dataKey="undergradPositive"
-          description="Undergrads Positive"
+          description="Positive Undergrad Tests"
         />
       </div>
       <div className={styles.container}>

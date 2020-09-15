@@ -80,7 +80,7 @@ export const TestedAreaChart = (props: TestedAreaChartProps) => {
       />
       <YAxis
         scale={props.scale}
-        domain={[0.01, max]}
+        domain={[1, max]}
         allowDataOverflow
       />
       <Tooltip content={renderTooltipContent} />

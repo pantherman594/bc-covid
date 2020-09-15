@@ -75,7 +75,7 @@ export const TestedBarChart = (props: TestedBarChartProps) => {
   return (
     <div>
       <ChartContainer
-        title="Tests and Results per Day"
+        title="Cumulative Tests and Results"
         width={'100%'}
         height={250}
         chartComp={BarChart}
@@ -89,7 +89,7 @@ export const TestedBarChart = (props: TestedBarChartProps) => {
         <YAxis
           tickFormatter={valueTickFormatter}
           scale={props.scale}
-          domain={props.scale === 'log' ? [0.01, 100000] : [0, max + 2000]}
+          domain={props.scale === 'log' ? [1, 100000] : [0, max + 2000]}
           allowDataOverflow
         />
         <Bar
@@ -129,7 +129,7 @@ export const TestedBarChart = (props: TestedBarChartProps) => {
         <YAxis
           tickFormatter={valueTickFormatter}
           scale={props.scale}
-          domain={props.scale === 'log' ? [0.01, 100000] : [0, max + 2000]}
+          domain={props.scale === 'log' ? [1, 100000] : [0, max + 2000]}
           reversed
           allowDataOverflow
         />
@@ -153,7 +153,7 @@ export const TestedBarChart = (props: TestedBarChartProps) => {
           fill="#5f6d7d00"
           stackId="stack"
         />
-        <ReferenceLine y={0.01} stroke="#000" />
+        <ReferenceLine y={props.scale === 'log' ? 1 : 0} stroke="#000" />
         <ReferenceLine y={props.scale === 'log' ? 50000 : max} stroke="#0000" label="Remaining BC Community" />
       </ChartContainer>
     </div>
