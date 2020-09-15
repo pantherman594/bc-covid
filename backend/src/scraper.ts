@@ -25,6 +25,10 @@ const IGNORE_KEYS = [
   '__v',
   'flags',
   'date',
+  'buPositive',
+  'neuPositive',
+  'suffolkPositive',
+  'massPositive',
 ];
 
 const EXPECTED_LABELS = [
