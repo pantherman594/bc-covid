@@ -93,7 +93,7 @@ export const App: React.FunctionComponent = () => {
             {logScale ? 'Use linear scale' : 'Use log scale'}
           </button>
 
-          <div className="row" style={{ maxWidth: '80%', margin: '0 auto' }}>
+          <div className="row" style={{ maxWidth: 1200, width: '80%', margin: '0 auto' }}>
             <NumberStats data={data} />
             <CurrentPositiveChart data={data} recoveryDays={7} />
           </div>

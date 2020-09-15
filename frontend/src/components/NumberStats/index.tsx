@@ -72,11 +72,16 @@ export const NumberStats = (props: NumberStatsProps) => {
           description="Undergrads Positive"
         />
       </div>
-      <NumberStat
-        dataKey="isolation"
-        description="Undergrads Isolated"
-        style={{ flex: 0, paddingTop: 10 }}
-      />
+      <div className={styles.container}>
+        <NumberStat
+          dataKey="isolation"
+          description="Undergrads Isolated"
+        />
+        <NumberStat
+          dataKey="recovered"
+          description="Undergrads Recovered"
+        />
+      </div>
     </div>
   );
 };

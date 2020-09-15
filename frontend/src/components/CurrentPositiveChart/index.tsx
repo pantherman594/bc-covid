@@ -8,8 +8,8 @@ interface CurrentPositiveChartProps {
   recoveryDays: number;
 }
 
-const NUM_UNDERGRADS = 7500;
-const NUM_COMMUNITY = 7600;
+const NUM_UNDERGRADS = 8000;
+const NUM_COMMUNITY = 10000;
 // Pad the pie with 1.5 degree on both sides, in case the value is too small to hover.
 const PADDING_UNDERGRADS = 1.5 * NUM_UNDERGRADS / 360;
 const PADDING_COMMUNITY = 1.5 * NUM_COMMUNITY / 360;
@@ -43,6 +43,8 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
   // COVID-19 will recover in recoveryDays days.
   const recoveryData = props.data[props.data.length - 1 - Math.floor(props.recoveryDays / 2)] || create();
 
+  const curNumRecovered = Math.max(-1, latest.recovered - recoveryData.recovered);
+
   const curNumPositive = Math.max(-1, latest.undergradPositive - recoveryData.undergradPositive);
   const curNumTested = Math.max(-1, latest.undergradTested - recoveryData.undergradTested);
 
@@ -69,10 +71,14 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
   };
 
   const onPieEnter = (pie: number) => (_data: any, index: number) => {
-    if (index === 2) {
+    if ((pie === 6 && index === 3) || (pie !== 6 && index === 2)) {
       setActivePie(pie < 4 ? 0 : 1);
     } else {
-      setActivePie(pie);
+      if (pie === 6 && (index === 1 || index === 2)) {
+        setActivePie(7);
+      } else {
+        setActivePie(pie);
+      }
     }
   };
 
@@ -125,7 +131,7 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
           <Pie
             {...defaultProps}
             data={[
-              { name: 'Tested', value: curNumCommunityTested, fill: '#3dbd00' },
+              { name: 'Tested', value: curNumCommunityTested, fill: '#ebc634' },
               { name: 'Padding After', value: PADDING_COMMUNITY, fill: BG_COLOR },
               { name: 'Remaining', value: NUM_COMMUNITY - curNumCommunityTested - PADDING_COMMUNITY * 2, fill: BG_COLOR },
               { name: 'Padding After', value: PADDING_COMMUNITY, fill: BG_COLOR },
@@ -149,7 +155,7 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
           <Pie
             {...defaultProps}
             data={[
-              { name: 'Tested', value: curNumTested, fill: '#3dbd00' },
+              { name: 'Tested', value: curNumTested, fill: '#ebc634' },
               { name: 'Padding After', value: PADDING_UNDERGRADS, fill: BG_COLOR },
               { name: 'Remaining', value: NUM_UNDERGRADS - curNumTested - PADDING_UNDERGRADS * 2, fill: BG_COLOR },
               { name: 'Padding After', value: PADDING_UNDERGRADS, fill: BG_COLOR },
@@ -173,13 +179,14 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
             onMouseEnter={onPieEnter(5)}
           />
 
-          {/* This pie renders the number of isolated students. */}
+          {/* This pie renders the number of isolated and recovered students. */}
           <Pie
             {...defaultProps}
             data={[
               { name: 'Isolated', value: latest.isolation, fill: '#d95c00' },
+              { name: 'Recovered', value: curNumRecovered, fill: '#3dbd00' },
               { name: 'Padding After', value: PADDING_UNDERGRADS, fill: BG_COLOR },
-              { name: 'Remaining', value: NUM_UNDERGRADS - latest.isolation - PADDING_UNDERGRADS * 2, fill: BG_COLOR },
+              { name: 'Remaining', value: NUM_UNDERGRADS - latest.isolation - curNumRecovered - PADDING_UNDERGRADS * 2, fill: BG_COLOR },
               { name: 'Padding Before', value: PADDING_UNDERGRADS, fill: BG_COLOR },
             ]}
             innerRadius={'10%'}
@@ -225,6 +232,11 @@ export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
                 name: `Isolated students: ${numberFormat(latest.isolation)}`,
                 value: latest.isolation,
                 percentage: latest.isolation / NUM_UNDERGRADS,
+              },
+              {
+                name: `Recovered undergrads in the last ${recoveryDuration}: ${numberFormat(curNumRecovered)}`,
+                value: curNumRecovered,
+                percentage: curNumRecovered / NUM_UNDERGRADS,
               },
             ]}
             fill="#0000"

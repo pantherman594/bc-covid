@@ -7,6 +7,7 @@ export interface CovidDataItem {
   undergradTested: number;
   undergradPositive: number;
   isolation: number;
+  recovered: number;
   buPositive: number;
   neuPositive: number;
   suffolkPositive: number;
@@ -22,6 +23,7 @@ export const create = (): CovidDataItem => ({
   undergradTested: 0,
   undergradPositive: 0,
   isolation: 0,
+  recovered: 0,
   buPositive: 0,
   neuPositive: 0,
   suffolkPositive: 0,

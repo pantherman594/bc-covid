@@ -18,6 +18,7 @@ export const UndergradTestedAreaChart = (props: UndergradTestedAreaChartProps) =
       return {
         tested: item.undergradTested,
         positive: item.undergradPositive,
+        recovered: item.recovered,
         date: item.date.getTime(),
       };
     });
@@ -69,6 +70,10 @@ export const UndergradTestedAreaChart = (props: UndergradTestedAreaChartProps) =
           <stop offset="5%" stopColor="#5f6d7d" stopOpacity={0.8} />
           <stop offset="95%" stopColor="#5f6d7d" stopOpacity={0.2} />
         </linearGradient>
+        <linearGradient id="colorWv" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="5%" stopColor="#00cf0e" stopOpacity={0.8} />
+          <stop offset="95%" stopColor="#00cf0e" stopOpacity={0.2} />
+        </linearGradient>
       </defs>
 
       <XAxis
@@ -98,6 +103,13 @@ export const UndergradTestedAreaChart = (props: UndergradTestedAreaChartProps) =
         stroke="#ff0000"
         fillOpacity={1}
         fill="url(#colorUv)"
+      />
+      <Area
+        type="monotone"
+        dataKey="recovered"
+        stroke="#00cf0e"
+        fillOpacity={1}
+        fill="url(#colorWv)"
       />
     </ChartContainer>
   );

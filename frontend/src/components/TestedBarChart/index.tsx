@@ -15,10 +15,12 @@ export const TestedBarChart = (props: TestedBarChartProps) => {
   // format date property from Date obj to milliseconds
   const toPlotData = (data: CovidDataItem[]): any[] => {
     return data.map((item: CovidDataItem) => {
+      const remainingPositive = item.totalPositive - item.undergradPositive;
       return {
-        ...item,
-        remainingTested: 1 * (item.totalTested - item.undergradTested),
-        remainingPositive: 1 * (item.totalPositive - item.undergradPositive),
+        undergradTested: item.undergradTested - item.undergradPositive,
+        undergradPositive: item.undergradPositive,
+        remainingTested: item.totalTested - item.undergradTested - remainingPositive,
+        remainingPositive,
         date: item.date.getTime(),
       };
     });
@@ -26,9 +28,9 @@ export const TestedBarChart = (props: TestedBarChartProps) => {
 
   let max = 0;
   for (const item of props.data) {
-    if (item.undergradTested > max) max = item.undergradTested + item.undergradPositive;
+    if (item.undergradTested > max) max = item.undergradTested;
     if (item.totalTested - item.undergradTested > max)
-      max = item.totalTested - item.undergradTested + (item.totalPositive - item.undergradPositive);
+      max = item.totalTested - item.undergradTested;
   }
 
   max += 1000;
