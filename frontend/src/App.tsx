@@ -4,13 +4,18 @@ import superagent from 'superagent';
 
 import { data as dummyData } from './utils/dummy-data';
 import {
-  CurrentPositiveChart,
   NumberStats,
+  DialChart,
+
+  CumulativePositiveChart,
+  CumulativeTestedChart,
+
+  DailyPositiveChart,
   PercentPositiveChart,
+
   PopulationPercentChart,
-  TestedAreaChart,
+
   TestedBarChart,
-  UndergradTestedAreaChart,
 } from './components';
 import { CovidDataItem } from './types';
 import './App.css';
@@ -95,25 +100,31 @@ export const App: React.FunctionComponent = () => {
 
           <div className="row" style={{ maxWidth: 1200, width: '80%', margin: '0 auto' }}>
             <NumberStats data={data} />
-            <CurrentPositiveChart data={data} recoveryDays={7} />
+            <DialChart data={data} recoveryDays={7} />
           </div>
             <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff. "Community" excludes undergrad students. Estimated populations are 80% of 2019-20 populations, as drawn from the <a href="https://www.bc.edu/content/dam/files/publications/factbook/pdf/19-20_factbook.pdf">BC factbook</a>. This is by no means accurate, but I have not been able to find any official numbers.</div>
 
           <div className="row">
             <div style={{ flex: 1, minWidth: 350 }}>
-              <UndergradTestedAreaChart data={data} scale={scale} />
+              <CumulativePositiveChart data={data} scale={scale} />
             </div>
             <div style={{ flex: 1, minWidth: 350 }}>
-              <TestedAreaChart data={data} scale={scale} />
+              <CumulativeTestedChart data={data} scale={scale} />
             </div>
           </div>
-          <div className="hint">"Community" refers to the BC community excluding undergrad students: including grad students, faculty, and staff.</div>
+          <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff. "Community" excludes undergrad students.</div>
 
-          <PercentPositiveChart data={data} />
-          <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff.</div>
+          <div className="row">
+            <div style={{ flex: 1, minWidth: 350 }}>
+              <DailyPositiveChart data={data} scale={scale} />
+            </div>
+            <div style={{ flex: 1, minWidth: 350 }}>
+              <PercentPositiveChart data={data} />
+            </div>
+          </div>
+          <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff. "Community" excludes undergrad students.</div>
 
           <TestedBarChart data={data} scale={scale} />
-          <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff. "Remaining" refers to that total minus the undergraduate stats.</div>
 
           <PopulationPercentChart data={data} recoveryDays={7} />
           <div className="hint">This graph shows the number of positive tests in the past 7 days, as a percentage of the total population of the respective community. Take these values with a huge grain of salt. Many assumptions were made about population sizes.</div>

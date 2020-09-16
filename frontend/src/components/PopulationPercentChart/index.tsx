@@ -5,6 +5,7 @@ import { LineChart, XAxis, YAxis, Legend, Line, Tooltip } from 'recharts';
 import style from './style.module.css';
 import { ChartContainer } from '../index';
 import { CovidDataItem } from '../../types';
+import getRecoveryDays from '../../utils/recoveryDays';
 
 // Assume 80% of all students and faculty return to campus. While this is not accurate, I
 // couldn't find exact numbers so we'll use this just to compare the campuses.
@@ -33,17 +34,7 @@ interface PopulationPercentChartProps {
 export const PopulationPercentChart = (props: PopulationPercentChartProps) => {
   const toPlotData = (data: CovidDataItem[]): any[] => {
     return data.map((item: CovidDataItem, index: number, array: CovidDataItem[]) => {
-      let { recoveryDays } = props;
-
-      // Starting 9/10, BC is only reporting data Tues, Thurs, Sat.
-      // These adjustments are needed to keep the 7-day change accurate.
-      if (item.date > new Date(2020, 8, 17)) {
-        recoveryDays = Math.floor(recoveryDays / 2);
-      } else if (item.date > new Date(2020, 8, 15)) {
-        recoveryDays = 4;
-      } else if (item.date > new Date(2020, 8, 12)) {
-        recoveryDays = 6;
-      }
+      const recoveryDays = getRecoveryDays(item.date, props.recoveryDays);
 
       const prev = array[index - recoveryDays];
       if (!prev) return undefined;

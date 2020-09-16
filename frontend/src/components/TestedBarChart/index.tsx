@@ -84,6 +84,10 @@ export const TestedBarChart = (props: TestedBarChartProps) => {
         <Tooltip content={renderTooltipContent} />
         <XAxis
           dataKey="date"
+          tickFormatter={dateTickFormatter}
+          type="number"
+          scale="time"
+          domain={['dataMin - 43200000', 'dataMax + 43200000']}
           hide
         />
         <YAxis
@@ -125,6 +129,9 @@ export const TestedBarChart = (props: TestedBarChartProps) => {
         <XAxis
           dataKey="date"
           tickFormatter={dateTickFormatter}
+          type="number"
+          scale="time"
+          domain={['dataMin - 43200000', 'dataMax + 43200000']}
         />
         <YAxis
           tickFormatter={valueTickFormatter}

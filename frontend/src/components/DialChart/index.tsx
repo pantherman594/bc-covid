@@ -3,7 +3,7 @@ import style from './style.module.css';
 import { Pie, PieChart, ResponsiveContainer } from 'recharts';
 import { create, CovidDataItem } from '../../types';
 
-interface CurrentPositiveChartProps {
+interface DialChartProps {
   data: CovidDataItem[];
   recoveryDays: number;
 }
@@ -31,7 +31,7 @@ const noStroke = {
   stroke: 'none',
 };
 
-export const CurrentPositiveChart = (props: CurrentPositiveChartProps) => {
+export const DialChart = (props: DialChartProps) => {
   const [activePie, setActivePie] = useState(0);
 
   if (props.data.length === 0) return null;
