@@ -99,7 +99,7 @@ export const PopulationPercentChart = (props: PopulationPercentChartProps) => {
       width={'100%'}
       height={500}
       chartComp={LineChart}
-      chartProps={{ data: toPlotData(props.data), syncId: "syncTestPercent" }}
+      chartProps={{ data: toPlotData(props.data) }}
     >
       <XAxis
         dataKey="date"
