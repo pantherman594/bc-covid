@@ -46,7 +46,7 @@ export const PopulationPercentChart = (props: PopulationPercentChartProps) => {
       }
 
       const prev = array[index - recoveryDays];
-      if (!prev) return {};
+      if (!prev) return undefined;
 
       const bcPercent = (item.totalPositive - prev.totalPositive) / BC_POP;
       const buPercent = (item.buPositive - prev.buPositive) / BU_POP;
@@ -62,7 +62,7 @@ export const PopulationPercentChart = (props: PopulationPercentChartProps) => {
         Massachusetts: massPercent,
         date: item.date.getTime(),
       };
-    });
+    }).filter((entry: any) => entry !== undefined);
   };
 
   const dateTickFormatter = (tick: number) => moment(tick).format('M/D');
@@ -101,23 +101,12 @@ export const PopulationPercentChart = (props: PopulationPercentChartProps) => {
       chartComp={LineChart}
       chartProps={{ data: toPlotData(props.data), syncId: "syncTestPercent" }}
     >
-      <defs>
-        <linearGradient id="colorPTotal" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="5%" stopColor="#009dff" stopOpacity={0.8} />
-          <stop offset="95%" stopColor="#009dff" stopOpacity={0.2} />
-        </linearGradient>
-        <linearGradient id="colorPUnder" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-          <stop offset="95%" stopColor="#8884d8" stopOpacity={0.2} />
-        </linearGradient>
-      </defs>
-
       <XAxis
         dataKey="date"
         tickFormatter={dateTickFormatter}
         type="number"
         scale="time"
-        domain={['dataMin', 'dataMax']}
+        domain={['auto', 'auto']}
       />
       <YAxis tickFormatter={percentTickFormatter} />
       <Tooltip content={renderTooltipContent} />

@@ -57,7 +57,7 @@ export const App: React.FunctionComponent = () => {
 
       if (true || process.env.NODE_ENV === 'production') {
         setData(newData);
-        window.localStorage.setItem('data', JSON.stringify(newData));
+        window.localStorage.setItem('data', JSON.stringify(res.body));
       } else {
         setData(dummyData);
         window.localStorage.setItem('data', JSON.stringify(dummyData));
