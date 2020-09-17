@@ -20,6 +20,8 @@ import {
 import { CovidDataItem } from './types';
 import './App.css';
 
+const DATA_VERSION = '1';
+
 const processData = (data: any) => {
   const newData: CovidDataItem[] = [];
 
@@ -63,14 +65,16 @@ export const App: React.FunctionComponent = () => {
       if (true || process.env.NODE_ENV === 'production') {
         setData(newData);
         window.localStorage.setItem('data', JSON.stringify(res.body));
+        window.localStorage.setItem('dataVersion', DATA_VERSION);
       } else {
         setData(dummyData);
         window.localStorage.setItem('data', JSON.stringify(dummyData));
+        window.localStorage.setItem('dataVersion', DATA_VERSION);
       }
       setLoading(false);
     };
 
-    if (window.localStorage.getItem('data') !== null) {
+    if (window.localStorage.getItem('data') !== null && window.localStorage.getItem('dataVersion') === DATA_VERSION) {
       setData(processData(JSON.parse(window.localStorage.getItem('data') as string)));
       setLoading(false);
 
