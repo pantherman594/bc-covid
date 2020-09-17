@@ -43,7 +43,7 @@ export const DialChart = (props: DialChartProps) => {
   // COVID-19 will recover in recoveryDays days.
   const recoveryData = props.data[props.data.length - 1 - Math.floor(props.recoveryDays / 2)] || create();
 
-  const curNumRecovered = Math.max(-1, latest.recovered - recoveryData.recovered);
+  const curNumRecovered = Math.max(-1, latest.undergradRecovered - recoveryData.undergradRecovered);
 
   const curNumPositive = Math.max(-1, latest.undergradPositive - recoveryData.undergradPositive);
   const curNumTested = Math.max(-1, latest.undergradTested - recoveryData.undergradTested);

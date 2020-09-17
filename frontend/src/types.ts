@@ -4,10 +4,11 @@ export interface CovidDataItem {
   date: Date;
   totalTested: number;
   totalPositive: number;
+  totalRecovered: number;
   undergradTested: number;
   undergradPositive: number;
+  undergradRecovered: number;
   isolation: number;
-  recovered: number;
   buPositive: number;
   neuPositive: number;
   suffolkPositive: number;
@@ -20,10 +21,11 @@ export const create = (): CovidDataItem => ({
   date: new Date(),
   totalTested: 0,
   totalPositive: 0,
+  totalRecovered: 0,
   undergradTested: 0,
   undergradPositive: 0,
+  undergradRecovered: 0,
   isolation: 0,
-  recovered: 0,
   buPositive: 0,
   neuPositive: 0,
   suffolkPositive: 0,

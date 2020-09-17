@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import moment from 'moment';
-import { ComposedChart, XAxis, YAxis, Legend, Bar, Line, Tooltip } from 'recharts';
+import { ComposedChart, XAxis, YAxis, Legend, Line, Tooltip } from 'recharts';
 
 import style from './style.module.css';
 import { ChartContainer } from '../index';

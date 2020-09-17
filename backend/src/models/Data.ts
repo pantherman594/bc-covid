@@ -22,10 +22,13 @@ export class Data {
   public undergradPositive!: number;
 
   @prop({ required: true })
-  public isolation!: number;
+  public totalRecovered!: number;
 
   @prop({ required: true })
-  public recovered!: number;
+  public undergradRecovered!: number;
+
+  @prop({ required: true })
+  public isolation!: number;
 
   @prop({ required: true })
   public buPositive!: number;

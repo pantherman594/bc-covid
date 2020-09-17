@@ -81,7 +81,7 @@ export const NumberStats = (props: NumberStatsProps) => {
           description="Undergrads Isolated"
         />
         <NumberStat
-          dataKey="recovered"
+          dataKey="undergradRecovered"
           description="Undergrads Recovered"
         />
       </div>

@@ -45,8 +45,9 @@ interface IBCData {
   totalPositive: number;
   undergradTested: number;
   undergradPositive: number;
+  totalRecovered: number;
+  undergradRecovered: number;
   isolation: number;
-  recovered: number;
 }
 
 interface IBUData {
@@ -146,15 +147,16 @@ const scrapeBC = async (): Promise<IBCData> => {
     throw new Error('Parse int failed.');
   }
 
-  const recoveredMatch = recoveredData.text().match(/^([0-9]+) Students Recovered$/);
+  const recoveredMatch = recoveredData.text().match(/^([0-9]+) Recovered \(([0-9]+) Undergrads\)$/);
   if (!recoveredMatch) {
-    throw new Error('Labels have changed, please fix scraper. Failed label: Students Recovered.');
+    throw new Error('Labels have changed, please fix scraper. Failed label: Recovered.');
   }
 
   // Convert the value into a number, stripping commas.
-  const recovered = parseInt(recoveredMatch[1].replace(/,/g, ''), 10);
+  const totalRecovered = parseInt(recoveredMatch[1].replace(/,/g, ''), 10);
+  const undergradRecovered = parseInt(recoveredMatch[2].replace(/,/g, ''), 10);
 
-  if (Number.isNaN(recovered)) {
+  if (Number.isNaN(totalRecovered) || Number.isNaN(undergradRecovered)) {
     throw new Error('Parse int failed.');
   }
 
@@ -162,10 +164,11 @@ const scrapeBC = async (): Promise<IBCData> => {
   const bcData = {
     totalTested: data[0],
     totalPositive: data[1],
+    totalRecovered,
     undergradTested: data[2],
     undergradPositive: data[3],
+    undergradRecovered,
     isolation,
-    recovered,
   };
 
   console.log('BC Complete.');
