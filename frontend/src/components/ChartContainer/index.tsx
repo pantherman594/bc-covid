@@ -1,6 +1,7 @@
 import React from 'react';
 import { ResponsiveContainer, CartesianGrid } from 'recharts';
 import './styles.css';
+
 interface ChartContainerProps {
   title: string;
   width: string | number;
@@ -11,17 +12,27 @@ interface ChartContainerProps {
 }
 
 // Wrapper for rechart component
-export const ChartContainer = (props: ChartContainerProps) => {
-  const ChartComp = props.chartComp;
+const ChartContainer = (props: ChartContainerProps) => {
+  const {
+    title,
+    width,
+    height,
+    chartComp: ChartComp,
+    chartProps,
+    children,
+  } = props;
+
   return (
     <div className="chart-container">
-      <h1>{props.title}</h1>
-      <ResponsiveContainer width={props.width} height={props.height}>
-        <ChartComp {...props.chartProps}>
+      <h1>{title}</h1>
+      <ResponsiveContainer width={width} height={height}>
+        <ChartComp {...chartProps}>
           <CartesianGrid strokeDasharray="3 3" />
-          {props.children}
+          {children}
         </ChartComp>
       </ResponsiveContainer>
     </div>
   );
 };
+
+export default ChartContainer;

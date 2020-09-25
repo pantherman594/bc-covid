@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import moment from 'moment';
-import { ComposedChart, XAxis, YAxis, Legend, Bar, Line, Tooltip } from 'recharts';
+import {
+  ComposedChart, XAxis, YAxis, Legend, Bar, Line, Tooltip,
+} from 'recharts';
 
 import style from './style.module.css';
 import { ChartContainer } from '../index';
@@ -11,7 +13,9 @@ interface DailyPositiveChartProps {
   scale: 'log' | 'linear';
 }
 
-export const DailyPositiveChart = (props: DailyPositiveChartProps) => {
+const DailyPositiveChart = (props: DailyPositiveChartProps) => {
+  const { data: rawData, scale } = props;
+
   const [toggles, setToggles] = useState({
     totalPositive: false,
     undergradPositive: false,
@@ -45,7 +49,7 @@ export const DailyPositiveChart = (props: DailyPositiveChartProps) => {
         total7DayAvg: totalSum / items,
         undergrad7DayAvg: undergradSum / items,
         community7DayAvg: communitySum / items,
-      })
+      });
     });
 
     return data.map((item: CovidDataItem, index: number, array: CovidDataItem[]) => {
@@ -74,8 +78,8 @@ export const DailyPositiveChart = (props: DailyPositiveChartProps) => {
       <div className={style.customTooltip}>
         <p>{dateTickFormatter(label)}</p>
         {
-          payload.map((entry: any, index: number) => (
-            <p key={`item-${index}`} style={{ color: entry.color }}>
+          payload.map((entry: any) => (
+            <p key={entry.name} style={{ color: entry.color }}>
               {`${entry.name}: ${Math.round(entry.value)}`}
             </p>
           ))
@@ -87,10 +91,10 @@ export const DailyPositiveChart = (props: DailyPositiveChartProps) => {
   return (
     <ChartContainer
       title="Positive Test Results per Day"
-      width={'100%'}
+      width="100%"
       height={500}
       chartComp={ComposedChart}
-      chartProps={{ data: toPlotData(props.data), syncId: "syncTestPercent" }}
+      chartProps={{ data: toPlotData(rawData), syncId: 'syncTestPercent' }}
     >
       <XAxis
         dataKey="date"
@@ -101,21 +105,19 @@ export const DailyPositiveChart = (props: DailyPositiveChartProps) => {
       />
       <YAxis
         orientation="left"
-        scale={props.scale}
-        domain={[props.scale === 'log' ? 0.5 : 'auto', 'auto']}
+        scale={scale}
+        domain={[scale === 'log' ? 0.5 : 'auto', 'auto']}
         allowDataOverflow
       />
       <Tooltip content={renderTooltipContent} />
-      <Legend 
+      <Legend
         onClick={(dataProps: any) => {
           let key = dataProps.dataKey;
           if (key.includes('Percent')) key = 'percent';
-          setToggles((toggles: any) => {
-            return {
-              ...toggles,
-              [key]: !toggles[key],
-            };
-          });
+          setToggles((newToggles: any) => ({
+            ...newToggles,
+            [key]: !newToggles[key],
+          }));
         }}
       />
       <Bar
@@ -158,3 +160,5 @@ export const DailyPositiveChart = (props: DailyPositiveChartProps) => {
     </ChartContainer>
   );
 };
+
+export default DailyPositiveChart;

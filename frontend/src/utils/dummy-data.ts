@@ -1,6 +1,6 @@
 import { CovidDataItem } from '../types';
 
-export const data: CovidDataItem[] = [
+const data: CovidDataItem[] = [
   {
     id: '1',
     date: new Date(2020, 7, 23),
@@ -110,3 +110,5 @@ export const data: CovidDataItem[] = [
     daysSinceFirst: 5,
   },
 ];
+
+export default data;

@@ -1,6 +1,8 @@
 import React from 'react';
 import moment from 'moment';
-import { ComposedChart, XAxis, YAxis, Legend, Line, Tooltip } from 'recharts';
+import {
+  ComposedChart, XAxis, YAxis, Legend, Line, Tooltip,
+} from 'recharts';
 
 import style from './style.module.css';
 import { ChartContainer } from '../index';
@@ -10,7 +12,8 @@ interface PercentPositiveChartProps {
   data: CovidDataItem[];
 }
 
-export const PercentPositiveChart = (props: PercentPositiveChartProps) => {
+const PercentPositiveChart = (props: PercentPositiveChartProps) => {
+  const { data: rawData } = props;
   // format date property from Date obj to milliseconds
   const toPlotData = (data: CovidDataItem[]): any[] => {
     if (data.length === 0) return [];
@@ -18,7 +21,9 @@ export const PercentPositiveChart = (props: PercentPositiveChartProps) => {
     const averages: any[] = [];
 
     data.forEach((item: any) => {
-      let { totalTested, undergradTested, totalPositive, undergradPositive } = item;
+      let {
+        totalTested, undergradTested, totalPositive, undergradPositive,
+      } = item;
       let communityTested = totalTested - undergradTested;
       let communityPositive = totalPositive - undergradPositive;
 
@@ -86,8 +91,8 @@ export const PercentPositiveChart = (props: PercentPositiveChartProps) => {
       <div className={style.customTooltip}>
         <p>{dateTickFormatter(label)}</p>
         {
-          payload.map((entry: any, index: number) => (
-            <p key={`item-${index}`} style={{ color: entry.color }}>
+          payload.map((entry: any) => (
+            <p key={entry.name} style={{ color: entry.color }}>
               {`${entry.name}: ${percentTickFormatter(entry.value)}`}
             </p>
           ))
@@ -99,10 +104,10 @@ export const PercentPositiveChart = (props: PercentPositiveChartProps) => {
   return (
     <ChartContainer
       title="Test Percent Positive per Day"
-      width={'100%'}
+      width="100%"
       height={500}
       chartComp={ComposedChart}
-      chartProps={{ data: toPlotData(props.data), syncId: "syncTestPercent" }}
+      chartProps={{ data: toPlotData(rawData), syncId: 'syncTestPercent' }}
     >
       <XAxis
         dataKey="date"
@@ -150,3 +155,5 @@ export const PercentPositiveChart = (props: PercentPositiveChartProps) => {
     </ChartContainer>
   );
 };
+
+export default PercentPositiveChart;

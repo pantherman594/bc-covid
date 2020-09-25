@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './styles.module.css';
 import { create, CovidDataItem } from '../../types';
 
-interface NumberStatProps extends React.ComponentProps<"div"> {
+interface NumberStatProps extends React.ComponentProps<'div'> {
   dataKey: keyof CovidDataItem;
   description: string;
 }
@@ -11,21 +11,23 @@ interface NumberStatsProps {
   data: CovidDataItem[];
 }
 
-export const NumberStats = (props: NumberStatsProps) => {
-  if (props.data.length === 0) {
+const NumberStats = (props: NumberStatsProps) => {
+  const { data } = props;
+
+  if (data.length === 0) {
     return null;
   }
 
-  const latest = props.data[props.data.length - 1];
+  const latest = data[data.length - 1];
 
   let previous = create();
 
-  if (props.data.length > 1) {
+  if (data.length > 1) {
     previous = props.data[props.data.length - 2];
   }
 
   const NumberStat = (statProps: NumberStatProps) => {
-    const { dataKey, description, ...rest } = statProps;
+    const { dataKey, description } = statProps;
     const change = latest[dataKey] - previous[dataKey];
 
     let incr = change > 0;
@@ -37,14 +39,16 @@ export const NumberStats = (props: NumberStatsProps) => {
     if (dataKey === 'isolation') style = '';
 
     return (
-      <div className={styles.stat} {...rest}>
+      <div className={styles.stat}>
         <div className={styles.row}>
           {latest[dataKey].toLocaleString()}
-          { change === 0 ? <div className={styles.change}>{"\u2013 +0"}</div> :
-            <div className={[styles.change, style].join(" ")}>
-              { change > 0 ? "\u25b2 +" : "\u25bc " }{change.toLocaleString()}
-            </div>
-          }
+          { change === 0 ? <div className={styles.change}>{'\u2013 +0'}</div>
+            : (
+              <div className={[styles.change, style].join(' ')}>
+                { change > 0 ? '\u25b2 +' : '\u25bc ' }
+                {change.toLocaleString()}
+              </div>
+            )}
         </div>
         <div className={styles.description}>
           {description}
@@ -88,3 +92,5 @@ export const NumberStats = (props: NumberStatsProps) => {
     </div>
   );
 };
+
+export default NumberStats;

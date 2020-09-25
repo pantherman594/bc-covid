@@ -1,6 +1,8 @@
 import React from 'react';
 import moment from 'moment';
-import { ComposedChart, XAxis, YAxis, Legend, Bar, Line, Tooltip } from 'recharts';
+import {
+  ComposedChart, XAxis, YAxis, Legend, Bar, Line, Tooltip,
+} from 'recharts';
 
 import style from './style.module.css';
 import { ChartContainer } from '../index';
@@ -11,7 +13,9 @@ interface CumulativePositiveChartProps {
   scale: 'log' | 'linear';
 }
 
-export const CumulativePositiveChart = (props: CumulativePositiveChartProps) => {
+const CumulativePositiveChart = (props: CumulativePositiveChartProps) => {
+  const { data: rawData, scale } = props;
+
   // format date property from Date obj to milliseconds
   const toPlotData = (data: CovidDataItem[]): any[] => {
     if (data.length === 0) return [];
@@ -32,7 +36,7 @@ export const CumulativePositiveChart = (props: CumulativePositiveChartProps) => 
         totalSum -= data[startIndex].totalPositive;
         undergradSum -= data[startIndex].undergradPositive;
         communitySum -= data[startIndex].totalPositive - data[startIndex].undergradPositive;
-      
+
         startIndex += 1;
       }
 
@@ -41,18 +45,16 @@ export const CumulativePositiveChart = (props: CumulativePositiveChartProps) => 
         total7DayAvg: totalSum / items,
         undergrad7DayAvg: undergradSum / items,
         community7DayAvg: communitySum / items,
-      })
+      });
     });
 
-    return data.map((item: CovidDataItem, index: number) => {
-      return {
-        total: item.totalPositive,
-        undergrad: item.undergradPositive,
-        community: item.totalPositive - item.undergradPositive,
-        ...averages[index],
-        date: item.date.getTime(),
-      };
-    });
+    return data.map((item: CovidDataItem, index: number) => ({
+      total: item.totalPositive,
+      undergrad: item.undergradPositive,
+      community: item.totalPositive - item.undergradPositive,
+      ...averages[index],
+      date: item.date.getTime(),
+    }));
   };
 
   const dateTickFormatter = (tick: number) => {
@@ -70,8 +72,8 @@ export const CumulativePositiveChart = (props: CumulativePositiveChartProps) => 
       <div className={style.customTooltip}>
         <p>{dateTickFormatter(label)}</p>
         {
-          payload.map((entry: any, index: number) => (
-            <p key={`item-${index}`} style={{ color: entry.color }}>
+          payload.map((entry: any) => (
+            <p key={entry.name} style={{ color: entry.color }}>
               {`${entry.name}: ${Math.round(entry.value)}`}
             </p>
           ))
@@ -83,10 +85,10 @@ export const CumulativePositiveChart = (props: CumulativePositiveChartProps) => 
   return (
     <ChartContainer
       title="Cumulative Positive Tests"
-      width={'100%'}
+      width="100%"
       height={500}
       chartComp={ComposedChart}
-      chartProps={{ data: toPlotData(props.data), syncId: "syncTestPercent" }}
+      chartProps={{ data: toPlotData(rawData), syncId: 'syncTestPercent' }}
     >
       <defs>
         <linearGradient id="colorUndergrad" x1="0" y1="0" x2="0" y2="1">
@@ -111,7 +113,7 @@ export const CumulativePositiveChart = (props: CumulativePositiveChartProps) => 
         domain={['dataMin - 43200000', 'dataMax + 43200000']}
       />
       <YAxis
-        scale={props.scale}
+        scale={scale}
         domain={[1, 'dataMax']}
         allowDataOverflow
       />
@@ -147,3 +149,5 @@ export const CumulativePositiveChart = (props: CumulativePositiveChartProps) => 
     </ChartContainer>
   );
 };
+
+export default CumulativePositiveChart;

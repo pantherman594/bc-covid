@@ -1,6 +1,8 @@
 import React from 'react';
 import moment from 'moment';
-import { LineChart, XAxis, YAxis, Legend, Line, Tooltip } from 'recharts';
+import {
+  LineChart, XAxis, YAxis, Legend, Line, Tooltip,
+} from 'recharts';
 
 import style from './style.module.css';
 import { ChartContainer } from '../index';
@@ -27,31 +29,30 @@ const SUFFOLK_POP = 803907; // From https://usafactsstatic.blob.core.windows.net
 
 interface PopulationPercentChartProps {
   data: CovidDataItem[];
-  recoveryDays: number;
 }
 
-export const PopulationPercentChart = (props: PopulationPercentChartProps) => {
-  const toPlotData = (data: CovidDataItem[]): any[] => {
-    return data.map((item: CovidDataItem, _i: number, array: CovidDataItem[]) => {
-      const prev = array[item.recoveryIndex];
-      if (!prev) return undefined;
+const PopulationPercentChart = (props: PopulationPercentChartProps) => {
+  const { data } = props;
 
-      const bcPercent = (item.totalPositive - prev.totalPositive) / BC_POP;
-      const buPercent = (item.buPositive - prev.buPositive) / BU_POP;
-      const neuPercent = (item.neuPositive - prev.neuPositive) / NEU_POP;
-      const suffolkPercent = (item.suffolkPositive - prev.suffolkPositive) / SUFFOLK_POP;
-      const massPercent = (item.massPositive - prev.massPositive) / MASS_POP;
+  const plotData = data.map((item: CovidDataItem, _i: number, array: CovidDataItem[]) => {
+    const prev = array[item.recoveryIndex];
+    if (!prev) return undefined;
 
-      return {
-        BC: bcPercent,
-        BU: buPercent,
-        NEU: neuPercent,
-        'Suffolk County': suffolkPercent,
-        Massachusetts: massPercent,
-        date: item.date.getTime(),
-      };
-    }).filter((entry: any) => entry !== undefined);
-  };
+    const bcPercent = (item.totalPositive - prev.totalPositive) / BC_POP;
+    const buPercent = (item.buPositive - prev.buPositive) / BU_POP;
+    const neuPercent = (item.neuPositive - prev.neuPositive) / NEU_POP;
+    const suffolkPercent = (item.suffolkPositive - prev.suffolkPositive) / SUFFOLK_POP;
+    const massPercent = (item.massPositive - prev.massPositive) / MASS_POP;
+
+    return {
+      BC: bcPercent,
+      BU: buPercent,
+      NEU: neuPercent,
+      'Suffolk County': suffolkPercent,
+      Massachusetts: massPercent,
+      date: item.date.getTime(),
+    };
+  }).filter((entry: any) => entry !== undefined);
 
   const dateTickFormatter = (tick: number) => moment(tick).format('M/D');
   const percentTickFormatter = (tick: number) => `${(100 * tick).toFixed(2)}%`;
@@ -71,8 +72,8 @@ export const PopulationPercentChart = (props: PopulationPercentChartProps) => {
       <div className={style.customTooltip}>
         <p>{dateTickFormatter(label)}</p>
         {
-          payload.map((entry: any, index: number) => (
-            <p key={`item-${index}`} style={{ color: entry.color }}>
+          payload.map((entry: any) => (
+            <p key={entry.name} style={{ color: entry.color }}>
               {`${entry.name}: ${percentTickFormatter(entry.value)} (${Math.round(pops[entry.name] * entry.value).toLocaleString()}/${pops[entry.name].toLocaleString()})`}
             </p>
           ))
@@ -84,10 +85,10 @@ export const PopulationPercentChart = (props: PopulationPercentChartProps) => {
   return (
     <ChartContainer
       title="7-Day Population Percent Newly Testing Positive"
-      width={'100%'}
+      width="100%"
       height={500}
       chartComp={LineChart}
-      chartProps={{ data: toPlotData(props.data) }}
+      chartProps={{ data: plotData }}
     >
       <XAxis
         dataKey="date"
@@ -127,3 +128,5 @@ export const PopulationPercentChart = (props: PopulationPercentChartProps) => {
     </ChartContainer>
   );
 };
+
+export default PopulationPercentChart;

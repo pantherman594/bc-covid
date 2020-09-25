@@ -1,8 +1,8 @@
-import React, { useEffect, useState }from 'react';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import superagent from 'superagent';
 
-import { data as dummyData } from './utils/dummy-data';
+import './App.css';
 import {
   NumberStats,
   DialChart,
@@ -18,7 +18,6 @@ import {
   TestedBarChart,
 } from './components';
 import { CovidDataItem } from './types';
-import './App.css';
 
 const DATA_VERSION = '1';
 
@@ -54,13 +53,13 @@ const processData = (data: any) => {
   const daysSinceFirst = new Map<number, number>();
 
   // Populates the map.
-  for (let i = 0; i < newData.length; i++) {
+  for (let i = 0; i < newData.length; i += 1) {
     const diff = moment(newData[i].date).diff(firstDay, 'days');
     daysSinceFirst.set(diff, i);
     newData[i].daysSinceFirst = diff;
   }
 
-  for (let i = 0; i < newData.length; i++) {
+  for (let i = 0; i < newData.length; i += 1) {
     let recoveryDaysSinceFirst = (newData[i].daysSinceFirst || 0) - 7;
 
     while (!daysSinceFirst.has(recoveryDaysSinceFirst) && recoveryDaysSinceFirst > -1) {
@@ -76,7 +75,7 @@ const processData = (data: any) => {
   return newData;
 };
 
-export const App: React.FunctionComponent = () => {
+const App: React.FunctionComponent = () => {
   const initialData: CovidDataItem[] = [];
   const [data, setData] = useState<CovidDataItem[]>(initialData);
   const [loading, setLoading] = useState(true);
@@ -90,15 +89,9 @@ export const App: React.FunctionComponent = () => {
 
       const newData = processData(res.body);
 
-      if (true || process.env.NODE_ENV === 'production') {
-        setData(newData);
-        window.localStorage.setItem('data', JSON.stringify(res.body));
-        window.localStorage.setItem('dataVersion', DATA_VERSION);
-      } else {
-        setData(dummyData);
-        window.localStorage.setItem('data', JSON.stringify(dummyData));
-        window.localStorage.setItem('dataVersion', DATA_VERSION);
-      }
+      setData(newData);
+      window.localStorage.setItem('data', JSON.stringify(res.body));
+      window.localStorage.setItem('dataVersion', DATA_VERSION);
       setLoading(false);
     };
 
@@ -117,110 +110,148 @@ export const App: React.FunctionComponent = () => {
 
   return (
     <div className="App" style={{ overflowY: loading ? 'hidden' : 'auto' }}>
-      { loading ? null :
-        <React.Fragment>
-          <h1>Boston College Covid-19 Statistics</h1>
-          <h3>
-            {'Updated: '}
-            {data.length === 0 ? null : data[data.length - 1].date.toLocaleDateString(undefined, { day: 'numeric', month: 'numeric' })}
-          </h3>
-          <button onClick={() => {
-            setLogScale(!logScale);
-          }}>
-            {logScale ? 'Use linear scale' : 'Use log scale'}
-          </button>
+      { loading ? null
+        : (
+          <>
+            <h1>Boston College Covid-19 Statistics</h1>
+            <h3>
+              {'Updated: '}
+              {data.length === 0 ? null : data[data.length - 1].date.toLocaleDateString(undefined, { day: 'numeric', month: 'numeric' })}
+            </h3>
+            <button
+              type="button"
+              onClick={() => setLogScale(!logScale)}
+            >
+              {logScale ? 'Use linear scale' : 'Use log scale'}
+            </button>
 
-          <div className="row" style={{ maxWidth: 1200, width: '80%', margin: '0 auto' }}>
-            <NumberStats data={data} />
-            <DialChart data={data} recoveryDays={7} />
-          </div>
-            <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff. "Community" excludes undergrad students. Estimated populations are 80% of 2019-20 populations, as drawn from the <a href="https://www.bc.edu/content/dam/files/publications/factbook/pdf/19-20_factbook.pdf">BC factbook</a>. This is by no means accurate, but I have not been able to find any official numbers.</div>
-
-          <div className="row">
-            <div style={{ flex: 1, minWidth: 350 }}>
-              <CumulativePositiveChart data={data} scale={scale} />
+            <div className="row" style={{ maxWidth: 1200, width: '80%', margin: '0 auto' }}>
+              <NumberStats data={data} />
+              <DialChart data={data} recoveryDays={7} />
             </div>
-            <div style={{ flex: 1, minWidth: 350 }}>
-              <CumulativeTestedChart data={data} scale={scale} />
+            <div className="hint">
+              &ldquo;Total&rdquo; refers to the entire BC community, including undergrad and
+              grad students, faculty, and staff. &ldquo;Community&rdquo; excludes undergrad
+              students.
             </div>
-          </div>
-          <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff. "Community" excludes undergrad students.</div>
 
-          <div className="row">
-            <div style={{ flex: 1, minWidth: 350 }}>
-              <DailyPositiveChart data={data} scale={scale} />
+            <div className="row">
+              <div style={{ flex: 1, minWidth: 350 }}>
+                <CumulativePositiveChart data={data} scale={scale} />
+              </div>
+              <div style={{ flex: 1, minWidth: 350 }}>
+                <CumulativeTestedChart data={data} scale={scale} />
+              </div>
             </div>
-            <div style={{ flex: 1, minWidth: 350 }}>
-              <PercentPositiveChart data={data} />
+            <div className="hint">
+              &ldquo;Total&rdquo; refers to the entire BC community, including undergrad
+              and grad students, faculty, and staff. &ldquo;Community&rdquo; excludes
+              undergrad students.
             </div>
-          </div>
-          <div className="hint">"Total" refers to the entire BC community, including undergrad and grad students, faculty, and staff. "Community" excludes undergrad students.</div>
 
-          <TestedBarChart data={data} scale={scale} />
+            <div className="row">
+              <div style={{ flex: 1, minWidth: 350 }}>
+                <DailyPositiveChart data={data} scale={scale} />
+              </div>
+              <div style={{ flex: 1, minWidth: 350 }}>
+                <PercentPositiveChart data={data} />
+              </div>
+            </div>
+            <div className="hint">
+              &ldquo;Total&rdquo; refers to the entire BC community, including undergrad
+              and grad students, faculty, and staff. &ldquo;Community&rdquo; excludes
+              undergrad students.
+            </div>
 
-          <PopulationPercentChart data={data} recoveryDays={7} />
-          <div className="hint">This graph shows the number of positive tests in the past 7 days, as a percentage of the total population of the respective community. Take these values with a huge grain of salt. Many assumptions were made about population sizes.</div>
+            <TestedBarChart data={data} scale={scale} />
 
-          <hr />
+            <PopulationPercentChart data={data} />
+            <div className="hint">
+              This graph shows the number of positive tests in the past 7 days, as a
+              percentage of the total population of the respective community. Take these
+              values with a huge grain of salt. Many assumptions were made about population
+              sizes.
+            </div>
 
-          <div className="note">
-            * On 9/3, BC shifted their reporting from the number of undergrads who tested positive to the number of undergrad tests that came back positive, counting tests instead of people. I did not adjust the data prior to 9/3 because that could only be a guess, but I suspect a good number of undergraduate tests were counted as community tests. Picture shifting the "Tests and Results per Day" graph below up a bit to better fit the data after 9/3.
-            <br /><br />
-            The button below adjusts the data prior to 9/3 by moving 30% of the community tests to the undergraduates. There is no reasoning to this 30% other than the fact that it makes the cumulative graphs non-decreasing, as one would expect them to be.
-          </div>
-          { adjustSep3 ? (
-            <div className="note">Refresh the page to reset the data.</div>
-          ) : (
-            <React.Fragment>
-              <button onClick={() => {
-                setAdjustSep3(true);
-                setData((data: CovidDataItem[]) => data.map((entry: CovidDataItem) => {
-                  if (entry.date < new Date('2020-09-04')) {
-                    const { undergradTested, totalTested, ...rest } = entry;
-                    return {
-                      ...rest,
-                      totalTested,
-                      undergradTested: Math.round(undergradTested + (totalTested - undergradTested) * 0.3),
-                    };
-                  }
-                  return entry;
-                }));
-              }}>
-                Simulate
-              </button>
-            </React.Fragment>
-          )}
+            <hr />
 
-          <div className="note">
-            Starting 9/10, BC is only updating their dashboard on Tuesdays, Thursdays, and Saturdays.
-          </div>
+            <div className="note">
+              * On 9/3, BC shifted their reporting from the number of undergrads who tested
+              positive to the number of undergrad tests that came back positive, counting
+              tests instead of people. I did not adjust the data prior to 9/3 because that
+              could only be a guess, but I suspect a good number of undergraduate tests
+              were counted as community tests. Picture shifting the &ldquo;Tests and Results
+              per Day&rdquo; graph below up a bit to better fit the data after 9/3.
+              <br />
+              <br />
+              The button below adjusts the data prior to 9/3 by moving 30% of the community
+              tests to the undergraduates. There is no reasoning to this 30% other than the
+              fact that it makes the cumulative graphs non-decreasing, as one would expect
+              them to be.
+            </div>
+            { adjustSep3 ? (
+              <div className="note">Refresh the page to reset the data.</div>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAdjustSep3(true);
+                    setData((oldData: CovidDataItem[]) => oldData.map((entry: CovidDataItem) => {
+                      if (entry.date < new Date('2020-09-04')) {
+                        const { undergradTested, totalTested, ...rest } = entry;
+                        return {
+                          ...rest,
+                          totalTested,
+                          undergradTested: Math.round(
+                            undergradTested + (totalTested - undergradTested) * 0.3,
+                          ),
+                        };
+                      }
 
-          <hr />
+                      return entry;
+                    }));
+                  }}
+                >
+                  Simulate
+                </button>
+              </>
+            )}
 
-          <p style={{ paddingBottom: 0 }}>Made by David Shen and Roger Wang.</p>
+            <hr />
 
-          <a href="https://bccovid.dav.sh/data">collected data</a>{' '}
+            <p style={{ paddingBottom: 0 }}>Made by David Shen and Roger Wang.</p>
 
-          <br />
+            <a href="https://bccovid.dav.sh/data">collected data</a>
+            {' '}
 
-          <a href="https://www.bc.edu/content/bc-web/sites/reopening-boston-college.html#testing">bc data</a>
-          <br />
+            <br />
 
-          <a href="https://www.bu.edu/healthway/community-dashboard/">bu data</a>{' '}
-          <a href="https://news.northeastern.edu/coronavirus/reopening/testing-dashboard/">neu data</a>{' '}
-          <a href="https://docs.google.com/spreadsheets/u/0/d/1C8PDCqHB9DbUYbvrEMN2ZKyeDGAMAxdcNkmO2QSZJsE/pubhtml">neu direct</a>{' '}
-          <a href="https://usafacts.org/visualizations/coronavirus-covid-19-spread-map/">county data</a>{' '}
-          <a href="https://usafactsstatic.blob.core.windows.net/public/data/covid-19/covid_confirmed_usafacts.csv">county direct</a>
+            <a href="https://www.bc.edu/content/bc-web/sites/reopening-boston-college.html#testing">bc data</a>
+            <br />
 
-          <br />
+            <a href="https://www.bu.edu/healthway/community-dashboard/">bu data</a>
+            {' '}
+            <a href="https://news.northeastern.edu/coronavirus/reopening/testing-dashboard/">neu data</a>
+            {' '}
+            <a href="https://docs.google.com/spreadsheets/u/0/d/1C8PDCqHB9DbUYbvrEMN2ZKyeDGAMAxdcNkmO2QSZJsE/pubhtml">neu direct</a>
+            {' '}
+            <a href="https://usafacts.org/visualizations/coronavirus-covid-19-spread-map/">county data</a>
+            {' '}
+            <a href="https://usafactsstatic.blob.core.windows.net/public/data/covid-19/covid_confirmed_usafacts.csv">county direct</a>
 
-          <a href="https://github.com/pantherman594/bc-covid/">source code</a>{' '}
-          <a href="https://bccovid.dav.sh/changelog">changelog</a>
-        </React.Fragment>
-      }
+            <br />
+
+            <a href="https://github.com/pantherman594/bc-covid/">source code</a>
+            {' '}
+            <a href="https://bccovid.dav.sh/changelog">changelog</a>
+          </>
+        )}
       <div className="loading" style={{ opacity: loading && showLoading ? 1 : 0 }}>
         Loading...
       </div>
     </div>
   );
 };
+
+export default App;

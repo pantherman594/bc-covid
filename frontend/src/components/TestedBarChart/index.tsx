@@ -1,37 +1,45 @@
 import React from 'react';
 import moment from 'moment';
-import { BarChart, Bar, XAxis, YAxis, ReferenceLine, Tooltip } from 'recharts';
+import {
+  Bar,
+  BarChart,
+  ReferenceLine,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 
-import style from './style.module.css';
-import { ChartContainer } from '../index';
 import { CovidDataItem } from '../../types';
+import { ChartContainer } from '../index';
+import style from './style.module.css';
 
 interface TestedBarChartProps {
   data: CovidDataItem[];
   scale: 'log' | 'linear';
 }
 
-export const TestedBarChart = (props: TestedBarChartProps) => {
+const TestedBarChart = (props: TestedBarChartProps) => {
+  const { data, scale } = props;
+
   // format date property from Date obj to milliseconds
-  const toPlotData = (data: CovidDataItem[]): any[] => {
-    return data.map((item: CovidDataItem) => {
-      const remainingPositive = item.totalPositive - item.undergradPositive;
-      return {
-        undergradTested: item.undergradTested - item.undergradPositive,
-        undergradPositive: item.undergradPositive,
-        remainingTested: item.totalTested - item.undergradTested - remainingPositive,
-        remainingPositive,
-        date: item.date.getTime(),
-      };
-    });
-  };
+  const plotData = data.map((item: CovidDataItem) => {
+    const remainingPositive = item.totalPositive - item.undergradPositive;
+    return {
+      undergradTested: item.undergradTested - item.undergradPositive,
+      undergradPositive: item.undergradPositive,
+      remainingTested: item.totalTested - item.undergradTested - remainingPositive,
+      remainingPositive,
+      date: item.date.getTime(),
+    };
+  });
 
   let max = 0;
-  for (const item of props.data) {
+  data.forEach((item: CovidDataItem) => {
     if (item.undergradTested > max) max = item.undergradTested;
-    if (item.totalTested - item.undergradTested > max)
+    if (item.totalTested - item.undergradTested > max) {
       max = item.totalTested - item.undergradTested;
-  }
+    }
+  });
 
   max += 1000;
 
@@ -62,9 +70,12 @@ export const TestedBarChart = (props: TestedBarChartProps) => {
           {`Total Tested: ${totalTested}`}
         </p>
         {
-          payload.map((entry: any, index: number) => (
-            <p key={`item-${index}`} style={{ color: entry.color.substring(0, entry.color.length - 2) }}>
-              {`${entry.name.replace(/([A-Z])/g, " $1")}: ${valueTickFormatter(entry.value)}`}
+          payload.map((entry: any) => (
+            <p
+              key={entry.name}
+              style={{ color: entry.color.substring(0, entry.color.length - 2) }}
+            >
+              {`${entry.name.replace(/([A-Z])/g, ' $1')}: ${valueTickFormatter(entry.value)}`}
             </p>
           ))
         }
@@ -76,10 +87,10 @@ export const TestedBarChart = (props: TestedBarChartProps) => {
     <div>
       <ChartContainer
         title="Cumulative Tests and Results"
-        width={'100%'}
+        width="100%"
         height={250}
         chartComp={BarChart}
-        chartProps={{ data: toPlotData(props.data), stackOffset: 'sign' }}
+        chartProps={{ data: plotData, stackOffset: 'sign' }}
       >
         <Tooltip content={renderTooltipContent} />
         <XAxis
@@ -92,8 +103,8 @@ export const TestedBarChart = (props: TestedBarChartProps) => {
         />
         <YAxis
           tickFormatter={valueTickFormatter}
-          scale={props.scale}
-          domain={props.scale === 'log' ? [1, 100000] : [0, max + 2000]}
+          scale={scale}
+          domain={scale === 'log' ? [1, 100000] : [0, max + 2000]}
           allowDataOverflow
         />
         <Bar
@@ -116,14 +127,14 @@ export const TestedBarChart = (props: TestedBarChartProps) => {
           fill="#5f6d7d00"
           stackId="stack"
         />
-        <ReferenceLine y={props.scale === 'log' ? 50000 : max} stroke="#0000" label="Undergraduates" />
+        <ReferenceLine y={scale === 'log' ? 50000 : max} stroke="#0000" label="Undergraduates" />
       </ChartContainer>
       <ChartContainer
         title=""
-        width={'100%'}
+        width="100%"
         height={250}
         chartComp={BarChart}
-        chartProps={{ data: toPlotData(props.data), stackOffset: 'sign', style: { marginTop: -10 } }}
+        chartProps={{ data: plotData, stackOffset: 'sign', style: { marginTop: -10 } }}
       >
         <Tooltip content={renderTooltipContent} />
         <XAxis
@@ -135,8 +146,8 @@ export const TestedBarChart = (props: TestedBarChartProps) => {
         />
         <YAxis
           tickFormatter={valueTickFormatter}
-          scale={props.scale}
-          domain={props.scale === 'log' ? [1, 100000] : [0, max + 2000]}
+          scale={scale}
+          domain={scale === 'log' ? [1, 100000] : [0, max + 2000]}
           reversed
           allowDataOverflow
         />
@@ -160,9 +171,11 @@ export const TestedBarChart = (props: TestedBarChartProps) => {
           fill="#5f6d7d00"
           stackId="stack"
         />
-        <ReferenceLine y={props.scale === 'log' ? 1 : 0} stroke="#000" />
-        <ReferenceLine y={props.scale === 'log' ? 50000 : max} stroke="#0000" label="Remaining BC Community" />
+        <ReferenceLine y={scale === 'log' ? 1 : 0} stroke="#000" />
+        <ReferenceLine y={scale === 'log' ? 50000 : max} stroke="#0000" label="Remaining BC Community" />
       </ChartContainer>
     </div>
   );
 };
+
+export default TestedBarChart;

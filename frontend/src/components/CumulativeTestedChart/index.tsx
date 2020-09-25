@@ -1,6 +1,8 @@
 import React from 'react';
 import moment from 'moment';
-import { ComposedChart, XAxis, YAxis, Legend, Bar, Line, Tooltip } from 'recharts';
+import {
+  ComposedChart, XAxis, YAxis, Legend, Bar, Line, Tooltip,
+} from 'recharts';
 
 import style from './style.module.css';
 import { ChartContainer } from '../index';
@@ -11,7 +13,9 @@ interface CumulativeTestedChartProps {
   scale: 'log' | 'linear';
 }
 
-export const CumulativeTestedChart = (props: CumulativeTestedChartProps) => {
+const CumulativeTestedChart = (props: CumulativeTestedChartProps) => {
+  const { data: rawData, scale } = props;
+
   // format date property from Date obj to milliseconds
   const toPlotData = (data: CovidDataItem[]): any[] => {
     if (data.length === 0) return [];
@@ -41,18 +45,16 @@ export const CumulativeTestedChart = (props: CumulativeTestedChartProps) => {
         total7DayAvg: totalSum / items,
         undergrad7DayAvg: undergradSum / items,
         community7DayAvg: communitySum / items,
-      })
+      });
     });
 
-    return data.map((item: CovidDataItem, index: number) => {
-      return {
-        total: item.totalTested,
-        undergrad: item.undergradTested,
-        community: item.totalTested - item.undergradTested,
-        ...averages[index],
-        date: item.date.getTime(),
-      };
-    });
+    return data.map((item: CovidDataItem, index: number) => ({
+      total: item.totalTested,
+      undergrad: item.undergradTested,
+      community: item.totalTested - item.undergradTested,
+      ...averages[index],
+      date: item.date.getTime(),
+    }));
   };
 
   const dateTickFormatter = (tick: number) => {
@@ -70,8 +72,8 @@ export const CumulativeTestedChart = (props: CumulativeTestedChartProps) => {
       <div className={style.customTooltip}>
         <p>{dateTickFormatter(label)}</p>
         {
-          payload.map((entry: any, index: number) => (
-            <p key={`item-${index}`} style={{ color: entry.color }}>
+          payload.map((entry: any) => (
+            <p key={entry.name} style={{ color: entry.color }}>
               {`${entry.name}: ${Math.round(entry.value)}`}
             </p>
           ))
@@ -83,10 +85,10 @@ export const CumulativeTestedChart = (props: CumulativeTestedChartProps) => {
   return (
     <ChartContainer
       title="Cumulative Tests"
-      width={'100%'}
+      width="100%"
       height={500}
       chartComp={ComposedChart}
-      chartProps={{ data: toPlotData(props.data), syncId: "syncTestPercent" }}
+      chartProps={{ data: toPlotData(rawData), syncId: 'syncTestPercent' }}
     >
       <XAxis
         dataKey="date"
@@ -96,7 +98,7 @@ export const CumulativeTestedChart = (props: CumulativeTestedChartProps) => {
         domain={['dataMin - 43200000', 'dataMax + 43200000']}
       />
       <YAxis
-        scale={props.scale}
+        scale={scale}
         domain={[1, 'dataMax']}
         allowDataOverflow
       />
@@ -132,3 +134,5 @@ export const CumulativeTestedChart = (props: CumulativeTestedChartProps) => {
     </ChartContainer>
   );
 };
+
+export default CumulativeTestedChart;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import style from './style.module.css';
 import { Pie, PieChart, ResponsiveContainer } from 'recharts';
+import style from './style.module.css';
 import { create, CovidDataItem } from '../../types';
 
 interface DialChartProps {
@@ -11,9 +11,9 @@ interface DialChartProps {
 const NUM_UNDERGRADS = 8000;
 const NUM_COMMUNITY = 10000;
 // Pad the pie with 1.5 degree on both sides, in case the value is too small to hover.
-const PADDING_UNDERGRADS = 1.5 * NUM_UNDERGRADS / 360;
-const PADDING_COMMUNITY = 1.5 * NUM_COMMUNITY / 360;
-const BG_COLOR = "#0000";
+const PADDING_UNDERGRADS = 1.5 * (NUM_UNDERGRADS / 360);
+const PADDING_COMMUNITY = 1.5 * (NUM_COMMUNITY / 360);
+const BG_COLOR = '#0000';
 
 const defaultProps = {
   dataKey: 'value',
@@ -31,17 +31,19 @@ const noStroke = {
   stroke: 'none',
 };
 
-export const DialChart = (props: DialChartProps) => {
+const DialChart = (props: DialChartProps) => {
+  const { data, recoveryDays } = props;
+
   const [activePie, setActivePie] = useState(0);
 
-  if (props.data.length === 0) return null;
+  if (data.length === 0) return null;
 
-  const latest = props.data[props.data.length - 1];
+  const latest = data[data.length - 1];
 
   // Estimate the current number of infected students as the number of total positive tests
   // minus the number of positive tests from recoveryDays days ago. This assumes someone with
   // COVID-19 will recover in recoveryDays days.
-  const recoveryData = props.data[latest.recoveryIndex] || create();
+  const recoveryData = data[latest.recoveryIndex] || create();
 
   const curNumRecovered = Math.max(-1, latest.undergradRecovered - recoveryData.undergradRecovered);
 
@@ -53,18 +55,22 @@ export const DialChart = (props: DialChartProps) => {
   const curNumCommunityTested = Math.max(-1, (latest.totalTested - latest.undergradTested)
     - (recoveryData.totalTested - recoveryData.undergradTested));
 
-  const renderLabel = (props: any) => {
-    const { cx, cy, payload } = props;
+  const renderLabel = (labelProps: any) => {
+    const { cx, cy, payload } = labelProps;
 
     const percent = (payload.percentage || 0) * 100;
     const percentStr = percent.toFixed(percent < 10 ? 2 : 1);
 
     return (
       <g>
-        <rect x={cx - 180} y={cy - 12} width={360} height={payload.percentage ? 50 : 30} fill={'#0005'} />
-        <text x={cx} y={cy} dy={8} textAnchor="middle" fill={'#fff'}>{payload.name}</text>
+        <rect x={cx - 180} y={cy - 12} width={360} height={payload.percentage ? 50 : 30} fill="#0005" />
+        <text x={cx} y={cy} dy={8} textAnchor="middle" fill="#fff">{payload.name}</text>
         { payload.percentage ? (
-          <text x={cx} y={cy + 20} dy={8} textAnchor="middle" fill={'#ccc'}>({percentStr}%)</text>
+          <text x={cx} y={cy + 20} dy={8} textAnchor="middle" fill="#ccc">
+            (
+            {percentStr}
+            %)
+          </text>
         ) : null }
       </g>
     );
@@ -73,17 +79,15 @@ export const DialChart = (props: DialChartProps) => {
   const onPieEnter = (pie: number) => (_data: any, index: number) => {
     if ((pie === 6 && index === 3) || (pie !== 6 && index === 2)) {
       setActivePie(pie < 4 ? 0 : 1);
+    } else if (pie === 6 && (index === 1 || index === 2)) {
+      setActivePie(7);
     } else {
-      if (pie === 6 && (index === 1 || index === 2)) {
-        setActivePie(7);
-      } else {
-        setActivePie(pie);
-      }
+      setActivePie(pie);
     }
   };
 
-  let recoveryDuration = `${props.recoveryDays} days`;
-  if (props.recoveryDays === 1) {
+  let recoveryDuration = `${recoveryDays} days`;
+  if (recoveryDays === 1) {
     recoveryDuration = 'day';
   }
 
@@ -98,19 +102,18 @@ export const DialChart = (props: DialChartProps) => {
   return (
     <div className={style['chart-container']}>
       <ResponsiveContainer
-        width={'100%'}
+        width="100%"
         aspect={1}
       >
-        <PieChart
-        >
+        <PieChart>
           {/* This pie fills in the space between the outer pies. */}
           <Pie
             {...defaultProps}
             {...noStroke}
             data={[{ name: 'Total', value: 1 }]}
             fill="#5f6d7daa"
-            innerRadius={'75%'}
-            outerRadius={'100%'}
+            innerRadius="75%"
+            outerRadius="100%"
           />
 
           {/* This pie renders the number of positive cases. */}
@@ -122,8 +125,8 @@ export const DialChart = (props: DialChartProps) => {
               { name: 'Remaining', value: NUM_COMMUNITY - curNumCommunityPositive - PADDING_COMMUNITY * 2, fill: BG_COLOR },
               { name: 'Padding After', value: PADDING_COMMUNITY, fill: BG_COLOR },
             ]}
-            innerRadius={'82%'}
-            outerRadius={'100%'}
+            innerRadius="82%"
+            outerRadius="100%"
             onMouseEnter={onPieEnter(2)}
           />
 
@@ -136,8 +139,8 @@ export const DialChart = (props: DialChartProps) => {
               { name: 'Remaining', value: NUM_COMMUNITY - curNumCommunityTested - PADDING_COMMUNITY * 2, fill: BG_COLOR },
               { name: 'Padding After', value: PADDING_COMMUNITY, fill: BG_COLOR },
             ]}
-            innerRadius={'75%'}
-            outerRadius={'80%'}
+            innerRadius="75%"
+            outerRadius="80%"
             onMouseEnter={onPieEnter(3)}
           />
 
@@ -147,8 +150,8 @@ export const DialChart = (props: DialChartProps) => {
             {...noStroke}
             data={[{ name: 'Total', value: 1 }]}
             fill="#5f6d7daa"
-            innerRadius={'10%'}
-            outerRadius={'65%'}
+            innerRadius="10%"
+            outerRadius="65%"
           />
 
           {/* This pie renders the number of tested students. */}
@@ -160,8 +163,8 @@ export const DialChart = (props: DialChartProps) => {
               { name: 'Remaining', value: NUM_UNDERGRADS - curNumTested - PADDING_UNDERGRADS * 2, fill: BG_COLOR },
               { name: 'Padding After', value: PADDING_UNDERGRADS, fill: BG_COLOR },
             ]}
-            innerRadius={'60%'}
-            outerRadius={'65%'}
+            innerRadius="60%"
+            outerRadius="65%"
             onMouseEnter={onPieEnter(4)}
           />
 
@@ -174,8 +177,8 @@ export const DialChart = (props: DialChartProps) => {
               { name: 'Remaining', value: NUM_UNDERGRADS - curNumPositive - PADDING_UNDERGRADS * 2, fill: BG_COLOR },
               { name: 'Padding After', value: PADDING_UNDERGRADS, fill: BG_COLOR },
             ]}
-            innerRadius={'20%'}
-            outerRadius={'58%'}
+            innerRadius="20%"
+            outerRadius="58%"
             onMouseEnter={onPieEnter(5)}
           />
 
@@ -189,8 +192,8 @@ export const DialChart = (props: DialChartProps) => {
               { name: 'Remaining', value: NUM_UNDERGRADS - latest.isolation - curNumRecovered - PADDING_UNDERGRADS * 2, fill: BG_COLOR },
               { name: 'Padding Before', value: PADDING_UNDERGRADS, fill: BG_COLOR },
             ]}
-            innerRadius={'10%'}
-            outerRadius={'18%'}
+            innerRadius="10%"
+            outerRadius="18%"
             onMouseEnter={onPieEnter(6)}
           />
 
@@ -240,8 +243,8 @@ export const DialChart = (props: DialChartProps) => {
               },
             ]}
             fill="#0000"
-            innerRadius={'0%'}
-            outerRadius={'1%'}
+            innerRadius="0%"
+            outerRadius="1%"
           />
 
         </PieChart>
@@ -249,3 +252,5 @@ export const DialChart = (props: DialChartProps) => {
     </div>
   );
 };
+
+export default DialChart;
