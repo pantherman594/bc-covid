@@ -5,7 +5,6 @@ import { ComposedChart, XAxis, YAxis, Legend, Bar, Line, Tooltip } from 'rechart
 import style from './style.module.css';
 import { ChartContainer } from '../index';
 import { CovidDataItem } from '../../types';
-import getRecoveryDays from '../../utils/recoveryDays';
 
 interface CumulativeTestedChartProps {
   data: CovidDataItem[];
@@ -19,6 +18,7 @@ export const CumulativeTestedChart = (props: CumulativeTestedChartProps) => {
 
     const averages: any[] = [];
 
+    let startIndex = 0;
     let totalSum = 0;
     let undergradSum = 0;
     let communitySum = 0;
@@ -28,16 +28,15 @@ export const CumulativeTestedChart = (props: CumulativeTestedChartProps) => {
       undergradSum += item.undergradTested;
       communitySum += item.totalTested - item.undergradTested;
 
-      const recoveryDays = getRecoveryDays(item.date, 7);
-
-      if (index >= recoveryDays) {
-        const startIndex = index - recoveryDays;
+      while (item.recoveryIndex >= startIndex) {
         totalSum -= data[startIndex].totalTested;
         undergradSum -= data[startIndex].undergradTested;
         communitySum -= data[startIndex].totalTested - data[startIndex].undergradTested;
+
+        startIndex += 1;
       }
 
-      const items = Math.min(index + 1, 7);
+      const items = item.recoveryIndex < 0 ? item.daysSinceFirst + 1 : (index - item.recoveryIndex);
       averages.push({
         total7DayAvg: totalSum / items,
         undergrad7DayAvg: undergradSum / items,

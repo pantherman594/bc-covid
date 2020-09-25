@@ -5,7 +5,6 @@ import { LineChart, XAxis, YAxis, Legend, Line, Tooltip } from 'recharts';
 import style from './style.module.css';
 import { ChartContainer } from '../index';
 import { CovidDataItem } from '../../types';
-import getRecoveryDays from '../../utils/recoveryDays';
 
 // Assume 80% of all students and faculty return to campus. While this is not accurate, I
 // couldn't find exact numbers so we'll use this just to compare the campuses.
@@ -33,10 +32,8 @@ interface PopulationPercentChartProps {
 
 export const PopulationPercentChart = (props: PopulationPercentChartProps) => {
   const toPlotData = (data: CovidDataItem[]): any[] => {
-    return data.map((item: CovidDataItem, index: number, array: CovidDataItem[]) => {
-      const recoveryDays = getRecoveryDays(item.date, props.recoveryDays);
-
-      const prev = array[index - recoveryDays];
+    return data.map((item: CovidDataItem, _i: number, array: CovidDataItem[]) => {
+      const prev = array[item.recoveryIndex];
       if (!prev) return undefined;
 
       const bcPercent = (item.totalPositive - prev.totalPositive) / BC_POP;

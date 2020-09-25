@@ -25,6 +25,10 @@ const DATA_VERSION = '1';
 const processData = (data: any) => {
   const newData: CovidDataItem[] = [];
 
+  if (data.length === 0) return newData;
+
+  const firstDay = moment(new Date(data[0].date)).endOf('day');
+
   data.map((entry: any) => ({
     ...entry,
     date: new Date(entry.date),
@@ -45,6 +49,30 @@ const processData = (data: any) => {
   }, moment());
 
   newData.reverse();
+
+  // Maps days since first day to index in data array.
+  const daysSinceFirst = new Map<number, number>();
+
+  // Populates the map.
+  for (let i = 0; i < newData.length; i++) {
+    const diff = moment(newData[i].date).diff(firstDay, 'days');
+    daysSinceFirst.set(diff, i);
+    newData[i].daysSinceFirst = diff;
+  }
+
+  for (let i = 0; i < newData.length; i++) {
+    let recoveryDaysSinceFirst = (newData[i].daysSinceFirst || 0) - 7;
+
+    while (!daysSinceFirst.has(recoveryDaysSinceFirst) && recoveryDaysSinceFirst > -1) {
+      recoveryDaysSinceFirst -= 1;
+    }
+
+    let recoveryIndex = daysSinceFirst.get(recoveryDaysSinceFirst);
+    if (recoveryIndex === undefined) recoveryIndex = -1;
+
+    newData[i].recoveryIndex = recoveryIndex;
+  }
+
   return newData;
 };
 

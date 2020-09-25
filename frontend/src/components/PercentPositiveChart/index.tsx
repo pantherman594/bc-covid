@@ -5,7 +5,6 @@ import { ComposedChart, XAxis, YAxis, Legend, Line, Tooltip } from 'recharts';
 import style from './style.module.css';
 import { ChartContainer } from '../index';
 import { create, CovidDataItem } from '../../types';
-import getRecoveryDays from '../../utils/recoveryDays';
 
 interface PercentPositiveChartProps {
   data: CovidDataItem[];
@@ -14,9 +13,34 @@ interface PercentPositiveChartProps {
 export const PercentPositiveChart = (props: PercentPositiveChartProps) => {
   // format date property from Date obj to milliseconds
   const toPlotData = (data: CovidDataItem[]): any[] => {
-    const plotData: any[] = [];
+    if (data.length === 0) return [];
 
-    data.forEach((item: CovidDataItem, index: number, array: CovidDataItem[]) => {
+    const averages: any[] = [];
+
+    data.forEach((item: any) => {
+      let { totalTested, undergradTested, totalPositive, undergradPositive } = item;
+      let communityTested = totalTested - undergradTested;
+      let communityPositive = totalPositive - undergradPositive;
+
+      if (item.recoveryIndex > -1) {
+        const rI = item.recoveryIndex;
+
+        totalTested -= data[rI].totalTested;
+        totalPositive -= data[rI].totalPositive;
+        undergradTested -= data[rI].undergradTested;
+        undergradPositive -= data[rI].undergradPositive;
+        communityTested -= data[rI].totalTested - data[rI].undergradTested;
+        communityPositive -= data[rI].totalPositive - data[rI].undergradPositive;
+      }
+
+      averages.push({
+        total7Day: totalPositive <= 0 ? 0 : totalPositive / totalTested,
+        undergrad7Day: undergradPositive <= 0 ? 0 : undergradPositive / undergradTested,
+        community7Day: communityPositive <= 0 ? 0 : communityPositive / communityTested,
+      });
+    });
+
+    return data.map((item: CovidDataItem, index: number, array: CovidDataItem[]) => {
       const prev = array[index - 1] || create();
 
       const totalPositive = item.totalPositive - prev.totalPositive;
@@ -34,41 +58,14 @@ export const PercentPositiveChart = (props: PercentPositiveChartProps) => {
       const percentCommunity = communityTested <= 0 ? 0
         : communityPositive / communityTested;
 
-      plotData.push({
+      return {
         totalPercent: percentTotal,
         undergradPercent: percentUndergrad,
         communityPercent: percentCommunity,
+        ...averages[index],
         date: item.date.getTime(),
-      });
+      };
     });
-
-    let startIndex = 0;
-    let totalSum = 0;
-    let undergradSum = 0;
-    let communitySum = 0;
-
-    plotData.forEach((item: any, index: number) => {
-      totalSum += item.totalPercent;
-      undergradSum += item.undergradPercent;
-      communitySum += item.communityPercent;
-
-      const recoveryDays = getRecoveryDays(item.date, 7);
-
-      if (index >= recoveryDays) {
-        totalSum -= plotData[startIndex].totalPercent;
-        undergradSum -= plotData[startIndex].undergradPercent;
-        communitySum -= plotData[startIndex].communityPercent;
-
-        startIndex += 1;
-      }
-
-      const items = Math.min(index + 1, 7);
-      plotData[index].total7DayAvg = totalSum / items;
-      plotData[index].undergrad7DayAvg = undergradSum / items;
-      plotData[index].community7DayAvg = communitySum / items;
-    });
-
-    return plotData;
   };
 
   const dateTickFormatter = (tick: number) => moment(tick).format('M/D');
@@ -134,19 +131,19 @@ export const PercentPositiveChart = (props: PercentPositiveChartProps) => {
       />
       <Line
         type="monotone"
-        dataKey="total7DayAvg"
+        dataKey="total7Day"
         stroke="#5f6d7d"
         strokeDasharray="5 5"
       />
       <Line
         type="monotone"
-        dataKey="undergrad7DayAvg"
+        dataKey="undergrad7Day"
         stroke="#8884d8"
         strokeDasharray="5 5"
       />
       <Line
         type="monotone"
-        dataKey="community7DayAvg"
+        dataKey="community7Day"
         stroke="#009dff"
         strokeDasharray="5 5"
       />

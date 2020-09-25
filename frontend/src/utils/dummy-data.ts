@@ -16,6 +16,8 @@ export const data: CovidDataItem[] = [
     suffolkPositive: 22017,
     massPositive: 124063,
     flags: [],
+    recoveryIndex: -1,
+    daysSinceFirst: 0,
   },
   {
     id: '2',
@@ -32,6 +34,8 @@ export const data: CovidDataItem[] = [
     suffolkPositive: 22017,
     massPositive: 124415,
     flags: [],
+    recoveryIndex: -1,
+    daysSinceFirst: 1,
   },
   {
     id: '3',
@@ -48,6 +52,8 @@ export const data: CovidDataItem[] = [
     suffolkPositive: 22017,
     massPositive: 129927,
     flags: [],
+    recoveryIndex: -1,
+    daysSinceFirst: 2,
   },
   {
     id: '4',
@@ -64,6 +70,8 @@ export const data: CovidDataItem[] = [
     suffolkPositive: 22694,
     massPositive: 130415,
     flags: [],
+    recoveryIndex: -1,
+    daysSinceFirst: 3,
   },
   {
     id: '5',
@@ -80,6 +88,8 @@ export const data: CovidDataItem[] = [
     suffolkPositive: 22706,
     massPositive: 130560,
     flags: [],
+    recoveryIndex: -1,
+    daysSinceFirst: 4,
   },
   {
     id: '6',
@@ -96,5 +106,7 @@ export const data: CovidDataItem[] = [
     suffolkPositive: 22706,
     massPositive: 130582,
     flags: [],
+    recoveryIndex: -1,
+    daysSinceFirst: 5,
   },
 ];

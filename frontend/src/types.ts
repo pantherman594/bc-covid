@@ -14,6 +14,8 @@ export interface CovidDataItem {
   suffolkPositive: number;
   massPositive: number;
   flags: string[];
+  recoveryIndex: number;
+  daysSinceFirst: number;
 }
 
 export const create = (): CovidDataItem => ({
@@ -31,4 +33,6 @@ export const create = (): CovidDataItem => ({
   suffolkPositive: 0,
   massPositive: 0,
   flags: [],
+  recoveryIndex: 0,
+  daysSinceFirst: 0,
 });

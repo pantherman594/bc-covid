@@ -5,7 +5,6 @@ import { ComposedChart, XAxis, YAxis, Legend, Bar, Line, Tooltip } from 'rechart
 import style from './style.module.css';
 import { ChartContainer } from '../index';
 import { CovidDataItem } from '../../types';
-import getRecoveryDays from '../../utils/recoveryDays';
 
 interface CumulativePositiveChartProps {
   data: CovidDataItem[];
@@ -19,6 +18,7 @@ export const CumulativePositiveChart = (props: CumulativePositiveChartProps) => 
 
     const averages: any[] = [];
 
+    let startIndex = 0;
     let totalSum = 0;
     let undergradSum = 0;
     let communitySum = 0;
@@ -28,16 +28,15 @@ export const CumulativePositiveChart = (props: CumulativePositiveChartProps) => 
       undergradSum += item.undergradPositive;
       communitySum += item.totalPositive - item.undergradPositive;
 
-      const recoveryDays = getRecoveryDays(item.date, 7);
-
-      if (index >= recoveryDays) {
-        const startIndex = index - recoveryDays;
+      while (item.recoveryIndex >= startIndex) {
         totalSum -= data[startIndex].totalPositive;
         undergradSum -= data[startIndex].undergradPositive;
         communitySum -= data[startIndex].totalPositive - data[startIndex].undergradPositive;
+      
+        startIndex += 1;
       }
 
-      const items = Math.min(index + 1, 7);
+      const items = item.recoveryIndex < 0 ? item.daysSinceFirst + 1 : (index - item.recoveryIndex);
       averages.push({
         total7DayAvg: totalSum / items,
         undergrad7DayAvg: undergradSum / items,

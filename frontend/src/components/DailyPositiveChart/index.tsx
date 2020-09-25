@@ -5,7 +5,6 @@ import { ComposedChart, XAxis, YAxis, Legend, Bar, Line, Tooltip } from 'rechart
 import style from './style.module.css';
 import { ChartContainer } from '../index';
 import { create, CovidDataItem } from '../../types';
-import getRecoveryDays from '../../utils/recoveryDays';
 
 interface DailyPositiveChartProps {
   data: CovidDataItem[];
@@ -27,21 +26,21 @@ export const DailyPositiveChart = (props: DailyPositiveChartProps) => {
   const toPlotData = (data: CovidDataItem[]): any[] => {
     const averages: any[] = [];
 
-    data.forEach((item: CovidDataItem, index: number) => {
+    data.forEach((item: CovidDataItem) => {
       let totalSum = item.totalPositive;
       let undergradSum = item.undergradPositive;
       let communitySum = item.totalPositive - item.undergradPositive;
 
-      const recoveryDays = getRecoveryDays(item.date, 7);
-
-      if (index >= recoveryDays) {
-        const startIndex = index - recoveryDays;
-        totalSum -= data[startIndex].totalPositive;
-        undergradSum -= data[startIndex].undergradPositive;
-        communitySum -= data[startIndex].totalPositive - data[startIndex].undergradPositive;
+      if (item.recoveryIndex > -1) {
+        const rI = item.recoveryIndex;
+        totalSum -= data[rI].totalPositive;
+        undergradSum -= data[rI].undergradPositive;
+        communitySum -= data[rI].totalPositive - data[rI].undergradPositive;
       }
 
-      const items = Math.min(index + 1, 7);
+      const items = item.recoveryIndex < 0
+        ? item.daysSinceFirst + 1
+        : item.daysSinceFirst - data[item.recoveryIndex].daysSinceFirst;
       averages.push({
         total7DayAvg: totalSum / items,
         undergrad7DayAvg: undergradSum / items,
