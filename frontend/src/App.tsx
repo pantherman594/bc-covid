@@ -76,7 +76,7 @@ const processData = (data: any) => {
 };
 
 const checkIsEmbed = () => {
-  const search = window.location.search;
+  const { search } = window.location;
   const params = new URLSearchParams(search);
   return params.get('embed') === 'true';
 };
@@ -257,6 +257,7 @@ const App: React.FunctionComponent = () => {
       <div className="loading" style={{ opacity: loading && showLoading ? 1 : 0 }}>
         Loading...
       </div>
+      { !isEmbed ? null : <style>{'body{overflow-y:hidden;}'}</style> }
     </div>
   );
 };
