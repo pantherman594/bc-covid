@@ -105,6 +105,7 @@ const TestedBarChart = (props: TestedBarChartProps) => {
           tickFormatter={valueTickFormatter}
           scale={scale}
           domain={scale === 'log' ? [1, 100000] : [0, max + 2000]}
+          width={70}
           allowDataOverflow
         />
         <Bar
@@ -148,6 +149,7 @@ const TestedBarChart = (props: TestedBarChartProps) => {
           tickFormatter={valueTickFormatter}
           scale={scale}
           domain={scale === 'log' ? [1, 100000] : [0, max + 2000]}
+          width={70}
           reversed
           allowDataOverflow
         />
@@ -172,7 +174,7 @@ const TestedBarChart = (props: TestedBarChartProps) => {
           stackId="stack"
         />
         <ReferenceLine y={scale === 'log' ? 1 : 0} stroke="#000" />
-        <ReferenceLine y={scale === 'log' ? 50000 : max} stroke="#0000" label="Remaining BC Community" />
+        <ReferenceLine y={scale === 'log' ? 50000 : max * 0.95} stroke="#0000" label="Remaining BC Community" />
       </ChartContainer>
     </div>
   );

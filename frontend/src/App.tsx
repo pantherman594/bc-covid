@@ -75,6 +75,12 @@ const processData = (data: any) => {
   return newData;
 };
 
+const checkIsEmbed = () => {
+  const search = window.location.search;
+  const params = new URLSearchParams(search);
+  return params.get('embed') === 'true';
+};
+
 const App: React.FunctionComponent = () => {
   const initialData: CovidDataItem[] = [];
   const [data, setData] = useState<CovidDataItem[]>(initialData);
@@ -82,6 +88,7 @@ const App: React.FunctionComponent = () => {
   const [showLoading, setShowLoading] = useState(false);
   const [adjustSep3, setAdjustSep3] = useState(false);
   const [logScale, setLogScale] = useState(false);
+  const [isEmbed] = useState(checkIsEmbed());
 
   useEffect(() => {
     const loadData = async () => {
@@ -109,7 +116,7 @@ const App: React.FunctionComponent = () => {
   const scale = logScale ? 'log' : 'linear';
 
   return (
-    <div className="App" style={{ overflowY: loading ? 'hidden' : 'auto' }}>
+    <div className={`App${isEmbed ? ' embed' : ''}`} style={{ overflowY: loading ? 'hidden' : 'auto' }}>
       { loading ? null
         : (
           <>

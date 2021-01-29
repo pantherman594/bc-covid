@@ -21,6 +21,11 @@ body {
   padding: 50px 0;
 }
 
+.App.embed {
+  background: white;
+  font-family: 'Adamina', 'Georgia', 'Arial', 'Helvetica', 'sans-serif';
+}
+
 .App > div:not(:first-child) {
   margin: 20px 10%;
 }
@@ -75,12 +80,29 @@ h6 {
   margin: 0;
 }
 
+.embed h1,
+.embed h2,
+.embed h3,
+.embed h4,
+.embed h5,
+.embed h6 {
+  font-family: 'Arbutus Slab', 'Adamina', 'Georgia', 'Arial', 'Helvetica', 'sans-serif';
+}
+
 p {
   font-family: 'Roboto', sans-serif;
+}
+
+.embed p {
+  font-family: 'Adamina', 'Georgia', 'Arial', 'Helvetica', 'sans-serif';
 }
 
 hr {
   width: 20%;
   color: #ddd;
   margin: 50px auto;
+}
+
+.embed button {
+  font-family: 'Adamina', 'Georgia', 'Arial', 'Helvetica', 'sans-serif';
 }
