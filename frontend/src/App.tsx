@@ -257,7 +257,7 @@ const App: React.FunctionComponent = () => {
       <div className="loading" style={{ opacity: loading && showLoading ? 1 : 0 }}>
         Loading...
       </div>
-      { !isEmbed ? null : <style>{'body{overflow-y:hidden;}'}</style> }
+      { !isEmbed ? null : <style>{'body{overflow-y:hidden!important;}'}</style> }
     </div>
   );
 };
