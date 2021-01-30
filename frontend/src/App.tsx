@@ -17,18 +17,27 @@ import {
 
   TestedBarChart,
 } from './components';
-import { CovidDataItem } from './types';
+import { CovidDataItem, create } from './types';
 
 const DATA_VERSION = '1';
 
-const processData = (data: any) => {
+const processData = (showFall: boolean, data: any) => {
   const newData: CovidDataItem[] = [];
+  let filteredData: any[] = data;
+  let lastInFall = create();
 
-  if (data.length === 0) return newData;
+  if (!showFall) {
+    filteredData = data.filter((entry: any) => (
+      new Date(entry.date).getFullYear() >= 2021
+    ));
+    lastInFall = data[data.length - filteredData.length - 1] ?? lastInFall;
+  }
 
-  const firstDay = moment(new Date(data[0].date)).endOf('day');
+  if (filteredData.length === 0) return newData;
 
-  data.map((entry: any) => ({
+  const firstDay = moment(new Date(filteredData[0].date)).endOf('day');
+
+  filteredData.map((entry: any) => ({
     ...entry,
     date: new Date(entry.date),
   })).reduceRight((deleteTo: moment.Moment, entry: any) => {
@@ -40,6 +49,12 @@ const processData = (data: any) => {
 
     const newEntry = {
       ...entry,
+      totalTested: entry.totalTested - lastInFall.totalTested,
+      totalPositive: entry.totalPositive - lastInFall.totalPositive,
+      totalRecovered: entry.totalRecovered - lastInFall.totalRecovered,
+      undergradTested: entry.undergradTested - lastInFall.undergradTested,
+      undergradPositive: entry.undergradPositive - lastInFall.undergradPositive,
+      undergradRecovered: entry.undergradRecovered - lastInFall.undergradRecovered,
       date: newDate.toDate(),
     };
 
@@ -75,6 +90,18 @@ const processData = (data: any) => {
   return newData;
 };
 
+const loadData = async (showFall: boolean, setData: Function, setLoading: Function) => {
+  const res = await superagent.get('https://bccovid.dav.sh/data');
+
+  const newData = processData(showFall, res.body);
+
+  setData(newData);
+  window.localStorage.setItem('data', JSON.stringify(res.body));
+  window.localStorage.setItem('dataVersion', DATA_VERSION);
+  window.localStorage.setItem('showFall', showFall ? 'true' : 'false');
+  setLoading(false);
+};
+
 const checkIsEmbed = () => {
   const { search } = window.location;
   const params = new URLSearchParams(search);
@@ -88,30 +115,27 @@ const App: React.FunctionComponent = () => {
   const [showLoading, setShowLoading] = useState(false);
   const [adjustSep3, setAdjustSep3] = useState(false);
   const [logScale, setLogScale] = useState(false);
+  const [showFall, setShowFall] = useState(true);
   const [isEmbed] = useState(checkIsEmbed());
 
   useEffect(() => {
-    const loadData = async () => {
-      const res = await superagent.get('https://bccovid.dav.sh/data');
-
-      const newData = processData(res.body);
-
-      setData(newData);
-      window.localStorage.setItem('data', JSON.stringify(res.body));
-      window.localStorage.setItem('dataVersion', DATA_VERSION);
-      setLoading(false);
-    };
-
     if (window.localStorage.getItem('data') !== null && window.localStorage.getItem('dataVersion') === DATA_VERSION) {
-      setData(processData(JSON.parse(window.localStorage.getItem('data') as string)));
+      const showFallLS = window.localStorage.getItem('showFall') !== 'false';
+      setShowFall(showFallLS);
+      setData(processData(showFallLS, JSON.parse(window.localStorage.getItem('data') as string)));
       setLoading(false);
 
-      setTimeout(loadData, 1000);
+      setTimeout(() => loadData(showFallLS, setData, setLoading), 1000);
     } else {
       setShowLoading(true);
-      loadData();
+      loadData(/* showFall */true, setData, setLoading);
     }
   }, []);
+
+  useEffect(() => {
+    if (loading) return;
+    loadData(showFall, setData, setLoading);
+  }, [loading, showFall]);
 
   const scale = logScale ? 'log' : 'linear';
 
@@ -120,19 +144,29 @@ const App: React.FunctionComponent = () => {
       { loading ? null
         : (
           <>
-            <h1>Boston College Covid-19 Statistics</h1>
+            <h1>
+              { isEmbed ? 'Coronavirus Statistics' : 'Boston College Covid-19 Statistics' }
+            </h1>
             <h3>
-              {'Updated: '}
-              {data.length === 0 ? null : data[data.length - 1].date.toLocaleDateString(undefined, { day: 'numeric', month: 'numeric' })}
+              {'Updated '}
+              {data.length === 0 ? null : moment(data[data.length - 1].date).format('MMMM D, Y')}
             </h3>
             <button
               type="button"
               onClick={() => setLogScale(!logScale)}
+              style={{ margin: 10 }}
             >
               {logScale ? 'Use linear scale' : 'Use log scale'}
             </button>
+            <button
+              type="button"
+              onClick={() => setShowFall(!showFall)}
+              style={{ margin: 10 }}
+            >
+              {showFall ? 'Exclude fall data' : 'Include fall data'}
+            </button>
 
-            <div className="row" style={{ maxWidth: 1200, width: '80%', margin: '0 auto' }}>
+            <div className="row" style={{ maxWidth: 1200, width: isEmbed ? undefined : '80%', margin: '0 auto' }}>
               <NumberStats data={data} />
               <DialChart data={data} recoveryDays={7} />
             </div>
@@ -182,52 +216,65 @@ const App: React.FunctionComponent = () => {
 
             <hr />
 
-            <div className="note">
-              * On 9/3, BC shifted their reporting from the number of undergrads who tested
-              positive to the number of undergrad tests that came back positive, counting
-              tests instead of people. I did not adjust the data prior to 9/3 because that
-              could only be a guess, but I suspect a good number of undergraduate tests
-              were counted as community tests. Picture shifting the &ldquo;Tests and Results
-              per Day&rdquo; graph below up a bit to better fit the data after 9/3.
-              <br />
-              <br />
-              The button below adjusts the data prior to 9/3 by moving 30% of the community
-              tests to the undergraduates. There is no reasoning to this 30% other than the
-              fact that it makes the cumulative graphs non-decreasing, as one would expect
-              them to be.
-            </div>
-            { adjustSep3 ? (
-              <div className="note">Refresh the page to reset the data.</div>
-            ) : (
+            { showFall ? (
               <>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAdjustSep3(true);
-                    setData((oldData: CovidDataItem[]) => oldData.map((entry: CovidDataItem) => {
-                      if (entry.date < new Date('2020-09-04')) {
-                        const { undergradTested, totalTested, ...rest } = entry;
-                        return {
-                          ...rest,
-                          totalTested,
-                          undergradTested: Math.round(
-                            undergradTested + (totalTested - undergradTested) * 0.3,
-                          ),
-                        };
-                      }
+                <div className="note">
+                  * On 9/3, BC shifted their reporting from the number of undergrads who tested
+                  positive to the number of undergrad tests that came back positive, counting
+                  tests instead of people. We did not adjust the data prior to 9/3 because that
+                  could only be a guess, but we suspect a good number of undergraduate tests
+                  were counted as community tests. Picture shifting the &ldquo;Tests and Results
+                  per Day&rdquo; graph below up a bit to better fit the data after 9/3.
+                  <br />
+                  <br />
+                  The button below adjusts the data prior to 9/3 by moving 30% of the community
+                  tests to the undergraduates. There is no reasoning to this 30% other than the
+                  fact that it makes the cumulative graphs non-decreasing, as one would expect
+                  them to be.
+                </div>
+                { adjustSep3 ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAdjustSep3(false);
+                      loadData(showFall, setData, setLoading);
+                    }}
+                  >
+                    Revert
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAdjustSep3(true);
+                        setData((oldData) => oldData.map((entry: CovidDataItem) => {
+                          if (entry.date < new Date('2020-09-04')) {
+                            const { undergradTested, totalTested, ...rest } = entry;
+                            return {
+                              ...rest,
+                              totalTested,
+                              undergradTested: Math.round(
+                                undergradTested + (totalTested - undergradTested) * 0.3,
+                              ),
+                            };
+                          }
 
-                      return entry;
-                    }));
-                  }}
-                >
-                  Simulate
-                </button>
+                          return entry;
+                        }));
+                      }}
+                    >
+                      Simulate
+                    </button>
+                  </>
+                )}
+
+                <hr />
               </>
-            )}
+            ) : null}
 
-            <hr />
-
-            <p style={{ paddingBottom: 0 }}>Made by David Shen and Roger Wang.</p>
+            {isEmbed ? null
+              : <p style={{ paddingBottom: 0 }}>Made by David Shen and Roger Wang.</p>}
 
             <a href="https://bccovid.dav.sh/data">collected data</a>
             {' '}

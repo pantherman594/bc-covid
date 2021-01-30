@@ -24,6 +24,7 @@ body {
 .App.embed {
   background: white;
   font-family: 'Adamina', 'Georgia', 'Arial', 'Helvetica', 'sans-serif';
+  padding: 0;
 }
 
 .App > div:not(:first-child) {
@@ -87,6 +88,22 @@ h6 {
 .embed h5,
 .embed h6 {
   font-family: 'Arbutus Slab', 'Adamina', 'Georgia', 'Arial', 'Helvetica', 'sans-serif';
+}
+
+.embed h1 {
+  font-weight: 700;
+  font-size: 28px;
+}
+
+.embed > h1 {
+  font-weight: 700;
+  font-size: 35px;
+}
+
+.embed h3 {
+  color: #111;
+  font-weight: 300;
+  font-size: 12px;
 }
 
 p {

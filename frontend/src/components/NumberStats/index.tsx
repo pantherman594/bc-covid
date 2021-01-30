@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import styles from './styles.module.css';
 import { create, CovidDataItem } from '../../types';
 
@@ -88,6 +89,11 @@ const NumberStats = (props: NumberStatsProps) => {
           dataKey="undergradRecovered"
           description="Undergrads Recovered"
         />
+      </div>
+      <div className="hint">
+        Deltas compare to data collected
+        {moment(previous.date).format(' MMMM D, Y')}
+        .
       </div>
     </div>
   );
