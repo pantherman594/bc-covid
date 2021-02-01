@@ -22,6 +22,7 @@ body {
 }
 
 .App.embed {
+  min-height: initial;
   background: white;
   font-family: 'Adamina', 'Georgia', 'Arial', 'Helvetica', 'sans-serif';
   padding: 0;

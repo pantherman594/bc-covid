@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import moment from 'moment';
 import superagent from 'superagent';
 
@@ -117,8 +117,6 @@ const App: React.FunctionComponent = () => {
   const [logScale, setLogScale] = useState(false);
   const [showFall, setShowFall] = useState(true);
   const [isEmbed] = useState(checkIsEmbed());
-  const oldWidth = useRef(0);
-  const resizeState = useRef(2);
 
   useEffect(() => {
     if (window.localStorage.getItem('data') !== null && window.localStorage.getItem('dataVersion') === DATA_VERSION) {
@@ -139,37 +137,31 @@ const App: React.FunctionComponent = () => {
     loadData(showFall, setData, setLoading);
   }, [loading, showFall]);
 
+  const resize = useCallback(() => {
+    const frame = document.getElementById('ai_hidden_iframe_advanced_iframe') as HTMLIFrameElement;
+    if (!frame) return;
+
+    const url = `${(window as any).domain_advanced_iframe}/js/iframe_height.html`;
+    if (!document.getElementById('ai_wrapper_div')) {
+      (window as any).createAiWrapperDiv();
+    }
+    const wrapper = document.body.children[0] as HTMLDivElement;
+    wrapper.style.marginTop = '0';
+    wrapper.style.marginBottom = '0';
+    const iframeHeight = wrapper.offsetHeight;
+    const iframeWidth = (window as any).getIframeWidth();
+    frame.src = `${url}?height=${iframeHeight + 4}&width=${iframeWidth}&id=${(window as any).iframe_id_advanced_iframe}`;
+  }, []);
+
   useEffect(() => {
-    if (!isEmbed) return;
-    const onResize = () => {
-      resizeState.current += 1;
-      if (resizeState.current >= 3) resizeState.current = 0;
-      if (resizeState.current !== 0) return;
+    resize();
+  }, [loading, data]);
 
-      if ((window as any).aiExecuteWorkaround_advanced_iframe === undefined) return;
-      const width = window.innerWidth;
-      if (width <= oldWidth.current) {
-        (window as any).aiExecuteWorkaround_advanced_iframe();
-        oldWidth.current = width;
-        resizeState.current = 1;
-        return;
-      }
-      oldWidth.current = width;
+  useEffect(() => {
+    if (!isEmbed) return () => {};
 
-      const frame = document.getElementById('ai_hidden_iframe_advanced_iframe') as HTMLIFrameElement;
-      if (!frame || frame.tagName !== 'IFRAME') return;
-      if ((window as any).domain_advanced_iframe === undefined) return;
-      if ((window as any).iframe_id_advanced_iframe === undefined) return;
-
-      frame.addEventListener('load', () => {
-        frame.remove();
-        (window as any).aiExecuteWorkaround_advanced_iframe();
-      });
-      frame.src = `${(window as any).domain_advanced_iframe}/js/iframe_height.html?height=0&width=0&id=${(window as any).iframe_id_advanced_iframe}`;
-    };
-
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
+    window.addEventListener('resize', resize);
+    return () => window.removeEventListener('resize', resize);
   }, [isEmbed]);
 
   const scale = logScale ? 'log' : 'linear';
