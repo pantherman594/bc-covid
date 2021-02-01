@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import moment from 'moment';
 import superagent from 'superagent';
 
@@ -117,6 +117,8 @@ const App: React.FunctionComponent = () => {
   const [logScale, setLogScale] = useState(false);
   const [showFall, setShowFall] = useState(true);
   const [isEmbed] = useState(checkIsEmbed());
+  const oldWidth = useRef(0);
+  const resizeState = useRef(2);
 
   useEffect(() => {
     if (window.localStorage.getItem('data') !== null && window.localStorage.getItem('dataVersion') === DATA_VERSION) {
@@ -136,6 +138,39 @@ const App: React.FunctionComponent = () => {
     if (loading) return;
     loadData(showFall, setData, setLoading);
   }, [loading, showFall]);
+
+  useEffect(() => {
+    if (!isEmbed) return;
+    const onResize = () => {
+      resizeState.current += 1;
+      if (resizeState.current >= 3) resizeState.current = 0;
+      if (resizeState.current !== 0) return;
+
+      if ((window as any).aiExecuteWorkaround_advanced_iframe === undefined) return;
+      const width = window.innerWidth;
+      if (width <= oldWidth.current) {
+        (window as any).aiExecuteWorkaround_advanced_iframe();
+        oldWidth.current = width;
+        resizeState.current = 1;
+        return;
+      }
+      oldWidth.current = width;
+
+      const frame = document.getElementById('ai_hidden_iframe_advanced_iframe') as HTMLIFrameElement;
+      if (!frame || frame.tagName !== 'IFRAME') return;
+      if ((window as any).domain_advanced_iframe === undefined) return;
+      if ((window as any).iframe_id_advanced_iframe === undefined) return;
+
+      frame.addEventListener('load', () => {
+        frame.remove();
+        (window as any).aiExecuteWorkaround_advanced_iframe();
+      });
+      frame.src = `${(window as any).domain_advanced_iframe}/js/iframe_height.html?height=0&width=0&id=${(window as any).iframe_id_advanced_iframe}`;
+    };
+
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [isEmbed]);
 
   const scale = logScale ? 'log' : 'linear';
 
@@ -304,7 +339,6 @@ const App: React.FunctionComponent = () => {
       <div className="loading" style={{ opacity: loading && showLoading ? 1 : 0 }}>
         Loading...
       </div>
-      { !isEmbed ? null : <style>{'body{overflow-y:hidden!important;}'}</style> }
     </div>
   );
 };
