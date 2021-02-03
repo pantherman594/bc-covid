@@ -8,8 +8,8 @@ interface DialChartProps {
   recoveryDays: number;
 }
 
-const NUM_UNDERGRADS = 8000;
-const NUM_COMMUNITY = 10000;
+const NUM_UNDERGRADS = 8600;
+const NUM_COMMUNITY = 6500;
 // Pad the pie with 1.5 degree on both sides, in case the value is too small to hover.
 const PADDING_UNDERGRADS = 1.5 * (NUM_UNDERGRADS / 360);
 const PADDING_COMMUNITY = 1.5 * (NUM_COMMUNITY / 360);
@@ -204,7 +204,7 @@ const DialChart = (props: DialChartProps) => {
             activeShape={renderLabel}
             data={[
               {
-                name: `Estimated total community: ${numberFormat(NUM_COMMUNITY)}`,
+                name: `Estimated total non-undergrads: ${numberFormat(NUM_COMMUNITY)}`,
                 value: NUM_UNDERGRADS,
               },
               {

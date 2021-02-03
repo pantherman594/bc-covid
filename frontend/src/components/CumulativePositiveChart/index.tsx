@@ -42,16 +42,16 @@ const CumulativePositiveChart = (props: CumulativePositiveChartProps) => {
 
       const items = item.recoveryIndex < 0 ? item.daysSinceFirst + 1 : (index - item.recoveryIndex);
       averages.push({
-        total7DayAvg: totalSum / items,
-        undergrad7DayAvg: undergradSum / items,
-        community7DayAvg: communitySum / items,
+        'Total 7 Day Average': totalSum / items,
+        'Undergrad 7 Day Average': undergradSum / items,
+        'Non-undergrad 7 Day Average': communitySum / items,
       });
     });
 
     return data.map((item: CovidDataItem, index: number) => ({
-      total: item.totalPositive,
-      undergrad: item.undergradPositive,
-      community: item.totalPositive - item.undergradPositive,
+      Total: item.totalPositive,
+      Undergrads: item.undergradPositive,
+      'Non-undergrads': item.totalPositive - item.undergradPositive,
       ...averages[index],
       date: item.date.getTime(),
     }));
@@ -120,30 +120,30 @@ const CumulativePositiveChart = (props: CumulativePositiveChartProps) => {
       <Tooltip content={renderTooltipContent} />
       <Legend />
       <Bar
-        dataKey="undergrad"
+        dataKey="Undergrads"
         stroke="#8884d8bb"
         fillOpacity={1}
         fill="url(#colorUndergrad)"
       />
       <Bar
-        dataKey="community"
+        dataKey="Non-undergrads"
         stroke="#009dffbb"
         fillOpacity={1}
         fill="url(#colorCommunity)"
       />
       <Line
         type="monotone"
-        dataKey="undergrad7DayAvg"
+        dataKey="Undergrad 7 Day Average"
         stroke="#8884d8"
       />
       <Line
         type="monotone"
-        dataKey="community7DayAvg"
+        dataKey="Non-undergrad 7 Day Average"
         stroke="#009dff"
       />
       <Line
         type="monotone"
-        dataKey="total7DayAvg"
+        dataKey="Total 7 Day Average"
         stroke="#5f6d7d"
       />
     </ChartContainer>

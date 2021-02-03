@@ -199,8 +199,7 @@ const App: React.FunctionComponent = () => {
             </div>
             <div className="hint">
               &ldquo;Total&rdquo; refers to the entire BC community, including undergrad and
-              grad students, faculty, and staff. &ldquo;Community&rdquo; excludes undergrad
-              students.
+              grad students, faculty, and staff.
             </div>
 
             <div className="row">
@@ -213,8 +212,7 @@ const App: React.FunctionComponent = () => {
             </div>
             <div className="hint">
               &ldquo;Total&rdquo; refers to the entire BC community, including undergrad
-              and grad students, faculty, and staff. &ldquo;Community&rdquo; excludes
-              undergrad students.
+              and grad students, faculty, and staff.
             </div>
 
             <div className="row">
@@ -227,8 +225,7 @@ const App: React.FunctionComponent = () => {
             </div>
             <div className="hint">
               &ldquo;Total&rdquo; refers to the entire BC community, including undergrad
-              and grad students, faculty, and staff. &ldquo;Community&rdquo; excludes
-              undergrad students.
+              and grad students, faculty, and staff.
             </div>
 
             <TestedBarChart data={data} scale={scale} />
@@ -250,14 +247,15 @@ const App: React.FunctionComponent = () => {
                   positive to the number of undergrad tests that came back positive, counting
                   tests instead of people. We did not adjust the data prior to 9/3 because that
                   could only be a guess, but we suspect a good number of undergraduate tests
-                  were counted as community tests. Picture shifting the &ldquo;Tests and Results
-                  per Day&rdquo; graph below up a bit to better fit the data after 9/3.
+                  were counted as non-undergraduate tests. Picture shifting the &ldquo;Tests
+                  and Results per Day&rdquo; graph below up a bit to better fit the data after
+                  9/3.
                   <br />
                   <br />
-                  The button below adjusts the data prior to 9/3 by moving 30% of the community
-                  tests to the undergraduates. There is no reasoning to this 30% other than the
-                  fact that it makes the cumulative graphs non-decreasing, as one would expect
-                  them to be.
+                  The button below adjusts the data prior to 9/3 by moving 30% of the
+                  non-undergraduate tests to the undergraduates. There is no reasoning to this
+                  30% other than the fact that it makes the cumulative graphs non-decreasing,
+                  as one would expect them to be.
                 </div>
                 { adjustSep3 ? (
                   <button

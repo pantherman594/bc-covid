@@ -46,9 +46,9 @@ const DailyPositiveChart = (props: DailyPositiveChartProps) => {
         ? item.daysSinceFirst + 1
         : item.daysSinceFirst - data[item.recoveryIndex].daysSinceFirst;
       averages.push({
-        total7DayAvg: totalSum / items,
-        undergrad7DayAvg: undergradSum / items,
-        community7DayAvg: communitySum / items,
+        'Total 7 Day Average': totalSum / items,
+        'Undergrad 7 Day Average': undergradSum / items,
+        'Non-undergrad 7 Day Average': communitySum / items,
       });
     });
 
@@ -60,9 +60,9 @@ const DailyPositiveChart = (props: DailyPositiveChartProps) => {
       const communityPositive = totalPositive - undergradPositive;
 
       return {
-        totalPositive,
-        undergradPositive,
-        communityPositive,
+        Total: totalPositive,
+        Undergrads: undergradPositive,
+        'Non-undergrads': communityPositive,
         ...averages[index],
         date: item.date.getTime(),
       };
@@ -122,7 +122,7 @@ const DailyPositiveChart = (props: DailyPositiveChartProps) => {
       />
       <Bar
         stackId="1"
-        dataKey="undergradPositive"
+        dataKey="Undergrads"
         stroke="#8884d8bb"
         fillOpacity={1}
         fill="url(#colorUndergrad)"
@@ -130,7 +130,7 @@ const DailyPositiveChart = (props: DailyPositiveChartProps) => {
       />
       <Bar
         stackId="1"
-        dataKey="communityPositive"
+        dataKey="Non-undergrads"
         stroke="#009dffbb"
         fillOpacity={1}
         fill="url(#colorCommunity)"
@@ -138,21 +138,21 @@ const DailyPositiveChart = (props: DailyPositiveChartProps) => {
       />
       <Line
         type="monotone"
-        dataKey="total7DayAvg"
+        dataKey="Total 7 Day Average"
         stroke="#5f6d7d"
         strokeDasharray="5 5"
         hide={toggles.total7DayAvg}
       />
       <Line
         type="monotone"
-        dataKey="undergrad7DayAvg"
+        dataKey="Undergrad 7 Day Average"
         stroke="#8884d8"
         strokeDasharray="5 5"
         hide={toggles.undergrad7DayAvg}
       />
       <Line
         type="monotone"
-        dataKey="community7DayAvg"
+        dataKey="Non-undergrad 7 Day Average"
         stroke="#009dff"
         strokeDasharray="5 5"
         hide={toggles.community7DayAvg}

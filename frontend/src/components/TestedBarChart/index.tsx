@@ -25,10 +25,10 @@ const TestedBarChart = (props: TestedBarChartProps) => {
   const plotData = data.map((item: CovidDataItem) => {
     const remainingPositive = item.totalPositive - item.undergradPositive;
     return {
-      undergradTested: item.undergradTested - item.undergradPositive,
-      undergradPositive: item.undergradPositive,
-      remainingTested: item.totalTested - item.undergradTested - remainingPositive,
-      remainingPositive,
+      'Undergrad Tests': item.undergradTested - item.undergradPositive,
+      'Undergrad Positives': item.undergradPositive,
+      'Non-undergrad Tests': item.totalTested - item.undergradTested - remainingPositive,
+      'Non-undergrad Positives': remainingPositive,
       date: item.date.getTime(),
     };
   });
@@ -75,7 +75,7 @@ const TestedBarChart = (props: TestedBarChartProps) => {
               key={entry.name}
               style={{ color: entry.color.substring(0, entry.color.length - 2) }}
             >
-              {`${entry.name.replace(/([A-Z])/g, ' $1')}: ${valueTickFormatter(entry.value)}`}
+              {`${entry.name}: ${valueTickFormatter(entry.value)}`}
             </p>
           ))
         }
@@ -109,22 +109,22 @@ const TestedBarChart = (props: TestedBarChartProps) => {
           allowDataOverflow
         />
         <Bar
-          dataKey="undergradPositive"
+          dataKey="Undergrad Positives"
           fill="#ff0000bb"
           stackId="stack"
         />
         <Bar
-          dataKey="undergradTested"
+          dataKey="Undergrad Tests"
           fill="#5f6d7dbb"
           stackId="stack"
         />
         <Bar
-          dataKey="remainingPositive"
+          dataKey="Non-undergrad Positives"
           fill="#ff000000"
           stackId="stack"
         />
         <Bar
-          dataKey="remainingTested"
+          dataKey="Non-undergrad Tests"
           fill="#5f6d7d00"
           stackId="stack"
         />
@@ -154,27 +154,27 @@ const TestedBarChart = (props: TestedBarChartProps) => {
           allowDataOverflow
         />
         <Bar
-          dataKey="remainingPositive"
+          dataKey="Non-undergrad Positives"
           fill="#ff0000bb"
           stackId="stack"
         />
         <Bar
-          dataKey="remainingTested"
+          dataKey="Non-undergrad Tests"
           fill="#5f6d7dbb"
           stackId="stack"
         />
         <Bar
-          dataKey="undergradPositive"
+          dataKey="Undergrad Positives"
           fill="#ff000000"
           stackId="stack"
         />
         <Bar
-          dataKey="undergradTested"
+          dataKey="Undergrad Tests"
           fill="#5f6d7d00"
           stackId="stack"
         />
         <ReferenceLine y={scale === 'log' ? 1 : 0} stroke="#000" />
-        <ReferenceLine y={scale === 'log' ? 50000 : max * 0.95} stroke="#0000" label="Remaining BC Community" />
+        <ReferenceLine y={scale === 'log' ? 50000 : max * 0.95} stroke="#0000" label="Non-undergraduates" />
       </ChartContainer>
     </div>
   );

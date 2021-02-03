@@ -39,9 +39,9 @@ const PercentPositiveChart = (props: PercentPositiveChartProps) => {
       }
 
       averages.push({
-        total7Day: totalPositive <= 0 ? 0 : totalPositive / totalTested,
-        undergrad7Day: undergradPositive <= 0 ? 0 : undergradPositive / undergradTested,
-        community7Day: communityPositive <= 0 ? 0 : communityPositive / communityTested,
+        'Total 7 Day Percent': totalPositive <= 0 ? 0 : totalPositive / totalTested,
+        'Undergrad 7 Day Percent': undergradPositive <= 0 ? 0 : undergradPositive / undergradTested,
+        'Non-undergrad 7 Day Percent': communityPositive <= 0 ? 0 : communityPositive / communityTested,
       });
     });
 
@@ -64,9 +64,9 @@ const PercentPositiveChart = (props: PercentPositiveChartProps) => {
         : communityPositive / communityTested;
 
       return {
-        totalPercent: percentTotal,
-        undergradPercent: percentUndergrad,
-        communityPercent: percentCommunity,
+        Total: percentTotal,
+        Undergrads: percentUndergrad,
+        'Non-undergrads': percentCommunity,
         ...averages[index],
         date: item.date.getTime(),
       };
@@ -121,34 +121,34 @@ const PercentPositiveChart = (props: PercentPositiveChartProps) => {
       <Legend />
       <Line
         type="monotone"
-        dataKey="totalPercent"
+        dataKey="Total"
         stroke="#5f6d7d"
       />
       <Line
         type="monotone"
-        dataKey="undergradPercent"
+        dataKey="Undergrads"
         stroke="#8884d8"
       />
       <Line
         type="monotone"
-        dataKey="communityPercent"
+        dataKey="Non-undergrads"
         stroke="#009dff"
       />
       <Line
         type="monotone"
-        dataKey="total7Day"
+        dataKey="Total 7 Day Percent"
         stroke="#5f6d7d"
         strokeDasharray="5 5"
       />
       <Line
         type="monotone"
-        dataKey="undergrad7Day"
+        dataKey="Undergrad 7 Day Percent"
         stroke="#8884d8"
         strokeDasharray="5 5"
       />
       <Line
         type="monotone"
-        dataKey="community7Day"
+        dataKey="Non-undergrad 7 Day Percent"
         stroke="#009dff"
         strokeDasharray="5 5"
       />
