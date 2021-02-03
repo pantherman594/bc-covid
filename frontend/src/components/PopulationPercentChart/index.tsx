@@ -45,9 +45,9 @@ const PopulationPercentChart = (props: PopulationPercentChartProps) => {
     const massPercent = (item.massPositive - prev.massPositive) / MASS_POP;
 
     return {
-      BC: bcPercent,
-      BU: buPercent,
-      NEU: neuPercent,
+      'Boston College': bcPercent,
+      'Boston University': buPercent,
+      'Northeastern University': neuPercent,
       'Suffolk County': suffolkPercent,
       Massachusetts: massPercent,
       date: item.date.getTime(),
@@ -59,11 +59,10 @@ const PopulationPercentChart = (props: PopulationPercentChartProps) => {
 
   const renderTooltipContent = (o: any) => {
     const { payload, label } = o;
-
     const pops = {
-      BC: BC_POP,
-      BU: BU_POP,
-      NEU: NEU_POP,
+      'Boston College': BC_POP,
+      'Boston University': BU_POP,
+      'Northeastern University': NEU_POP,
       'Suffolk County': SUFFOLK_POP,
       Massachusetts: MASS_POP,
     } as any;
@@ -102,17 +101,17 @@ const PopulationPercentChart = (props: PopulationPercentChartProps) => {
       <Legend />
       <Line
         type="monotone"
-        dataKey="BC"
+        dataKey="Boston College"
         stroke="#8a100b"
       />
       <Line
         type="monotone"
-        dataKey="BU"
+        dataKey="Boston University"
         stroke="#cc0000"
       />
       <Line
         type="monotone"
-        dataKey="NEU"
+        dataKey="Northeastern University"
         stroke="#d41b2c"
       />
       <Line

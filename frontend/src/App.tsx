@@ -115,7 +115,7 @@ const App: React.FunctionComponent = () => {
   const [showLoading, setShowLoading] = useState(false);
   const [adjustSep3, setAdjustSep3] = useState(false);
   const [logScale, setLogScale] = useState(false);
-  const [showFall, setShowFall] = useState(true);
+  const [showFall, setShowFall] = useState(false);
   const [isEmbed] = useState(checkIsEmbed());
 
   useEffect(() => {
@@ -232,10 +232,8 @@ const App: React.FunctionComponent = () => {
 
             <PopulationPercentChart data={data} />
             <div className="hint">
-              This graph shows the number of positive tests in the past 7 days, as a
-              percentage of the total population of the respective community. Take these
-              values with a huge grain of salt. Many assumptions were made about population
-              sizes.
+              This graph shows the number of positive tests in the past 7 days,
+              as a percentage of the estimated total population of the respective community.
             </div>
 
             <hr />
@@ -301,29 +299,26 @@ const App: React.FunctionComponent = () => {
             {isEmbed ? null
               : <p style={{ paddingBottom: 0 }}>Made by David Shen and Roger Wang.</p>}
 
-            <a href="https://bccovid.dav.sh/data">collected data</a>
+            <a href="https://bccovid.dav.sh/data">Collected Data Sources</a>
             {' '}
+            <br />
+            <a href="https://www.bc.edu/content/bc-web/sites/reopening-boston-college.html#testing">BC Data</a>
+            <br />
+            <a href="https://www.bu.edu/healthway/community-dashboard/">BU Data</a>
+            {' '}
+            <a href="https://news.northeastern.edu/coronavirus/reopening/testing-dashboard/">NEU Data</a>
+            {' '}
+            <a href="https://docs.google.com/spreadsheets/u/0/d/1C8PDCqHB9DbUYbvrEMN2ZKyeDGAMAxdcNkmO2QSZJsE/pubhtml">NEU Direct</a>
+            {' '}
+            <a href="https://usafacts.org/visualizations/coronavirus-covid-19-spread-map/">County Data</a>
+            {' '}
+            <a href="https://usafactsstatic.blob.core.windows.net/public/data/covid-19/covid_confirmed_usafacts.csv">County Direct</a>
 
             <br />
 
-            <a href="https://www.bc.edu/content/bc-web/sites/reopening-boston-college.html#testing">bc data</a>
-            <br />
-
-            <a href="https://www.bu.edu/healthway/community-dashboard/">bu data</a>
+            <a href="https://github.com/pantherman594/bc-covid/">Source Code</a>
             {' '}
-            <a href="https://news.northeastern.edu/coronavirus/reopening/testing-dashboard/">neu data</a>
-            {' '}
-            <a href="https://docs.google.com/spreadsheets/u/0/d/1C8PDCqHB9DbUYbvrEMN2ZKyeDGAMAxdcNkmO2QSZJsE/pubhtml">neu direct</a>
-            {' '}
-            <a href="https://usafacts.org/visualizations/coronavirus-covid-19-spread-map/">county data</a>
-            {' '}
-            <a href="https://usafactsstatic.blob.core.windows.net/public/data/covid-19/covid_confirmed_usafacts.csv">county direct</a>
-
-            <br />
-
-            <a href="https://github.com/pantherman594/bc-covid/">source code</a>
-            {' '}
-            <a href="https://bccovid.dav.sh/changelog">changelog</a>
+            <a href="https://bccovid.dav.sh/changelog">Changelog</a>
           </>
         )}
       <div className="loading" style={{ opacity: loading && showLoading ? 1 : 0 }}>
