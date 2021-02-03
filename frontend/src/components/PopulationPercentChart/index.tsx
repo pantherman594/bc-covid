@@ -38,6 +38,8 @@ const PopulationPercentChart = (props: PopulationPercentChartProps) => {
   const plotData = data.map((item: CovidDataItem, _i: number, array: CovidDataItem[]) => {
     const prev = array[item.recoveryIndex];
     if (!prev) return undefined;
+    // Ignore if it's been more than 3 weeks since the last data entry.
+    if (item.date.getTime() - prev.date.getTime() > 21 * 24 * 60 * 60 * 1000) return undefined;
 
     const bcPercent = (item.totalPositive - prev.totalPositive) / BC_POP;
     const buPercent = (item.buPositive - prev.buPositive) / BU_POP;
