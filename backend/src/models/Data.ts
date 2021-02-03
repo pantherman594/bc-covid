@@ -40,6 +40,9 @@ export class Data {
   public suffolkPositive!: number;
 
   @prop({ required: true })
+  public middlesexPositive!: number;
+
+  @prop({ required: true })
   public massPositive!: number;
 
   @prop({ required: true, type: String, default: [] })

@@ -12,6 +12,7 @@ export interface CovidDataItem {
   buPositive: number;
   neuPositive: number;
   suffolkPositive: number;
+  middlesexPositive: number;
   massPositive: number;
   flags: string[];
   recoveryIndex: number;
@@ -31,6 +32,7 @@ export const create = (): CovidDataItem => ({
   buPositive: 0,
   neuPositive: 0,
   suffolkPositive: 0,
+  middlesexPositive: 0,
   massPositive: 0,
   flags: [],
   recoveryIndex: 0,

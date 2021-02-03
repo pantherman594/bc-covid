@@ -26,6 +26,7 @@ const BU_POP = Math.round((34589 + 10517) * 0.8);
 // From https://usafacts.org/visualizations/coronavirus-covid-19-spread-map/.
 const MASS_POP = 6892503; // From https://usafactsstatic.blob.core.windows.net/public/data/covid-19/covid_county_population_usafacts.csv.
 const SUFFOLK_POP = 803907; // From https://usafactsstatic.blob.core.windows.net/public/data/covid-19/covid_county_population_usafacts.csv.
+const MIDDLESEX_POP = 1611699; // From https://usafactsstatic.blob.core.windows.net/public/data/covid-19/covid_county_population_usafacts.csv.
 
 interface PopulationPercentChartProps {
   data: CovidDataItem[];
@@ -42,6 +43,7 @@ const PopulationPercentChart = (props: PopulationPercentChartProps) => {
     const buPercent = (item.buPositive - prev.buPositive) / BU_POP;
     const neuPercent = (item.neuPositive - prev.neuPositive) / NEU_POP;
     const suffolkPercent = (item.suffolkPositive - prev.suffolkPositive) / SUFFOLK_POP;
+    const middlesexPercent = (item.middlesexPositive - prev.middlesexPositive) / MIDDLESEX_POP;
     const massPercent = (item.massPositive - prev.massPositive) / MASS_POP;
 
     return {
@@ -49,6 +51,7 @@ const PopulationPercentChart = (props: PopulationPercentChartProps) => {
       'Boston University': buPercent,
       'Northeastern University': neuPercent,
       'Suffolk County': suffolkPercent,
+      'Middlesex County': middlesexPercent,
       Massachusetts: massPercent,
       date: item.date.getTime(),
     };
@@ -64,6 +67,7 @@ const PopulationPercentChart = (props: PopulationPercentChartProps) => {
       'Boston University': BU_POP,
       'Northeastern University': NEU_POP,
       'Suffolk County': SUFFOLK_POP,
+      'Middlesex County': MIDDLESEX_POP,
       Massachusetts: MASS_POP,
     } as any;
 
@@ -117,6 +121,11 @@ const PopulationPercentChart = (props: PopulationPercentChartProps) => {
       <Line
         type="monotone"
         dataKey="Suffolk County"
+        stroke="#566ca0"
+      />
+      <Line
+        type="monotone"
+        dataKey="Middlesex County"
         stroke="#8884d8"
       />
       <Line

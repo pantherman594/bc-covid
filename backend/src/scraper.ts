@@ -19,6 +19,7 @@ const NEU_URL = 'https://spreadsheets.google.com/feeds/cells/1C8PDCqHB9DbUYbvrEM
 // From https://usafacts.org/visualizations/coronavirus-covid-19-spread-map/.
 const MASS_COUNTY_CASES_DL = 'https://usafactsstatic.blob.core.windows.net/public/data/covid-19/covid_confirmed_usafacts.csv';
 const SUFFOLK_FIPS = '25025';
+const MIDDLESEX_FIPS = '25017';
 
 const IGNORE_KEYS = [
   '_id',
@@ -28,6 +29,7 @@ const IGNORE_KEYS = [
   'buPositive',
   'neuPositive',
   'suffolkPositive',
+  'middlesexPositive',
   'massPositive',
 ];
 
@@ -60,6 +62,7 @@ interface INEUData {
 
 interface IMassData {
   suffolkPositive: number;
+  middlesexPositive: number;
   massPositive: number;
 }
 
@@ -303,6 +306,7 @@ const scrapeMass = () => new Promise<IMassData>((resolve, reject) => {
 
   let header = '';
   let suffolkPositive = 0;
+  let middlesexPositive = 0;
   let massPositive = 0;
 
   superagent
@@ -321,15 +325,67 @@ const scrapeMass = () => new Promise<IMassData>((resolve, reject) => {
 
       if (row.countyFIPS === SUFFOLK_FIPS) {
         suffolkPositive = countyCases;
+      } else if (row.countyFIPS === MIDDLESEX_FIPS) {
+        middlesexPositive = countyCases;
       }
 
       massPositive += countyCases;
     })
     .on('end', (_rowCount: number) => {
       console.log('Massachusetts Complete.');
-      resolve({ suffolkPositive, massPositive });
+      resolve({ suffolkPositive, middlesexPositive, massPositive });
     });
 });
+
+export const addMiddlesexPositives = async () => {
+  let headers: string[];
+  let suffolkPositives: number[];
+  let middlesexPositives: number[];
+
+  await connectDB();
+  const entries = await DataModel.find().exec();
+
+  await new Promise<void>((resolve, reject) => {
+    superagent
+      .get(MASS_COUNTY_CASES_DL)
+      .pipe(csv.parse({ headers: true, skipRows: 1239, maxRows: 15 }))
+      .on('error', reject)
+      .on('headers', (h: string[]) => {
+        headers = h.slice(4);
+      })
+      .on('data', (row: any) => {
+        if (row.countyFIPS !== SUFFOLK_FIPS && row.countyFIPS !== MIDDLESEX_FIPS) return;
+
+        const parsedArr = headers.map((header) => parseInt(row[header], 10));
+
+        if (row.countyFIPS === SUFFOLK_FIPS) {
+          suffolkPositives = parsedArr;
+        } else if (row.countyFIPS === MIDDLESEX_FIPS) {
+          middlesexPositives = parsedArr;
+        }
+      })
+      .on('end', (_rowCount: number) => {
+        console.log('Massachusetts Complete.');
+
+        resolve();
+      });
+  });
+
+  await Promise.all(entries.map(async (entry) => {
+    const index = suffolkPositives.lastIndexOf(entry.suffolkPositive);
+    entry.middlesexPositive = middlesexPositives[index];
+    if (entry.totalRecovered === undefined) {
+      entry.totalRecovered = entry.undergradRecovered;
+    }
+
+    try {
+      await entry.save();
+    } catch (err) {
+      console.log(entry);
+      throw err;
+    }
+  }));
+};
 
 const scrape = async () => {
   console.log('Scraping data...');

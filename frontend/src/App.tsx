@@ -19,7 +19,7 @@ import {
 } from './components';
 import { CovidDataItem, create } from './types';
 
-const DATA_VERSION = '1';
+const DATA_VERSION = '2';
 
 const processData = (showFall: boolean, data: any) => {
   const newData: CovidDataItem[] = [];
@@ -154,15 +154,16 @@ const App: React.FunctionComponent = () => {
   }, []);
 
   useEffect(() => {
+    if (!isEmbed) return;
     resize();
-  }, [loading, data]);
+  }, [isEmbed, loading, data, resize]);
 
   useEffect(() => {
     if (!isEmbed) return () => {};
 
     window.addEventListener('resize', resize);
     return () => window.removeEventListener('resize', resize);
-  }, [isEmbed]);
+  }, [isEmbed, resize]);
 
   const scale = logScale ? 'log' : 'linear';
 
