@@ -325,6 +325,33 @@ const App: React.FunctionComponent = () => {
       <div className="loading" style={{ opacity: loading && showLoading ? 1 : 0 }}>
         Loading...
       </div>
+
+      <div style={{
+        width: 0,
+        height: 0,
+        margin: 0,
+        padding: 0,
+        overflow: 'hidden',
+        position: 'absolute',
+        opacity: 0,
+      }}>
+        <svg>
+          <defs>
+            <linearGradient id="colorUndergrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.4} />
+              <stop offset="95%" stopColor="#8884d8" stopOpacity={0.1} />
+            </linearGradient>
+            <linearGradient id="colorCommunity" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#009dff" stopOpacity={0.4} />
+              <stop offset="95%" stopColor="#009dff" stopOpacity={0.1} />
+            </linearGradient>
+            <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#5f6d7d" stopOpacity={0.4} />
+              <stop offset="95%" stopColor="#5f6d7d" stopOpacity={0.1} />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
     </div>
   );
 };

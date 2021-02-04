@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Pie, PieChart, ResponsiveContainer } from 'recharts';
+import Color from 'color';
 import style from './style.module.css';
 import { create, CovidDataItem } from '../../types';
 
@@ -29,6 +30,41 @@ const defaultProps = {
 const noStroke = {
   blendStroke: false,
   stroke: 'none',
+};
+
+const interpolateColors = (colors: string[], colorCount: number) => {
+  if (colors.length === 0) {
+    return Array(colorCount).fill('#000000');
+  }
+  if (colors.length === 1) {
+    return Array(colorCount).fill(colors[0]);
+  }
+  const colorArray = [];
+
+  for (let i = 0; i < colors.length - 1; i += 1) {
+    const start = Color(colors[i]).object();
+    const end = Color(colors[i + 1]).object();
+    colorArray.push(Color(start).hex());
+    const segmentLength: number = i === colors.length - 2
+      ? colorCount - colorArray.length - 1
+      : Math.round(colorCount / colors.length);
+
+    const deltaBlend = 1.0 / (segmentLength + 1);
+    for (
+      let j = 0, blend = deltaBlend;
+      j < segmentLength;
+      j += 1, blend += deltaBlend
+    ) {
+      const r = end.r * blend + (1 - blend) * start.r;
+      const g = end.g * blend + (1 - blend) * start.g;
+      const b = end.b * blend + (1 - blend) * start.b;
+
+      colorArray.push(Color.rgb(r, g, b).hex());
+    }
+  }
+
+  colorArray.push(Color(colors[colors.length - 1]).hex());
+  return colorArray;
 };
 
 const DialChart = (props: DialChartProps) => {
@@ -74,6 +110,49 @@ const DialChart = (props: DialChartProps) => {
         ) : null }
       </g>
     );
+  };
+
+  const renderGradientSector = (spiralProps: any) => {
+    const RADIAN = Math.PI / 180;
+    const {
+      cx, cy, innerRadius, outerRadius, startAngle, endAngle,
+    } = spiralProps;
+    const r = (innerRadius + outerRadius) / 2;
+    const width = outerRadius - innerRadius;
+
+    const precision = 2;
+    const size = Math.ceil((startAngle - endAngle) / precision);
+    const minColors = Math.ceil(360 / precision);
+
+    const color = interpolateColors(['#f3e75b', '#f58d1e'], Math.max(minColors, size));
+
+    const trim = endAngle + 360;
+
+    const paths = Array.from({ length: size }, (_v, i) => {
+      const start = endAngle + i * precision;
+
+      if (start > trim) return null;
+
+      const end = start + precision + 0.5;
+      const sx = cx + r * Math.cos(-RADIAN * start);
+      const sy = cy + r * Math.sin(-RADIAN * start);
+      const ex = cx + r * Math.cos(-RADIAN * end);
+      const ey = cy + r * Math.sin(-RADIAN * end);
+
+      return (
+        <path
+          key={`path-${i}`}
+          d={`M ${sx} ${sy} A ${r} ${r} 0 0 0 ${ex} ${ey}`}
+          stroke={color[size - 1 - i]}
+          strokeWidth={width}
+          fill={color[size - 1 - i]}
+        />
+      );
+    });
+
+    paths.reverse();
+
+    return <g>{paths}</g>;
   };
 
   const onPieEnter = (pie: number) => (_data: any, index: number) => {
@@ -133,10 +212,25 @@ const DialChart = (props: DialChartProps) => {
           {/* This pie renders the number of tested community. */}
           <Pie
             {...defaultProps}
+            activeIndex={0}
+            activeShape={renderGradientSector}
             data={[
-              { name: 'Tested', value: curNumCommunityTested, fill: '#ebc634' },
+              { name: 'Tested', value: curNumCommunityTested },
               { name: 'Padding After', value: PADDING_COMMUNITY, fill: BG_COLOR },
               { name: 'Remaining', value: NUM_COMMUNITY - curNumCommunityTested - PADDING_COMMUNITY * 2, fill: BG_COLOR },
+              { name: 'Padding After', value: PADDING_COMMUNITY, fill: BG_COLOR },
+            ]}
+            innerRadius="75%"
+            outerRadius="80%"
+            onMouseEnter={onPieEnter(3)}
+          />
+          {/* Hover for tested community. */}
+          <Pie
+            {...defaultProps}
+            data={[
+              { name: 'Tested', value: curNumCommunityTested, fill: BG_COLOR },
+              { name: 'Padding After', value: PADDING_COMMUNITY, fill: BG_COLOR },
+              { name: 'Remaining', value: Math.max(NUM_COMMUNITY - curNumCommunityTested, 0) - PADDING_COMMUNITY * 2, fill: BG_COLOR },
               { name: 'Padding After', value: PADDING_COMMUNITY, fill: BG_COLOR },
             ]}
             innerRadius="75%"
@@ -157,10 +251,24 @@ const DialChart = (props: DialChartProps) => {
           {/* This pie renders the number of tested students. */}
           <Pie
             {...defaultProps}
+            activeIndex={0}
+            activeShape={renderGradientSector}
             data={[
-              { name: 'Tested', value: curNumTested, fill: '#ebc634' },
+              { name: 'Tested', value: curNumTested },
               { name: 'Padding After', value: PADDING_UNDERGRADS, fill: BG_COLOR },
               { name: 'Remaining', value: NUM_UNDERGRADS - curNumTested - PADDING_UNDERGRADS * 2, fill: BG_COLOR },
+              { name: 'Padding After', value: PADDING_UNDERGRADS, fill: BG_COLOR },
+            ]}
+            innerRadius="60%"
+            outerRadius="65%"
+          />
+          {/* Hover for tested students. */}
+          <Pie
+            {...defaultProps}
+            data={[
+              { name: 'Tested', value: curNumTested, fill: BG_COLOR },
+              { name: 'Padding After', value: PADDING_UNDERGRADS, fill: BG_COLOR },
+              { name: 'Remaining', value: Math.max(NUM_UNDERGRADS - curNumTested, 0) - PADDING_UNDERGRADS * 2, fill: BG_COLOR },
               { name: 'Padding After', value: PADDING_UNDERGRADS, fill: BG_COLOR },
             ]}
             innerRadius="60%"
