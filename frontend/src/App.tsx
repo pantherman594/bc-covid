@@ -235,6 +235,7 @@ const App: React.FunctionComponent = () => {
             <div className="hint">
               This graph shows the number of positive tests in the past 7 days,
               as a percentage of the estimated total population of the respective community.
+              Part of BC&rsquo;s campus lies in Middlesex County and part lies in Suffolk County.
             </div>
 
             <hr />
