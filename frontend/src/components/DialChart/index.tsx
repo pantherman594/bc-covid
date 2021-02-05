@@ -320,12 +320,12 @@ const DialChart = (props: DialChartProps) => {
                 value: NUM_UNDERGRADS,
               },
               {
-                name: `Positive community tests in the last ${recoveryDuration}: ${numberFormat(curNumCommunityPositive)}`,
+                name: `Positive non-undergrad tests in the last ${recoveryDuration}: ${numberFormat(curNumCommunityPositive)}`,
                 value: curNumPositive,
                 percentage: curNumCommunityPositive / NUM_COMMUNITY,
               },
               {
-                name: `Community tests in the last ${recoveryDuration}: ${numberFormat(curNumCommunityTested)}`,
+                name: `Non-undergrad tests in the last ${recoveryDuration}: ${numberFormat(curNumCommunityTested)}`,
                 value: curNumTested,
                 percentage: curNumCommunityTested / NUM_COMMUNITY,
               },
