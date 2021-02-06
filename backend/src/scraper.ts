@@ -392,7 +392,7 @@ export const addMiddlesexPositives = async () => {
 };
 
 const scrape = async () => {
-  console.log('Scraping data...');
+  console.log(`Starting scrape at ${new Date().toLocaleString('en-US', { timeZone: 'EST' })}`);
   const start = new Date().getTime();
 
   // Run all the scrapes as well as connectDB asynchronously.
