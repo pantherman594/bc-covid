@@ -311,16 +311,20 @@ const scrapeMass = () => new Promise<IMassData>((resolve, reject) => {
 
   superagent
     .get(MASS_COUNTY_CASES_DL)
-    .pipe(csv.parse({ headers: true, skipRows: 1239, maxRows: 15 }))
+    .pipe(csv.parse({ headers: true, skipRows: 1238, maxRows: 15 }))
     .on('error', reject)
     .on('headers', (headers: string[]) => {
       header = headers[headers.length - 1];
     })
     .on('data', (row: any) => {
+      if (row.State !== 'MA') {
+        reject('Invalid MA county row selection.');
+      }
+
       const countyCases = parseInt(row[header], 10);
 
       if (Number.isNaN(countyCases)) {
-        throw new Error('Parse int failed.');
+        reject('Invalid MA county row selection.');
       }
 
       if (row.countyFIPS === SUFFOLK_FIPS) {
