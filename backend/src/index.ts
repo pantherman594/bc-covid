@@ -15,11 +15,14 @@ const app = express();
 
 let changelog = 'Error loading changelog.';
 
-exec('git log --pretty="format:- %h %as  %s"', (err, stdout, stderr) => {
-  if (err || stderr) return;
+const updateChangelog = () => {
+  changelog = 'Error loading changelog.';
+  exec('git log --pretty="format:- %h %as  %s"', (err, stdout, stderr) => {
+    if (err || stderr) return;
 
-  changelog = stdout;
-});
+    changelog = stdout;
+  });
+};
 
 const corsOptionsDelegate = (req: any, callback: any) => {
   const corsOptions = {
@@ -88,6 +91,8 @@ if (process.env.NODE_ENV === 'production') {
 app.listen(PORT, async () => {
   console.log(`Listening on port ${PORT}.`);
 
+  updateChangelog();
+
   // Set up email error notifications.
   setup();
 
@@ -95,6 +100,9 @@ app.listen(PORT, async () => {
   await scrape();
 
   // Run the scraper at the start of every hour.
-  const job = new CronJob('0 0 * * * *', scrape);
+  const job = new CronJob('0 0 * * * *', () => {
+    scrape();
+    updateChangelog();
+  });
   job.start();
 });
