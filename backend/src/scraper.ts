@@ -317,7 +317,8 @@ const scrapeMass = () => new Promise<IMassData>((resolve, reject) => {
       header = headers[headers.length - 1];
     })
     .on('data', (row: any) => {
-      if (row.State !== 'MA' || row.StateFIPS !== 25) return;
+      console.log('row', row.State, row.StateFIPS);
+      if (row.State !== 'MA' || row.StateFIPS !== '25') return;
 
       const countyCases = parseInt(row[header], 10);
 
@@ -335,6 +336,7 @@ const scrapeMass = () => new Promise<IMassData>((resolve, reject) => {
     })
     .on('end', (_rowCount: number) => {
       console.log('Massachusetts Complete.');
+      console.log({ suffolkPositive, middlesexPositive, massPositive });
       resolve({ suffolkPositive, middlesexPositive, massPositive });
     });
 });
