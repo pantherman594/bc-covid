@@ -317,7 +317,7 @@ const scrapeMass = () => new Promise<IMassData>((resolve, reject) => {
       header = headers[headers.length - 1];
     })
     .on('data', (row: any) => {
-      if (row.State !== 'MA' || row.stateFIPS !== 25) return;
+      if (row.State !== 'MA' || row.StateFIPS !== 25) return;
 
       const countyCases = parseInt(row[header], 10);
 
