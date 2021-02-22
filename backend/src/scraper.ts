@@ -139,7 +139,6 @@ const scrapeBC = async (): Promise<IBCData> => {
   }
 
   if (label.text().trim().replace(/[^a-zA-Z ]/g, '') !== EXPECTED_ISOLATION_LABEL) {
-    console.log(label.text().trim().replace(/[^a-zA-Z ]/g, ''));
     throw new Error(`Labels have changed, please fix scraper. Failed labels: ${EXPECTED_ISOLATION_LABEL}.`);
   }
 
@@ -317,7 +316,6 @@ const scrapeMass = () => new Promise<IMassData>((resolve, reject) => {
       header = headers[headers.length - 1];
     })
     .on('data', (row: any) => {
-      console.log('row', row.State, row.StateFIPS);
       if (row.State !== 'MA' || row.StateFIPS !== '25') return;
 
       const countyCases = parseInt(row[header], 10);
@@ -336,7 +334,6 @@ const scrapeMass = () => new Promise<IMassData>((resolve, reject) => {
     })
     .on('end', (_rowCount: number) => {
       console.log('Massachusetts Complete.');
-      console.log({ suffolkPositive, middlesexPositive, massPositive });
       resolve({ suffolkPositive, middlesexPositive, massPositive });
     });
 });
