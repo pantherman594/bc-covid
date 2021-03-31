@@ -149,7 +149,7 @@ const scrapeBC = async (): Promise<IBCData> => {
     throw new Error('Parse int failed.');
   }
 
-  const recoveredMatch = recoveredData.text().replace(/\xa0/g, ' ').match(/^([0-9]+) Recovered \(([0-9]+) Undergrads\)$/);
+  const recoveredMatch = recoveredData.text().replace(/\xa0/g, ' ').match(/^([0-9,]+) Recovered \(([0-9,]+) Undergrads\)$/);
   if (!recoveredMatch) {
     throw new Error('Labels have changed, please fix scraper. Failed label: Recovered.');
   }
